@@ -1,8 +1,30 @@
+@import './styles/global.css';
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+@import url('./assets/fonts/fonts.css');
+
+@font-face {
+  font-family: 'HelveticaRegular';
+  src: url('./assets/fonts/helvetica/HELVETICA.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'HelveticaLight';
+  src: url('./assets/fonts/helvetica/HELVETICA LIGHT.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'HelveticaBold';
+  src: url('./assets/fonts/helvetica/HELVETICA BOLD.ttf') format('truetype');
+  font-weight: normal;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
+/* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -66,5 +88,17 @@ button:focus-visible {
   }
   button {
     background-color: #f9f9f9;
+  }
+} */
+
+@layer base {
+  html:lang(ko),
+  body:lang(ko) {
+    font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  }
+  
+  html:lang(en),
+  body:lang(en) {
+    font-family: 'HelveticaRegular', 'HelveticaLight', 'HelveticaBold', sans-serif;
   }
 }

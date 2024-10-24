@@ -1,3 +1,5 @@
+import LoginPage from '@pages/LoginPage';
+import SignupPage from '@pages/SignupPage';
 import MainPage from '@pages/MainPage';
 import TradeSettingsPage from '@pages/TradeSettingsPage';
 import InvestmentStatusPage from '@pages/InvestmentStatusPage';
@@ -5,6 +7,14 @@ import AssetOverviewPage from '@pages/AssetOverviewPage';
 import TradeDetailsPage from '@pages/TradeDetailsPage';
 
 const routerInfo = [
+  {
+    path: 'login',
+    element: <LoginPage/>,
+  },
+  {
+    path: 'signup',
+    element: <SignupPage/>,
+  },
   {
     path: '/',
     element: <MainPage/>,
