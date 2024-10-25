@@ -23,7 +23,7 @@
 
 @font-face {
   font-family: 'HelveticaRegular';
-  src: url('/fonts/HELVETICA.ttf') format('truetype');
+  src: url('../assets/fonts/helvetica/HELVETICA.ttf');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -31,7 +31,7 @@
 
 @font-face {
   font-family: 'HelveticaLight';
-  src: url('/fonts/HELVETICA-LIGHT.ttf') format('truetype');
+  src: url('/fonts/HELVETICA-LIGHT.ttf');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -39,7 +39,7 @@
 
 @font-face {
   font-family: 'HelveticaBold';
-  src: url('/fonts/HELVETICA-BOLD.ttf') format('truetype');
+  src: url('../assets/fonts/helvetica/HELVETICA-BOLD.ttf');
   font-weight: bold;
   font-style: normal;
   font-display: swap;

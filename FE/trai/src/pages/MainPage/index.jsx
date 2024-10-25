@@ -6,6 +6,12 @@ const MainPage = () => {
     <div className="min-h-screen w-full bg-gray-100 flex flex-col items-center justify-center">
       <div className="text-3xl font-bold mb-8">메인 페이지입니다.</div>
       <div className="flex space-x-4">
+        <StyledLink to={'/signup'} className="hover:bg-blue-500">
+          회원가입
+        </StyledLink>
+        <StyledLink to={'/login'} className="hover:bg-blue-500">
+          로그인
+        </StyledLink>
         <StyledLink to={'/trade-settings'} className="hover:bg-blue-500">
           거래설정페이지
         </StyledLink>
