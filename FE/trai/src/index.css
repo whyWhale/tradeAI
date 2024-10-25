@@ -101,4 +101,8 @@ button:focus-visible {
   body:lang(en) {
     font-family: 'HelveticaRegular', 'HelveticaLight', 'HelveticaBold', sans-serif;
   }
+
+  body {
+    font-family: 'HelveticaBold';
+  }
 }
