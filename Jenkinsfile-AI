@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     echo 'Building Backend Application...'
-                    sh './gradlew clean build -x test'
+                    sh './BE/gradlew clean build -x test'
                     echo 'Backend Application Build Success!'
 
                     echo 'Building Backend Image...'
