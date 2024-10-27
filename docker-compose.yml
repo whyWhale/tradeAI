@@ -41,7 +41,7 @@ services:
       - frontend
       - backend
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
+      - /var/nginx_config/nginx.conf:/etc/nginx/nginx.conf
     restart: always
 
 volumes:
