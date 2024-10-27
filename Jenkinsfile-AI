@@ -37,7 +37,7 @@ pipeline {
 
         stage('Build Frontend') {
             steps {
-                dir('FE/Trai') {
+                dir('FE/trai') {
                     script {
                         echo 'Building Frontend Image...'
                         sh 'docker build -t kimjaehyun158/trai-frontend:latest -f Dockerfile .'
