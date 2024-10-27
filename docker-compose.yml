@@ -10,12 +10,16 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     expose:
       - "8080"
+    networks:
+      - trai_network
       
   frontend:
     image: kimjaehyun158/trai-frontend:latest
     container_name: frontend
     expose:
       - "3000"
+    networks:
+      - trai_network
       
 networks:
   trai_network:
