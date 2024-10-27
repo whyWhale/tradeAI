@@ -28,7 +28,7 @@ pipeline {
                         echo 'Backend Application Build Success!'
 
                         echo 'Building Backend Image...'
-                        sh 'docker build -t kimjaehyun158/trai-backend:latest -f Dockerfile .' // BE 디렉토리 내 Dockerfile 참조
+                        sh 'docker build -t kimjaehyun158/trai-backend:latest -f Dockerfile .'
                         echo 'Backend Image Build Success!'
                     }
                 }
@@ -50,11 +50,12 @@ pipeline {
         stage('Push Images to Docker Hub') {
             steps {
                 script {
+                    echo 'Logging in to Docker Hub...'
+                    sh 'echo "${DOCKER_HUB_PASSWORD}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin'
+                    
                     echo 'Pushing Images to Docker Hub...'
-                    docker.withRegistry('https://registry.hub.docker.com/', DOCKER_HUB_CREDENTIALS_ID) {
-                        sh 'docker push kimjaehyun158/trai-backend:latest'
-                        sh 'docker push kimjaehyun158/trai-frontend:latest'
-                    }
+                    sh 'docker push kimjaehyun158/trai-backend:latest'
+                    sh 'docker push kimjaehyun158/trai-frontend:latest'
                     echo 'Images Push Success!'
                 }
             }
@@ -69,7 +70,8 @@ pipeline {
                     export MYSQL_DATABASE=${MYSQL_DATABASE} && \
                     export SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} && \
                     docker-compose pull && \
-                    docker-compose up -d
+                    docker-compose up -d && \
+                    docker logout
                     """
                     echo 'Deploy Success!'
                 }
