@@ -27,7 +27,7 @@ pipeline {
                         echo 'Backend Application Build Success!'
 
                         echo 'Building Backend Image...'
-                        sh 'docker build -t kimjaehyun158/trai-backend:latest -f Dockerfile .'
+                        sh 'docker build -t kimjaehyun158/trai-backend:latest .'
                         echo 'Backend Image Build Success!'
                     }
                 }
@@ -44,7 +44,7 @@ pipeline {
                         echo 'Frontend Application Build Success!'
 
                         echo 'Building Frontend Image...'
-                        sh 'docker build -t kimjaehyun158/trai-frontend:latest -f Dockerfile .'
+                        sh 'docker build -t kimjaehyun158/trai-frontend:latest .'
                         echo 'Frontend Image Build Success!'
                     }
                 }
