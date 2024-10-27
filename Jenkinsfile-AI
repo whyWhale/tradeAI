@@ -67,14 +67,11 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying with Docker Compose...'
-                    sh """
-                    export MYSQL_PASSWORD=${MYSQL_PASSWORD} && \
-                    export MYSQL_DATABASE=${MYSQL_DATABASE} && \
-                    export SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE} && \
-                    docker-compose pull && \
-                    docker-compose up -d && \
-                    docker logout
-                    """
+                    withEnv(["MYSQL_PASSWORD=${MYSQL_PASSWORD}", "MYSQL_DATABASE=${MYSQL_DATABASE}", "SPRING_PROFILES_ACTIVE=prod"]) {
+                        sh './docker-compose pull'
+                        sh './docker-compose up -d'
+                    }   
+                    sh 'docker logout'
                     echo 'Deploy Success!'
                 }
             }
