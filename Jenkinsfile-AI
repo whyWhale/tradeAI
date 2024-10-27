@@ -51,7 +51,9 @@ pipeline {
             steps {
                 script {
                     echo 'Logging in to Docker Hub...'
-                    sh 'echo "${DOCKER_HUB_PASSWORD}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin'
+                    withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS_ID, usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        sh 'echo "${DOCKER_HUB_PASSWORD}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin'
+                    }
                     
                     echo 'Pushing Images to Docker Hub...'
                     sh 'docker push kimjaehyun158/trai-backend:latest'
