@@ -66,17 +66,9 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying with Docker Compose...'
-                    def mysqlRunning = sh(script: 'docker ps --filter "name=mysql" --filter "status=running" -q', returnStdout: true).trim()
-                    if (!mysqlRunning) {
-                        sh 'docker compose up -d mysql'
-                    }
-                    def nginxRunning = sh(script: 'docker ps --filter "name=nginx" --filter "status=running" -q', returnStdout: true).trim()
-                    if (!nginxRunning) {
-                        sh 'docker compose up -d nginx'
-                    } 
                     withEnv(["MYSQL_PASSWORD=${MYSQL_PASSWORD}", "MYSQL_DATABASE=${MYSQL_DATABASE}", "MYSQL_USER=${MYSQL_USER}"]) {
                         sh 'docker compose pull'
-                        sh 'docker compose up -d backend frontend'
+                        sh 'docker compose up -d'
                     }   
                     
                     sh 'docker image prune -f'
