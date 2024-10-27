@@ -66,11 +66,11 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying with Docker Compose...'
-                    def mysqlRunning = sh(script: 'docker ps -q --filter "name=mysql"', returnStdout: true).trim()
+                    def mysqlRunning = sh(script: 'docker ps --filter "name=mysql" --filter "status=running" -q', returnStdout: true).trim()
                     if (!mysqlRunning) {
                         sh 'docker compose up -d mysql'
                     }
-                    def nginxRunning = sh(script: 'docker ps -q --filter "name=nginx"', returnStdout: true).trim()
+                    def nginxRunning = sh(script: 'docker ps --filter "name=nginx" --filter "status=running" -q', returnStdout: true).trim()
                     if (!nginxRunning) {
                         sh 'docker compose up -d nginx'
                     } 
