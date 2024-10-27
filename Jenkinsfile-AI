@@ -4,8 +4,7 @@ pipeline {
         DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun' 
         MYSQL_USER = credentials('MYSQL_USER')       
         MYSQL_PASSWORD = credentials('MYSQL_PASSWORD')           
-        MYSQL_DATABASE = credentials('MYSQL_DATABASE')      
-        SPRING_PROFILES_ACTIVE = 'prod'                       
+        MYSQL_DATABASE = credentials('MYSQL_DATABASE')                      
     }
 
     stages {
@@ -67,9 +66,9 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying with Docker Compose...'
-                    withEnv(["MYSQL_PASSWORD=${MYSQL_PASSWORD}", "MYSQL_DATABASE=${MYSQL_DATABASE}", "SPRING_PROFILES_ACTIVE=prod"]) {
-                        sh './docker-compose pull'
-                        sh './docker-compose up -d'
+                    withEnv(["MYSQL_PASSWORD=${MYSQL_PASSWORD}", "MYSQL_DATABASE=${MYSQL_DATABASE}", "MYSQL_USER=${MYSQL_USER}"]) {
+                        sh 'docker compose pull'
+                        sh 'docker compose up -d'
                     }   
                     sh 'docker logout'
                     echo 'Deploy Success!'
