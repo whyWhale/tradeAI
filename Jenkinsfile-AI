@@ -1,18 +1,18 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun'  // Docker Hub 자격 증명 ID
-        MYSQL_USER = credentials('MYSQL_USER')                    // MySQL 사용자
-        MYSQL_PASSWORD = credentials('MYSQL_PASSWORD')              // MySQL 비밀번호
-        MYSQL_DATABASE = credentials('MYSQL_DATABASE')              // MySQL 데이터베이스 이름
-        SPRING_PROFILES_ACTIVE = 'prod'                             // Spring 프로파일
+        DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun' 
+        MYSQL_USER = credentials('MYSQL_USER')       
+        MYSQL_PASSWORD = credentials('MYSQL_PASSWORD')           
+        MYSQL_DATABASE = credentials('MYSQL_DATABASE')      
+        SPRING_PROFILES_ACTIVE = 'prod'                       
     }
 
     stages {
         stage('Clone Repository') {
             steps {
                 script {
-                    echo 'Clone Repository...'
+                    echo 'Cloning Repository...'
                     git url: 'https://lab.ssafy.com/s11-final/S11P31A609.git', branch: 'develop', credentialsId: 'gitlab-access-jaehyun'
                     echo 'Repository Clone Success!'
                 }
@@ -22,6 +22,10 @@ pipeline {
         stage('Build Backend') {
             steps {
                 script {
+                    echo 'Building Backend Application...'
+                    sh './gradlew clean build -x test'
+                    echo 'Backend Application Build Success!'
+
                     echo 'Building Backend Image...'
                     sh 'docker build -t kimjaehyun158/trai-backend:latest -f BE/Dockerfile .'
                     echo 'Backend Image Build Success!'
@@ -33,7 +37,6 @@ pipeline {
             steps {
                 script {
                     echo 'Building Frontend Image...'
-                    // 프론트엔드 이미지 빌드
                     sh 'docker build -t kimjaehyun158/trai-frontend:latest -f FE/Trai/Dockerfile .'
                     echo 'Frontend Image Build Success!'
                 }
@@ -44,11 +47,8 @@ pipeline {
             steps {
                 script {
                     echo 'Pushing Images to Docker Hub...'
-                    // Docker Hub에 로그인하고 이미지 푸시
                     docker.withRegistry('https://registry.hub.docker.com/', DOCKER_HUB_CREDENTIALS_ID) {
-                        // 백엔드 이미지 푸시
                         sh 'docker push kimjaehyun158/trai-backend:latest'
-                        // 프론트엔드 이미지 푸시
                         sh 'docker push kimjaehyun158/trai-frontend:latest'
                     }
                     echo 'Images Push Success!'
