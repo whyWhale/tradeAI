@@ -21,24 +21,28 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                script {
-                    echo 'Building Backend Application...'
-                    sh './BE/gradlew clean build -x test'
-                    echo 'Backend Application Build Success!'
+                dir('BE') {
+                    script {
+                        echo 'Building Backend Application...'
+                        sh './gradlew clean build -x test'
+                        echo 'Backend Application Build Success!'
 
-                    echo 'Building Backend Image...'
-                    sh 'docker build -t kimjaehyun158/trai-backend:latest -f BE/Dockerfile .'
-                    echo 'Backend Image Build Success!'
+                        echo 'Building Backend Image...'
+                        sh 'docker build -t kimjaehyun158/trai-backend:latest -f Dockerfile .' // BE 디렉토리 내 Dockerfile 참조
+                        echo 'Backend Image Build Success!'
+                    }
                 }
             }
         }
 
         stage('Build Frontend') {
             steps {
-                script {
-                    echo 'Building Frontend Image...'
-                    sh 'docker build -t kimjaehyun158/trai-frontend:latest -f FE/Trai/Dockerfile .'
-                    echo 'Frontend Image Build Success!'
+                dir('FE/Trai') {
+                    script {
+                        echo 'Building Frontend Image...'
+                        sh 'docker build -t kimjaehyun158/trai-frontend:latest -f Dockerfile .'
+                        echo 'Frontend Image Build Success!'
+                    }
                 }
             }
         }
