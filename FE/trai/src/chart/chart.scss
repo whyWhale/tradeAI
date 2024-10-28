@@ -1,0 +1,95 @@
+.chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding: 10px 0;
+    border-bottom: 1px solid #eaeaea;
+  
+    .chart-price {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #d32f2f; /* 붉은색 가격 */
+    }
+  
+    .change-text {
+      font-size: 1rem;
+      color: #d32f2f;
+      margin-left: 10px;
+    }
+  
+    .chart-details {
+      display: flex;
+      gap: 16px;
+      font-size: 0.9rem;
+      color: #555;
+  
+      div {
+        &:first-child {
+          font-weight: bold;
+          color: #000;
+        }
+      }
+    }
+  }
+  
+  .coin-chart {
+    width: 100%;
+    height: 500px;
+    background-color: #f0f0f0;
+    margin: 20px 0;
+    border-radius: 8px;
+  }
+  
+  .chart-menu-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s;
+  
+      &:hover {
+        background-color: #0056b3;
+      }
+  
+      &:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.5);
+      }
+    }
+  }
+  
+  .ticker-container {
+    display: flex;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+  
+    img {
+      width: 24px;
+      height: 24px;
+      margin-right: 10px;
+    }
+  }
+  
