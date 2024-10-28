@@ -5,7 +5,7 @@ FROM node:18-alpine AS build
 WORKDIR /app
 
 # package.json만 복사하여 의존성 설치
-COPY FE/trai/package*.json ./
+COPY package*.json ./
 RUN npm install
 
 # 전체 파일 복사 및 빌드 실행
