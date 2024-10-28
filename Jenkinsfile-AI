@@ -71,9 +71,7 @@ pipeline {
                         sh 'docker compose up -d'
                     }   
                     
-                    sh 'docker image prune -f'
                     sh 'docker logout'
-                    sh 'docker system prune -a -f'
                     echo 'Deploy Success!'
                 }
             }
