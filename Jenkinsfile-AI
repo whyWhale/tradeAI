@@ -41,6 +41,7 @@ pipeline {
                         echo 'Building Frontend Application...'
                         sh 'npm install'      
                         sh 'npm run build' 
+                        sh 'docker cp ./dist nginx:/usr/share/nginx/html'
                         echo 'Frontend Application Build Success!'
 
                         echo 'Building Frontend Image...'
