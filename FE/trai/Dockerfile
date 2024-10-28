@@ -9,7 +9,7 @@ COPY FE/trai/package*.json ./
 RUN npm install
 
 # 전체 파일 복사 및 빌드 실행
-COPY FE/trai /app
+COPY . .
 RUN npm run build
 
 # Production stage
