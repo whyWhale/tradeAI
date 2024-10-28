@@ -38,11 +38,6 @@ pipeline {
             steps {
                 dir('FE/trai') {
                     script {
-                        echo 'Building Frontend Application...'
-                        sh 'npm install'      
-                        sh 'npm run build' 
-                        echo 'Frontend Application Build Success!'
-
                         echo 'Building Frontend Image...'
                         sh 'docker build -t kimjaehyun158/trai-frontend:latest .'
                         echo 'Frontend Image Build Success!'
