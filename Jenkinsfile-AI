@@ -73,6 +73,7 @@ pipeline {
                     
                     sh 'docker image prune -f'
                     sh 'docker logout'
+                    sh 'docker system prune -a -f'
                     echo 'Deploy Success!'
                 }
             }
