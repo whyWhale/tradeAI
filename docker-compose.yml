@@ -3,11 +3,12 @@ services:
     image: kimjaehyun158/trai-backend:latest
     container_name: backend
     environment:
-      SPRING_PROFILES_ACTIVE: prod
-      MYSQL_HOST: mysql
-      MYSQL_PORT: 3306
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}            
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}   
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: com.mysql.cj.jdbc.Driver
+      UPBIT_API_ACCESS_KEY: ${UPBIT_ACCESS_KEY}
+      UPBIT_API_SECRET_KEY: ${UPBIT_SECRET_KEY}
     expose:
       - "8080"
     networks:
