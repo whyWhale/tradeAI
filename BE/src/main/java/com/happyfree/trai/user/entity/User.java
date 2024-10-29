@@ -1,4 +1,4 @@
-package com.happyfree.trai.entity;
+package com.happyfree.trai.user.entity;
 
 import com.happyfree.trai.common.BaseEntity;
 

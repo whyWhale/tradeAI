@@ -1,4 +1,4 @@
-package com.happyfree.trai.controller;
+package com.happyfree.trai.user.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,13 +11,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "사용자")
-@RequestMapping("/api/users")
 @RestController
 public class UserController {
 
 	@Operation(summary = "회원가입")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
-	@PostMapping("/join")
+	@PostMapping("/api/users/join")
 	public void a() {
 
 	}
@@ -33,13 +32,6 @@ public class UserController {
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
 	@PostMapping("/logout")
 	public void c() {
-
-	}
-
-	@Operation(summary = "거래설정 [고려중]")
-	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
-	@GetMapping("/setting")
-	public void d() {
 
 	}
 }
