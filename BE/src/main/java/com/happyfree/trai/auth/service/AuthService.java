@@ -7,8 +7,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.happyfree.trai.user.repository.UserRepository;
 import com.happyfree.trai.user.entity.User;
+import com.happyfree.trai.user.repository.UserRepository;
 
 @Service
 public class AuthService implements UserDetailsService {
@@ -16,10 +16,11 @@ public class AuthService implements UserDetailsService {
 	@Autowired
 	UserRepository userRepository;
 
-	public CustomUserDetails getLoginUser() {
+	public User getLoginUser() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		if (principal instanceof CustomUserDetails) {
-			return (CustomUserDetails) principal;
+			CustomUserDetails detail = (CustomUserDetails)principal;
+			return userRepository.findByEmail(detail.getUsername()).orElseThrow(RuntimeException::new);
 		}
 
 		throw new RuntimeException("현재 로그인한 유저가 없습니다.");
