@@ -18,6 +18,7 @@ export default defineConfig({
         find: '@components',
         replacement: path.resolve(__dirname, 'src/components'),
       },
+      { find: '@data', replacement: path.resolve(__dirname, 'src/data'),},
       { find: '@layout', replacement: path.resolve(__dirname, 'src/layout') },
       { find: '@pages', replacement: path.resolve(__dirname, 'src/pages') },
       { find: '@router', replacement: path.resolve(__dirname, 'src/router') },
