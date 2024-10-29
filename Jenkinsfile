@@ -1,9 +1,8 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun'                     
+        DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun'                
     }
-
 
     stages {
         stage('Clone Repository') {
@@ -53,8 +52,10 @@ pipeline {
                     }
                     
                     echo 'Pushing Images to Docker Hub...'
-                    sh 'docker push kimjaehyun158/trai-backend:latest'
-                    sh 'docker push kimjaehyun158/trai-frontend:latest'
+                    sh '''
+                        docker push kimjaehyun158/trai-backend:latest
+                        docker push kimjaehyun158/trai-frontend:latest
+                    '''
                     echo 'Images Push Success!'
                 }
             }
@@ -64,25 +65,28 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying with Docker Compose...'
+                    
                     withCredentials([
-                        string(credentialsId: 'mysql-url', variable: 'MYSQL_URL'),
+                        string(credentialsId: 'mysql-database', variable: 'MYSQL_DATABASE'),
                         string(credentialsId: 'mysql-user', variable: 'MYSQL_USER'),
                         string(credentialsId: 'mysql-password', variable: 'MYSQL_PASSWORD'),
                         string(credentialsId: 'upbit-accesskey', variable: 'UPBIT_ACCESS_KEY'),
-                        string(credentialsId: 'upbit-secretkey', variable: 'UPBIT_SECRET_KEY')
+                        string(credentialsId: 'upbit-secretkey', variable: 'UPBIT_SECRET_KEY'),
+                        string(credentialsId: 'server-ip', variable: 'SERVER_IP')
                     ]) {
-                        withEnv([
-                            "SPRING_DATASOURCE_URL=${MYSQL_URL}",  
-                            "SPRING_DATASOURCE_USERNAME=${MYSQL_USER}",                 
-                            "SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}",             
-                            "UPBIT_API_ACCESS_KEY=${UPBIT_ACCESS_KEY}",                 
-                            "UPBIT_API_SECRET_KEY=${UPBIT_SECRET_KEY}"                    
-                        ]) {
-                            sh 'docker compose pull'
-                            sh 'docker compose up -d'
-                        }
+                        sh '''
+                            docker compose pull
+                            MYSQL_DATABASE=${MYSQL_DATABASE} \
+                            MYSQL_USER=${MYSQL_USER} \
+                            MYSQL_PASSWORD=${MYSQL_PASSWORD} \
+                            UPBIT_ACCESS_KEY=${UPBIT_ACCESS_KEY} \
+                            UPBIT_SECRET_KEY=${UPBIT_SECRET_KEY} \
+                            SERVER_IP=${SERVER_IP} \
+                            docker compose up -d
+                        '''
                     }
-                    
+                
+                    sh 'docker image prune -f'
                     sh 'docker logout'
                     echo 'Deploy Success!'
                 }
