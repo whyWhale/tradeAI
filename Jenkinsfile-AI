@@ -1,11 +1,9 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun' 
-        MYSQL_USER = credentials('MYSQL_USER')       
-        MYSQL_PASSWORD = credentials('MYSQL_PASSWORD')           
-        MYSQL_DATABASE = credentials('MYSQL_DATABASE')                      
+        DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun'                     
     }
+
 
     stages {
         stage('Clone Repository') {
@@ -66,14 +64,26 @@ pipeline {
             steps {
                 script {
                     echo 'Deploying with Docker Compose...'
-                    withEnv(["MYSQL_PASSWORD=${MYSQL_PASSWORD}", "MYSQL_DATABASE=${MYSQL_DATABASE}", "MYSQL_USER=${MYSQL_USER}"]) {
-                        sh 'docker compose pull'
-                        sh 'docker compose up -d'
-                    }   
+                    withCredentials([
+                        string(credentialsId: 'mysql-url', variable: 'MYSQL_URL'),
+                        string(credentialsId: 'mysql-user', variable: 'MYSQL_USER'),
+                        string(credentialsId: 'mysql-password', variable: 'MYSQL_PASSWORD'),
+                        string(credentialsId: 'upbit-accesskey', variable: 'UPBIT_ACCESS_KEY'),
+                        string(credentialsId: 'upbit-secretkey', variable: 'UPBIT_SECRET_KEY')
+                    ]) {
+                        withEnv([
+                            "SPRING_DATASOURCE_URL=${MYSQL_URL}",  
+                            "SPRING_DATASOURCE_USERNAME=${MYSQL_USER}",                 
+                            "SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}",             
+                            "UPBIT_API_ACCESS_KEY=${UPBIT_ACCESS_KEY}",                 
+                            "UPBIT_API_SECRET_KEY=${UPBIT_SECRET_KEY}"                    
+                        ]) {
+                            sh 'docker compose pull'
+                            sh 'docker compose up -d'
+                        }
+                    }
                     
-                    sh 'docker image prune -f'
                     sh 'docker logout'
-                    sh 'docker system prune -a -f'
                     echo 'Deploy Success!'
                 }
             }
