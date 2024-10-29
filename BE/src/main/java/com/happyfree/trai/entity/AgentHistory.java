@@ -1,6 +1,7 @@
 package com.happyfree.trai.entity;
 
-import jakarta.persistence.Column;
+import com.happyfree.trai.user.entity.User;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;

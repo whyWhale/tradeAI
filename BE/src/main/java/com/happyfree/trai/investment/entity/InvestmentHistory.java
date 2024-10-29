@@ -1,11 +1,11 @@
-package com.happyfree.trai.entity;
+package com.happyfree.trai.investment.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 import com.happyfree.trai.common.BaseEntity;
+import com.happyfree.trai.user.entity.User;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -54,6 +54,6 @@ public class InvestmentHistory extends BaseEntity {
 
 	private Integer tradesCount;
 
-	private String orderCreatedAt;
+	private LocalDateTime orderCreatedAt;
 
 }

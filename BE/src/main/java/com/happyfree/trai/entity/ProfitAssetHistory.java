@@ -3,6 +3,7 @@ package com.happyfree.trai.entity;
 import java.math.BigDecimal;
 
 import com.happyfree.trai.common.BaseEntity;
+import com.happyfree.trai.user.entity.User;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
