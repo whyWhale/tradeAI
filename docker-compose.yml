@@ -10,6 +10,7 @@ services:
       UPBIT_API_ACCESS_KEY: ${UPBIT_ACCESS_KEY}
       UPBIT_API_SECRET_KEY: ${UPBIT_SECRET_KEY}
       SPRING_JPA_HIBERNATE_DIALECT: org.hibernate.dialect.MySQLDialect
+      SPRING_APPLICATION_NAME: "trade ai"
     expose:
       - "8080"
     networks:
