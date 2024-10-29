@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 const UPBIT_URL = "wss://api.upbit.com/websocket/v1";
 
-const useNewData = () => {
+const useRealTimeData = () => {
   const [result, setResult] = useState();
   const [timer, setTimer] = useState(false);
   const ws = useRef(null);
@@ -39,7 +39,6 @@ const useNewData = () => {
       const message = JSON.parse(text);
       console.log("Received message:", message); // 수신된 메시지 출력
       const {
-        opening_price,
         low_price,
         high_price,
         trade_price,
@@ -47,14 +46,11 @@ const useNewData = () => {
         trade_volume,
       } = message;
       setResult({
-        open: opening_price,
         low: low_price,
         high: high_price,
-        close: trade_price,
+        price: trade_price,
         volume: trade_volume,
         timestamp:timestamp,
-        turnover:
-          ((opening_price + low_price + high_price + trade_price) / 4) *trade_volume,
       });
     };
 
@@ -70,4 +66,4 @@ const useNewData = () => {
   return result;
 };
 
-export default useNewData;
+export default useRealTimeData;

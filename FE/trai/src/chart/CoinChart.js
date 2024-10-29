@@ -2,11 +2,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { init, dispose } from "klinecharts";
 
 import Layout from "../Layout";
+import "./chart.scss"; 
 import useNewData from "../hooks/useNewData";
 import getInitialDataList from "../utils/getInitialDataList";
 import getLanguageOption from "../utils/getLanguageOption";
 import { chartStyle } from './chartStyle';
-
+import bitcoinIcon from './BC_Logo_.png';
+import useRealTimeData from "../hooks/useRealTimeData";
 
 const types = [
   { key: "candle_solid", text: "캔들" },
@@ -16,9 +18,16 @@ const types = [
 ];
 
 const CoinChart = () => {
-  const chartRef = useRef(null); // 차트 인스턴스를 저장할 ref
+  const chartRef = useRef(null);
   const [initialized, setInitialized] = useState(false);
-  const newData = useNewData();
+  const newData = useNewData(1); // newData 가져오기
+  const realTimeData = useRealTimeData(); // useRealTimeData 호출
+
+  // realTimeData가 null일 경우를 처리
+  const price = realTimeData ? realTimeData.price : null;
+  const high = realTimeData ? realTimeData.high : null;
+  const low = realTimeData ? realTimeData.low : null;
+  const volume = realTimeData ? realTimeData.volume : null;
 
   useEffect(() => {
     // 차트 초기화
@@ -43,19 +52,37 @@ const CoinChart = () => {
   }, []);
 
   useEffect(() => {
-    if (initialized) {
-      console.log("Updating chart with data", newData); // 데이터 확인
-
+    if (initialized) {      
       chartRef.current.updateData(newData); // 차트 업데이트
     }
   }, [newData, initialized]); // newData와 initialized가 변경될 때마다 실행
 
   return (
-    <Layout ticker="Bitcoin(BTC-KRW) 실시간 가격 조회">
-      <div id="coin-chart" className="coin-chart" />
-      <div className="chart-menu-container">
-        {types.map(({ key, text }) => {
-          return (
+    <div className="chart-container">
+      <Layout ticker={
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+            <img src={bitcoinIcon} alt="Bitcoin Icon" style={{ width: '24px', height: '24px', marginRight: '8px' }} />
+            <span>비트코인 BITCOIN</span>
+          </div>
+      }>
+        <div className="chart-header">
+          {price !== null && high !== null && low !== null && volume !== null ? (
+            <>
+              <div className="chart-price">{`${price.toLocaleString()} KRW`}</div>
+              <div className="change-text">+0.14%</div>
+              <div className="chart-details">
+                <div>고가: {`${high.toLocaleString()} KRW`}</div>
+                <div>저가: {`${low.toLocaleString()} KRW`}</div>
+                <div>거래량: {`${volume.toLocaleString()}`}</div>
+              </div>
+            </>
+          ) : (
+            <div>Loading...</div> // 데이터 로딩 중 메시지
+          )}
+        </div>
+        <div id="coin-chart" className="coin-chart" />
+        <div className="chart-menu-container">
+          {types.map(({ key, text }) => (
             <button
               key={key}
               onClick={() => {
@@ -69,10 +96,10 @@ const CoinChart = () => {
             >
               {text}
             </button>
-          );
-        })}
-      </div>
-    </Layout>
+          ))}
+        </div>
+      </Layout>
+    </div>
   );
 };
 
