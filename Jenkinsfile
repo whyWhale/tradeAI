@@ -106,7 +106,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'mattermost-webhook-url', variable: 'WEBHOOK_URL')]) {
                     mattermostSend(
                         color: 'good',
-                        message: "✅Build Success!\n${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\n${Commit_Message}\n🔗[GitLab](${GitLab_URL}) 🔗[Jenkins](${env.BUILD_URL})",
+                        message: "✅ Build Success!\n${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\n${Commit_Message}\n[GitLab](${GitLab_URL}) [Jenkins](${env.BUILD_URL})",
                         endpoint: WEBHOOK_URL,
                         channel: 'A609-Jenkins'
                     )
@@ -125,7 +125,7 @@ pipeline {
                 withCredentials([string(credentialsId: 'mattermost-webhook-url', variable: 'WEBHOOK_URL')]) {
                     mattermostSend(
                         color: 'danger',
-                        message: "❌Build Failed!\n${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\n${Commit_Message}\n🔗[GitLab](${GitLab_URL}) 🔗[Jenkins](${env.BUILD_URL})",
+                        message: "❌ Build Failed!\n${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\n${Commit_Message}\n[GitLab](${GitLab_URL}) [Jenkins](${env.BUILD_URL})",
                         endpoint: WEBHOOK_URL,
                         channel: 'A609-Jenkins'
                     )
