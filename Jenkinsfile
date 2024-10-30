@@ -99,10 +99,12 @@ pipeline {
             script {
                 def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
                 def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                def Commit_Message = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim() // 최신 커밋 메시지 가져오기
+                
                 withCredentials([string(credentialsId: 'mattermost-webhook-url', variable: 'WEBHOOK_URL')]) {
                     mattermostSend(
                         color: 'good',
-                        message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\n(<${env.BUILD_URL}|Details>)",
+                        message: "Build Success!: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\nCommit Message: ${Commit_Message}\n(<${env.BUILD_URL}|Details>)",
                         endpoint: WEBHOOK_URL,
                         channel: 'A609-Jenkins'
                     )
@@ -114,10 +116,12 @@ pipeline {
             script {
                 def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
                 def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                def Commit_Message = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim() 
+                
                 withCredentials([string(credentialsId: 'mattermost-webhook-url', variable: 'WEBHOOK_URL')]) {
                     mattermostSend(
                         color: 'danger',
-                        message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\n(<${env.BUILD_URL}|Details>)",
+                        message: "Build Failed!: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\nCommit Message: ${Commit_Message}\n(<${env.BUILD_URL}|Details>)",
                         endpoint: WEBHOOK_URL,
                         channel: 'A609-Jenkins'
                     )
