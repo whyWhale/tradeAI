@@ -22,8 +22,6 @@ services:
       - "5173"
     networks:
       - trai_network
-    depends_on:
-      - backend
       
 networks:
   trai_network:
