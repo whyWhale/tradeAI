@@ -10,9 +10,11 @@ const BitbotModal = ({ onClose }) => {
 
   const [currentStep, setCurrentStep] = useState(data.root);
   const [history, setHistory] = useState([]);
+  const [backStack, setBackStack] = useState([]);
 
   useEffect(()=> {
     setHistory([]);
+    setBackStack([]);
   }, []);
 
   const handleOptionClick = (option) => {
@@ -23,6 +25,7 @@ const BitbotModal = ({ onClose }) => {
     };
 
     setHistory([...history, newHistoryItem]);
+    setBackStack([...backStack, currentStep]);
 
     if(option.next) {
       setCurrentStep(data[option.next]);
@@ -34,6 +37,19 @@ const BitbotModal = ({ onClose }) => {
       })
     }
   }
+
+  const handleReset = () => {
+    setCurrentStep(data.root);
+    setBackStack([]);
+  };
+
+  const handleBack = () => {
+    if(history.length > 0){
+      const previousStep = backStack[backStack.length-1];
+      setBackStack(backStack.slice(0,-1));
+      setCurrentStep(previousStep);
+    }
+  };
 
    return (
     <ModalOverlay>
@@ -58,7 +74,7 @@ const BitbotModal = ({ onClose }) => {
           ))}
         </HistoryContainer>
 
-        <div className='mt-10 border border-black p-2'>
+        <div className='mt-2 p-2'>
           {!currentStep.answer && (
             <div className='flex gap-2 items-center mt-1 mb-3'>
               <p className='bg-trai-mint w-[14px] h-[14px] rounded-full'></p>
@@ -75,6 +91,15 @@ const BitbotModal = ({ onClose }) => {
               </OptionButton>
             ))}
           </Options>
+
+          <div className='flex gap-2 mt-4'>
+            <ControlButton onClick={handleBack} disabled={backStack.length === 0}>
+              뒤로가기
+            </ControlButton>
+            <ControlButton onClick={handleReset}>
+              처음으로
+            </ControlButton>
+          </div>
         </div>
       </ModalContainer>
     </ModalOverlay>
@@ -122,10 +147,10 @@ const CloseButton = styled.button`
 `;
 
 const HistoryContainer = styled.div`
-  margin-top: 30px;
+  margin: 30px 10px 10px;
   max-height: 500px;
   overflow-y: auto;
-  margin-bottom: 10px;
+  padding: 10px;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -186,5 +211,17 @@ const OptionButton = styled.button`
   border-radius: 20px;
 `
 
+const ControlButton = styled.button`
+  background-color: var(--trai-mint);
+  color: var(--trai-white);
+  border-radius: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: var(--trai-disabled);
+  }
+`
 
 export default BitbotModal;
