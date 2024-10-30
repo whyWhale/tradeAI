@@ -43,9 +43,17 @@ const BitbotModal = ({ onClose }) => {
         <HistoryContainer>
           {history.map((item, index) => (
             <HistoryItem key={index}>
-              <Question>{item.question}</Question>
+              <div className='flex gap-2 items-center'>
+                <div className='bg-trai-mint w-[14px] h-[14px] rounded-full'></div>
+                <Question>{item.question}</Question>
+              </div>
               <SelectedOption>{item.selectedOption}</SelectedOption>
-              {item.answer && <Answer>{item.answer}</Answer>}
+              {item.answer && (
+                <div className='flex gap-2 items-center'>
+                  {/* 찌그러짐 이슈 <div className='bg-trai-mint w-[14px] h-[14px] rounded-full'></div> */}
+                  <Answer>{item.answer}</Answer>
+                </div>
+              )}
             </HistoryItem>
           ))}
         </HistoryContainer>
@@ -53,13 +61,13 @@ const BitbotModal = ({ onClose }) => {
         <div className='mt-10 border border-black p-2'>
           {!currentStep.answer && (
             <div className='flex gap-2 items-center mt-1 mb-3'>
-              <div className='bg-trai-mint w-[14px] h-[14px] rounded-full'></div>
+              <p className='bg-trai-mint w-[14px] h-[14px] rounded-full'></p>
               <Question>{currentStep.question}</Question>
             </div>
           )}
-          {currentStep.answer && (
+          {/* {currentStep.answer && (
             <Answer>{currentStep.answer}</Answer>
-          )}
+          )} */}
           <Options>
             {currentStep.options.map((option, index) => (
               <OptionButton key={index} onClick={()=> handleOptionClick(option)}>
@@ -118,6 +126,20 @@ const HistoryContainer = styled.div`
   max-height: 500px;
   overflow-y: auto;
   margin-bottom: 10px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--trai-mint);
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: var(--trai-disabled);
+  }
 `;
 
 const HistoryItem = styled.div`
@@ -125,6 +147,7 @@ const HistoryItem = styled.div`
   gap: 10px;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 `;
 
 const Question = styled.div`
@@ -141,11 +164,12 @@ const Answer = styled.div`
 const SelectedOption = styled.div`
   background-color: var(--trai-mint);
   color: var(--trai-white);
-  display: flex;
-  justify-content: end;
+  display: inline-block;
   font-size: 16px;
   padding: 5px 10px;
   border-radius: 20px;
+  max-width: fit-content;
+  align-self: flex-end;
 `;
 
 const Options = styled.div`
