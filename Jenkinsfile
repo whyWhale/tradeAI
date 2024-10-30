@@ -99,12 +99,14 @@ pipeline {
             script {
                 def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
                 def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
-                def Commit_Message = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim() // 최신 커밋 메시지 가져오기
+                def Commit_Message = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
+                def Commit_SHA = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+                def GitLab_URL = "https://lab.ssafy.com/s11-final/S11P31A609/-/commit/${Commit_SHA}"
                 
                 withCredentials([string(credentialsId: 'mattermost-webhook-url', variable: 'WEBHOOK_URL')]) {
                     mattermostSend(
                         color: 'good',
-                        message: "Build Success!: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\nCommit Message: ${Commit_Message}\n(<${env.BUILD_URL}|Details>)",
+                        message: "Build Success!: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\nCommit Message: ${Commit_Message}\n[GitLab Commit Link](${GitLab_URL})\n(<${env.BUILD_URL}|Details>)",
                         endpoint: WEBHOOK_URL,
                         channel: 'A609-Jenkins'
                     )
@@ -117,11 +119,13 @@ pipeline {
                 def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
                 def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
                 def Commit_Message = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim() 
+                def Commit_SHA = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+                def GitLab_URL = "https://lab.ssafy.com/s11-final/S11P31A609/-/commit/${Commit_SHA}"
                 
                 withCredentials([string(credentialsId: 'mattermost-webhook-url', variable: 'WEBHOOK_URL')]) {
                     mattermostSend(
                         color: 'danger',
-                        message: "Build Failed!: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\nCommit Message: ${Commit_Message}\n(<${env.BUILD_URL}|Details>)",
+                        message: "Build Failed!: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\nCommit Message: ${Commit_Message}\n[GitLab Commit Link](${GitLab_URL})\n(<${env.BUILD_URL}|Details>)",
                         endpoint: WEBHOOK_URL,
                         channel: 'A609-Jenkins'
                     )
