@@ -1,4 +1,4 @@
-package com.happyfree.trai.controller;
+package com.happyfree.trai.profitasset.controller;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;

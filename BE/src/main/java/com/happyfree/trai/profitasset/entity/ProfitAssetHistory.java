@@ -1,6 +1,7 @@
-package com.happyfree.trai.entity;
+package com.happyfree.trai.profitasset.entity;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import com.happyfree.trai.common.BaseEntity;
 import com.happyfree.trai.user.entity.User;
@@ -42,5 +43,7 @@ public class ProfitAssetHistory extends BaseEntity {
 	private BigDecimal accumulationProfitRatio;
 
 	private Byte coinAssetPercentage;
+
+	private LocalDate settlementDate;
 
 }

@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.happyfree.trai.auth.detail.CustomUserDetails;
 import com.happyfree.trai.user.entity.User;
 import com.happyfree.trai.user.repository.UserRepository;
 
