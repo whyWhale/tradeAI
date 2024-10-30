@@ -1,4 +1,4 @@
-package com.happyfree.trai.auth.service;
+package com.happyfree.trai.auth.detail;
 
 import java.util.Collection;
 import java.util.List;
