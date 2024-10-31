@@ -1,25 +1,11 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
 const UPBIT_URL = "wss://api.upbit.com/websocket/v1";
 
-const useRealTimeData = () => {
-  const [result, setResult] = useState();
-  const [timer, setTimer] = useState(false);
+const useRealTimeData = (setData) => {
   const ws = useRef(null);
 
   useEffect(() => {
-    // timer 종료 시 트리거
-    if (timer) {
-      alert("만료되었습니다.");
-      ws.current.close();
-    }
-  }, [timer]);
-
-  useEffect(() => {
-    // 10분 지나면 종료 처리
-    setTimeout(() => {
-      setTimer(true);
-    }, 10 * 60 * 1000);
-
     ws.current = new WebSocket(UPBIT_URL);
 
     ws.current.onopen = () => {
@@ -30,40 +16,42 @@ const useRealTimeData = () => {
       ws.current.send(JSON.stringify(message));
     };
 
-    ws.current.onclose = () => {
-      console.log("DISCONNECTED");
-    };
-
     ws.current.onmessage = async (event) => {
       const text = await new Response(event.data).text();
       const message = JSON.parse(text);
-      console.log("Received message:", message); // 수신된 메시지 출력
       const {
+        opening_price,
         low_price,
         high_price,
         trade_price,
         timestamp,
-        trade_volume,
+        acc_trade_volume_24h,
+        acc_trade_price_24h,
       } = message;
-      setResult({
+
+      // 실시간 데이터 업데이트
+      const newData = {
+        open: opening_price,
         low: low_price,
         high: high_price,
-        price: trade_price,
-        volume: trade_volume,
-        timestamp:timestamp,
-      });
+        close: trade_price,
+        tradeVolume: acc_trade_volume_24h,
+        tradePrice: acc_trade_price_24h,
+        timestamp: Math.floor(timestamp / 60000) * 60000, // 1분 단위로 조정
+      };
+
+      setData(prevData => [...prevData, newData].slice(-720)); // 최신 720개의 데이터 유지
     };
 
     ws.current.onerror = (event) => {
-      console.log("Error", event);
+      console.error("WebSocket error:", event);
       ws.current.close();
     };
 
     return () => {
       ws.current.close();
     };
-  }, []);
-  return result;
+  }, [setData]);
 };
 
 export default useRealTimeData;

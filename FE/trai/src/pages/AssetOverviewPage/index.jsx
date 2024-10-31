@@ -1,6 +1,9 @@
 import React from 'react';
 import NavBar from '@components/NavBar';
 import './index.scss';
+import DecisionStatusChart from  '../../components/DonutChart/index.jsx';
+import CoinChart from '../../components/BitcoinChart/CoinChart.jsx';
+import Timeline from '../../components/Timeline/index.jsx';
 
 const AssetOverview = () => {
   return (
@@ -45,23 +48,25 @@ const AssetOverview = () => {
           <div className="card-content">총 거래 횟수</div>
           <div style={{ fontSize: "17px" }}>200</div>
           <div className="card-content">첫 거래 날짜</div>
-          <div className="card-content" style={{ color: "#48BB78" }}>2024월 9월 17일 04:01:36</div>
+          <div className="card-content" style={{ color: "#A0AEC0" }}>2024월 9월 17일 04:01:36</div>
           <div className="card-content">마지막 거래 날짜</div>
-          <div className="card-content" style={{ color: "#48BB78" }}>2024월 10월 30일 14:10:00</div>
+          <div className="card-content" style={{ color: "#A0AEC0" }}>2024월 10월 30일 14:10:00</div>
           
         </div>
         
         <div className="info-card-large">
-          <div className="card-title">최근 거래 요약</div>
+          <div className="card-title">최근 거래 30회 의사결정 현황</div>
+            <DecisionStatusChart />
         </div>
 
         {/* Bottom Chart and Sidebar */}
         <div className="chart">
-          <div className="card-title">비트코인 차트</div>
+            <CoinChart/>
         </div>
         
         <div className="sidebar">
           <div className="card-title">투자 내역</div>
+          <Timeline/>
         </div>
       </div>
     </div>
