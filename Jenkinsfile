@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun'                
+        DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun'             
     }
 
     stages {
@@ -95,8 +95,42 @@ pipeline {
     }
 
     post {
-        success {
-            echo 'All Completed Successfully!'
+       success {
+            script {
+                def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                def Commit_Message = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim()
+                def Commit_SHA = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+                def GitLab_URL = "https://lab.ssafy.com/s11-final/S11P31A609/-/commit/${Commit_SHA}"
+                
+                withCredentials([string(credentialsId: 'mattermost-webhook-url', variable: 'WEBHOOK_URL')]) {
+                    mattermostSend(
+                        color: 'good',
+                        message: "✅ Build Success!\n${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\n${Commit_Message}\n[GitLab](${GitLab_URL}) [Jenkins](${env.BUILD_URL})",
+                        endpoint: WEBHOOK_URL,
+                        channel: 'A609-Jenkins'
+                    )
+                }
+                echo 'All Completed Successfully!'
+            }
+        }
+        failure {
+            script {
+                def Author_Name = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Email = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                def Commit_Message = sh(script: "git log -1 --pretty=%B", returnStdout: true).trim() 
+                def Commit_SHA = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
+                def GitLab_URL = "https://lab.ssafy.com/s11-final/S11P31A609/-/commit/${Commit_SHA}"
+                
+                withCredentials([string(credentialsId: 'mattermost-webhook-url', variable: 'WEBHOOK_URL')]) {
+                    mattermostSend(
+                        color: 'danger',
+                        message: "❌ Build Failed!\n${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_Name}(${Author_Email})\n${Commit_Message}\n[GitLab](${GitLab_URL}) [Jenkins](${env.BUILD_URL})",
+                        endpoint: WEBHOOK_URL,
+                        channel: 'A609-Jenkins'
+                    )
+                }
+            }
         }
     }
 }

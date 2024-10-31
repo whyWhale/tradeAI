@@ -3,6 +3,7 @@ services:
     image: kimjaehyun158/trai-backend:latest
     container_name: backend
     environment:
+      TZ: Asia/Seoul
       SPRING_PROFILES_ACTIVE: prod
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
@@ -18,6 +19,8 @@ services:
   frontend:
     image: kimjaehyun158/trai-frontend:latest
     container_name: frontend
+    environment:
+      TZ: Asia/Seoul
     expose:
       - "5173"
     networks:
