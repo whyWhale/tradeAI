@@ -41,5 +41,6 @@ upbit:
 springdoc:
   swagger-ui:
     path: /api/swagger-ui/index.html
+    disable-swagger-default-url: true
   api-docs:
     path: /api/v3/api-docs
