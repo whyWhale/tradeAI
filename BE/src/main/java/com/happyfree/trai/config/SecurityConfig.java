@@ -6,6 +6,7 @@ import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import java.util.Arrays;
 import java.util.Collections;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +23,7 @@ import com.happyfree.trai.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+@Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -65,6 +67,7 @@ public class SecurityConfig {
 						response.setStatus(SC_OK);
 					})
 					.failureHandler((request, response, exception) -> {
+						log.error("login unauthorized------------------------------------------");
 						response.setStatus(SC_UNAUTHORIZED);
 					})
 					.permitAll()
