@@ -1,11 +1,11 @@
-package com.happyfree.trai.entity;
+package com.happyfree.trai.profitasset.entity;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 import com.happyfree.trai.common.BaseEntity;
+import com.happyfree.trai.user.entity.User;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-public class InvestmentHistory extends BaseEntity {
+public class ProfitAssetHistory extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -30,30 +30,20 @@ public class InvestmentHistory extends BaseEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 
-	private String uuid;
+	private BigDecimal startingAssets;
 
-	private String side;
+	private BigDecimal endingAssets;
 
-	private String orderType = "LOC";
+	private BigDecimal dailyProfitAndLoss;
 
-	private String price;
+	private BigDecimal dailyProfitRatio;
 
-	private String state;
+	private BigDecimal accumulationProfitAndLoss;
 
-	private String market = "KRW-BTC";
+	private BigDecimal accumulationProfitRatio;
 
-	private String volume;
+	private Byte coinAssetPercentage;
 
-	private String reservedFee;
-
-	private String executedVolume;
-
-	private BigDecimal executedFunds;
-
-	private BigDecimal averagePrice;
-
-	private Integer tradesCount;
-
-	private String orderCreatedAt;
+	private LocalDate settlementDate;
 
 }

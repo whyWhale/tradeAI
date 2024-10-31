@@ -1,9 +1,8 @@
 pipeline {
     agent any
     environment {
-        DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun'                     
+        DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun'                
     }
-
 
     stages {
         stage('Clone Repository') {
@@ -15,84 +14,33 @@ pipeline {
                 }
             }
         }
-
-        stage('Build Backend') {
-            steps {
-                dir('BE') {
-                    script {
-                        echo 'Building Backend Application...'
-                        sh './gradlew clean build -x test'
-                        echo 'Backend Application Build Success!'
-
-                        echo 'Building Backend Image...'
-                        sh 'docker build -t kimjaehyun158/trai-backend:latest .'
-                        echo 'Backend Image Build Success!'
-                    }
-                }
-            }
-        }
-
-        stage('Build Frontend') {
-            steps {
-                dir('FE/trai') {
-                    script {
-                        echo 'Building Frontend Image...'
-                        sh 'docker build -t kimjaehyun158/trai-frontend:latest .'
-                        echo 'Frontend Image Build Success!'
-                    }
-                }
-            }
-        }
-
-        stage('Push Images to Docker Hub') {
-            steps {
-                script {
-                    echo 'Logging in to Docker Hub...'
-                    withCredentials([usernamePassword(credentialsId: DOCKER_HUB_CREDENTIALS_ID, usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-                        sh 'echo "${DOCKER_HUB_PASSWORD}" | docker login -u "${DOCKER_HUB_USERNAME}" --password-stdin'
-                    }
-                    
-                    echo 'Pushing Images to Docker Hub...'
-                    sh 'docker push kimjaehyun158/trai-backend:latest'
-                    sh 'docker push kimjaehyun158/trai-frontend:latest'
-                    echo 'Images Push Success!'
-                }
-            }
-        }
-
-        stage('Deploy with Docker Compose') {
-            steps {
-                script {
-                    echo 'Deploying with Docker Compose...'
-                    withCredentials([
-                        string(credentialsId: 'mysql-url', variable: 'MYSQL_URL'),
-                        string(credentialsId: 'mysql-user', variable: 'MYSQL_USER'),
-                        string(credentialsId: 'mysql-password', variable: 'MYSQL_PASSWORD'),
-                        string(credentialsId: 'upbit-accesskey', variable: 'UPBIT_ACCESS_KEY'),
-                        string(credentialsId: 'upbit-secretkey', variable: 'UPBIT_SECRET_KEY')
-                    ]) {
-                        withEnv([
-                            "SPRING_DATASOURCE_URL=${MYSQL_URL}",  
-                            "SPRING_DATASOURCE_USERNAME=${MYSQL_USER}",                 
-                            "SPRING_DATASOURCE_PASSWORD=${MYSQL_PASSWORD}",             
-                            "UPBIT_API_ACCESS_KEY=${UPBIT_ACCESS_KEY}",                 
-                            "UPBIT_API_SECRET_KEY=${UPBIT_SECRET_KEY}"                    
-                        ]) {
-                            sh 'docker compose pull'
-                            sh 'docker compose up -d'
-                        }
-                    }
-                    
-                    sh 'docker logout'
-                    echo 'Deploy Success!'
-                }
-            }
-        }
     }
 
     post {
         success {
-            echo 'All Completed Successfully!'
+            script {
+                def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                mattermostSend(
+                    color: 'good',
+                    message: "빌드 성공: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+                    endpoint: credentials('mattermost-webhook-url'),
+                    channel: 'A609-Jenkins'
+                )
+                echo 'All Completed Successfully!'
+            }
+        }
+        failure {
+            script {
+                def Author_ID = sh(script: "git show -s --pretty=%an", returnStdout: true).trim()
+                def Author_Name = sh(script: "git show -s --pretty=%ae", returnStdout: true).trim()
+                mattermostSend(
+                    color: 'danger',
+                    message: "빌드 실패: ${env.JOB_NAME} #${env.BUILD_NUMBER} by ${Author_ID}(${Author_Name})\n(<${env.BUILD_URL}|Details>)",
+                    endpoint: credentials('mattermost-webhook-url'),
+                    channel: 'A609-Jenkins'
+                )
+            }
         }
     }
 }
