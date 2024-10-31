@@ -21,11 +21,10 @@ public class SwaggerConfig {
         return new OpenAPI()
                 .info(new Info()
                         .title(applicationName + " API 명세서")
-                        .description("Trai AI API Documentation")
                         .version("0.1")
                         .license(new License()
                                 .name(applicationName)
-                                .url("https://www.trai-ai.site")
+                                .url("http://localhost:8080/")
                         )
                 )
                 .servers(List.of(
