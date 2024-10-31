@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { IoMdHelpCircleOutline } from 'react-icons/io';
@@ -7,7 +8,8 @@ import { IoDocumentTextOutline } from 'react-icons/io5';
 import { PiChartLineUpLight, PiHeadCircuit } from 'react-icons/pi';
 import { MdCurrencyBitcoin, MdOutlineLogout } from 'react-icons/md';
 
-const NavBar = () => {
+const NavBar = ({openModal}) => {
+
   return (
     <div className="flex flex-col items-center">
       <LogoArea>
@@ -48,11 +50,15 @@ const NavBar = () => {
         <div className="text-trai-white text-[24px] p-2"><IoMdHelpCircleOutline /></div>
         <div className="text-trai-white text-[16px] ml-2">도움이 필요하신가요?</div>
         <div className="text-trai-white text-[12px] ml-2">아래의 버튼을 눌러 확인해보세요.</div>
-        <BotButton>BitBot에게 물어보기</BotButton>
+        <BotButton onClick={openModal}>BitBot에게 물어보기</BotButton>
       </BotArea>
     </div>
   );
 };
+
+NavBar.propTypes = {
+  openModal: PropTypes.func.isRequired,
+}
 
 const StyledNavLink = styled(NavLink)`
   display: flex;

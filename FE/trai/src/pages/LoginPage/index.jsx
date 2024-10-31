@@ -6,9 +6,28 @@ const LoginPage = () => {
 
   const { register, handleSubmit, formState: {errors}} = useForm();
 
-  const onSubmit = (data) => {
-    console.log("로그인 성공: " , data);
-  }
+  // to: front , 로그아웃 url = http://localhost:8080/logout
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+          username: 'admin@naver.com',
+          password: '1'
+        }),
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+      } else {
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
+  };
 
   return (
     <div className="flex w-full justify-between">
@@ -16,7 +35,7 @@ const LoginPage = () => {
         <div className="font-helveticaBold text-trai-mint text-[28px] mb-1">Welcome Back</div>
         <div className="font-helveticaLight text-trai-greytext text-[16px] mb-8">로그인 후 TRAI 서비스를 이용해보세요</div>
         
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit(handleLogin())} className="flex flex-col gap-6">
           <InputGroup>
             <label className="ml-1">Email</label>
             <Input
