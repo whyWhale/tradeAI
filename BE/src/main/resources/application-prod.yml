@@ -37,3 +37,12 @@ upbit:
   api:
     accesskey: ${UPBIT_ACCESS_KEY}
     secretkey: ${UPBIT_SECRET_KEY}
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+    path: /api/swagger-ui/index.html
+    url: /api/v3/api-docs
+    config-url: /api/v3/api-docs/swagger-config
+  api-docs:
+    path: /api/v3/api-docs
