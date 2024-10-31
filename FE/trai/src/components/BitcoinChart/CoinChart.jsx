@@ -30,6 +30,9 @@ const CoinChart = () => {
   const tradePrice = realTimeData ? realTimeData.tradePrice : null;
   const changeRate = realTimeData ? `${(realTimeData.changeRate * 100).toFixed(2)}%` : null;
   const changePrice = realTimeData ? `${(realTimeData.change==="RISE"?"▲":(realTimeData.change==="FALL"?"▼":""))}${realTimeData.changePrice}`: null;
+  const priceStyle = {
+    color: realTimeData?.change === "RISE" ? "#F13B3B" : realTimeData?.change === "FALL" ? "#3030FD" : "#CBD5E0"
+  };
   const formatValue = (value) => (value !== null && value !== undefined ? value.toLocaleString() : "0");
 
   useEffect(() => {
@@ -62,7 +65,7 @@ const CoinChart = () => {
       </div>
       {price !== null && high !== null && low !== null && tradeVolume !== null && tradePrice !== null && changePrice !== null && changeRate !== null ? (
         <>
-          <div className="chart-price-container">
+          <div className="chart-price-container" style={ priceStyle }>
             <div className="chart-price">{`${formatValue(price)}`}<span style={{ fontSize: '16px' }}>KRW</span></div>
             <div className="change-text">
               <span className="signed-price-rate">{`${formatValue(changeRate)}`}</span>
