@@ -82,7 +82,7 @@ public class SecurityConfig {
 			.authorizeHttpRequests((auth) -> auth
 				.requestMatchers("/api/users/login", "api/users/join").permitAll()
 				.requestMatchers("/swagger", "/h2-console*/", "/h2-console/**", "/swagger-ui.html", "/swagger-ui/**",
-					"/api-docs", "/api-docs/**", "/v3/api-docs/**", "/api/swagger-ui/index.html").permitAll()
+					"/api-docs", "/api-docs/**", "/v3/api-docs/**", "/api/swagger-ui/**").permitAll()
 				.anyRequest().authenticated());
 
 		http.csrf(csrf -> csrf.disable());
