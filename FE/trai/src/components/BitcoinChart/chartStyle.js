@@ -24,14 +24,14 @@ export const chartStyle = {
       // 'candle_solid'|'candle_stroke'|'candle_up_stroke'|'candle_down_stroke'|'ohlc'|'area'
       type: 'candle_solid',
       bar: {
-        upColor: '#2D9CDB',
-        downColor: '#EB5757',
+        upColor: '#EB5757',
+        downColor: '#2D9CDB',
         noChangeColor: '#888888',
-        upBorderColor: '#2D9CDB',
-        downBorderColor: '#EB5757',
+        upBorderColor: '#EB5757',
+        downBorderColor: '#2D9CDB',
         noChangeBorderColor: '#888888',
-        upWickColor: '#2D9CDB',
-        downWickColor: '#EB5757',
+        upWickColor: '#EB5757',
+        downWickColor: '#2D9CDB',
         noChangeWickColor: '#888888'
       },
       area: {
@@ -76,8 +76,8 @@ export const chartStyle = {
         },
         last: {
           show: true,
-          upColor: '#2DC08E',
-          downColor: '#F92855',
+          upColor: '#EB5757',
+          downColor: '#2D9CDB',
           noChangeColor: '#888888',
           line: {
             show: true,
