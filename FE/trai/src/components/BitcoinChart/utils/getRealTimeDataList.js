@@ -25,7 +25,8 @@ const useRealTimeData = (setData) => {
         high_price,
         trade_price,
         timestamp,
-        trade_volume,
+        acc_trade_volume_24h,
+        acc_trade_price_24h,
       } = message;
 
       // 실시간 데이터 업데이트
@@ -34,7 +35,8 @@ const useRealTimeData = (setData) => {
         low: low_price,
         high: high_price,
         close: trade_price,
-        volume: trade_volume,
+        tradeVolume: acc_trade_volume_24h,
+        tradePrice: acc_trade_price_24h,
         timestamp: Math.floor(timestamp / 60000) * 60000, // 1분 단위로 조정
       };
 

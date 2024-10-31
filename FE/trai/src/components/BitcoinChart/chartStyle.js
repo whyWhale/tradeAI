@@ -1,6 +1,6 @@
-const blue = '#2196F3'; // 원하는 색상 코드로 설정
+const blue = '#4FD1C5'; // 원하는 색상 코드로 설정
 const getAlphaBlue = (alpha) => {
-  return `rgba(33, 150, 243, ${alpha})`; // alpha 값에 따라 변경
+  return `rgba(79, 209, 197, ${alpha})`; // alpha 값에 따라 변경
 };
 export const chartStyle = {
     grid: {
