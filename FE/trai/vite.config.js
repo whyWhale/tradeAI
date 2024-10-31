@@ -6,6 +6,13 @@ const __dirname = path.resolve();
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  server: {
+    host: true,
+    port: 5173,
+    watch: {
+      usePolling: true
+    }
+  },
   publicDir: 'public',
   assetsInclude: ['**/*.TTF', '**/*.ttf'],
 
