@@ -3,6 +3,7 @@ package com.happyfree.trai.config;
 import static jakarta.servlet.http.HttpServletResponse.SC_OK;
 import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class SecurityConfig {
 					public CorsConfiguration getCorsConfiguration(
 						HttpServletRequest request) {
 						CorsConfiguration configuration = new CorsConfiguration();
-						configuration.setAllowedOrigins(Collections.singletonList(allowedOrigins));
+						configuration.setAllowedOrigins(Arrays.asList(allowedOrigins, "https://www.trai-ai.site"));
 						configuration.addAllowedOriginPattern("http://localhost:5173");
 						configuration.setAllowedMethods(Collections.singletonList("*"));
 						configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -82,7 +83,8 @@ public class SecurityConfig {
 			.authorizeHttpRequests((auth) -> auth
 				.requestMatchers("/api/users/login", "api/users/join").permitAll()
 				.requestMatchers("/swagger", "/h2-console*/", "/h2-console/**", "/swagger-ui.html", "/swagger-ui/**",
-					"/api-docs", "/api-docs/**", "/v3/api-docs/**", "/api/swagger-ui/**").permitAll()
+					"/api-docs", "/api-docs/**", "/v3/api-docs/**", "/api/swagger-ui/**", "/api/swagger-ui.html",
+					"/api/v3/api-docs/**").permitAll()
 				.anyRequest().authenticated());
 
 		http.csrf(csrf -> csrf.disable());
