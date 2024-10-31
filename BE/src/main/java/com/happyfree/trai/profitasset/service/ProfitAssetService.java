@@ -17,6 +17,8 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -57,7 +59,7 @@ public class ProfitAssetService {
 
 	String serverUrl = "https://api.upbit.com";
 
-	public InvestSummary getSummary() throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException {
+	public InvestSummary sum() throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException {
 		User loginUser = authService.getLoginUser();
 		Optional<ProfitAssetHistory> pah = profitAssetRepository.findByUserAndSettlementDate(loginUser,
 			LocalDate.now().minusDays(1));
@@ -338,4 +340,8 @@ public class ProfitAssetService {
 		return totalWithdrawal;
 	}
 
+	public Page<ProfitAssetHistory> detail(Pageable page) {
+		User loginUser = authService.getLoginUser();
+		return profitAssetRepository.findByUser(loginUser, page);
+	}
 }
