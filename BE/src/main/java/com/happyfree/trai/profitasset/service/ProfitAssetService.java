@@ -89,13 +89,13 @@ public class ProfitAssetService {
 		NoSuchAlgorithmException,
 		UnsupportedEncodingException,
 		JsonProcessingException {
-		BigDecimal todayWithdrawalSum = with();
-		BigDecimal todayDepositSum = td();
-		BigDecimal myBitCoinVolume = bcv();
-		BigDecimal myTotalMoney = tm();
-		BigDecimal currentBitcoinPrice = bitp();
-		BigDecimal totalBitCoinValue = myBitCoinVolume.multiply(currentBitcoinPrice);
-		return myBitCoinVolume.multiply(currentBitcoinPrice).add(myTotalMoney).subtract(initialAsset).add(todayWithdrawalSum).subtract(todayDepositSum).divide(initialAsset.add(todayDepositSum), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100"));
+		BigDecimal with = with();
+		BigDecimal de = td();
+		BigDecimal bcv = bcv();
+		BigDecimal m = tm();
+		BigDecimal cBp = bitp();
+		BigDecimal tbv = bcv.multiply(cBp);
+		return bcv.multiply(cBp).add(m).subtract(initialAsset).add(with).subtract(de).divide(initialAsset.add(de), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100"));
 	}
 
 	public BigDecimal with() throws NoSuchAlgorithmException, UnsupportedEncodingException {
