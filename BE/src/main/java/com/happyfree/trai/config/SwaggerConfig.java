@@ -30,7 +30,7 @@ public class SwaggerConfig {
                 )
                 .servers(List.of(
                         new Server()
-                                .url("https://www.trai-ai.site/api")
+                                .url("https://www.trai-ai.site")
                                 .description("Production server"),
                         new Server()
                                 .url("http://localhost:8080")
