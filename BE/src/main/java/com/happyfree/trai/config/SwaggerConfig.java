@@ -19,19 +19,22 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title(applicationName + " API 명세서")
+                .info(new Info()
+                        .title(applicationName + " API 명세서")
+                        .description("Trai AI API Documentation")
                         .version("0.1")
-                        .license(
-                                new License()
-                                        .name(applicationName)
-                                        .url("http://localhost:8080/")
+                        .license(new License()
+                                .name(applicationName)
+                                .url("https://www.trai-ai.site")
                         )
                 )
                 .servers(List.of(
-                new Server()
-                        .url("https://www.trai-ai.site/api")
-                        .description("Production server")
+                        new Server()
+                                .url("https://www.trai-ai.site")
+                                .description("Production server"),
+                        new Server()
+                                .url("http://localhost:8080")
+                                .description("Local Development server")
                 ));
     }
 }
-
