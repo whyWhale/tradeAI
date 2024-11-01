@@ -366,10 +366,16 @@ public class ProfitAssetService {
 	}
 
 	public List<AssetProportion> assetProportion() {
-		List<ProfitAssetHistory> all = profitAssetRepository.findAll();
+		User loginUser = authService.getLoginUser();
+		List<ProfitAssetHistory> all = profitAssetRepository.findByUser(loginUser);
 		List<AssetProportion> list = new ArrayList<>();
+		int count=30;
 		for (ProfitAssetHistory profitAssetHistory : all) {
 			list.add(AssetProportion.builder().coinPercentage(profitAssetHistory.getCoinAssetPercentage()).createdAt(profitAssetHistory.getSettlementDate()).build());
+			count--;
+			if(count==0){
+				break;
+			}
 		}
 		return list;
 

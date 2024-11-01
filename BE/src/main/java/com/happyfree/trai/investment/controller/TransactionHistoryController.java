@@ -27,7 +27,7 @@ public class TransactionHistoryController {
 	@Autowired
 	TransactionHistoryService transactionHistoryService;
 
-	@Operation(summary = "일별 자산 비중 추이 조회")
+	@Operation(summary = "일별 거래 내역 조회")
 	@ApiResponses(value = {
 		@ApiResponse(
 			responseCode = "200",
