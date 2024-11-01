@@ -1,27 +1,28 @@
 import { useState, useEffect, useRef } from "react";
-
 const UPBIT_URL = "wss://api.upbit.com/websocket/v1";
 
 const useRealTimeData = () => {
-  const [result, setResult] = useState(null);
+  const [result, setResult] = useState();
   const [timer, setTimer] = useState(false);
   const ws = useRef(null);
 
   useEffect(() => {
-    // 타이머 만료 시 WebSocket 종료
+    // timer 종료 시 트리거
     if (timer) {
-      alert("세션이 만료되었습니다.");
-      if (ws.current) {
-        ws.current.close();
-      }
+      alert("만료되었습니다.");
+      ws.current.close();
     }
   }, [timer]);
 
-  const connectWebSocket = () => {
+  useEffect(() => {
+    // 10분 지나면 종료 처리
+    setTimeout(() => {
+      setTimer(true);
+    }, 10 * 60 * 1000);
+
     ws.current = new WebSocket(UPBIT_URL);
 
     ws.current.onopen = () => {
-      console.log("WebSocket 연결 성공");
       const message = [
         { ticket: "nexoneunji" },
         { type: "ticker", codes: ["KRW-BTC"], isOnlyRealtime: true },
@@ -30,21 +31,13 @@ const useRealTimeData = () => {
     };
 
     ws.current.onclose = () => {
-      console.log("WebSocket 연결 종료");
-      // 타이머 만료가 아닌 경우에만 재연결 시도
-      if (!timer) {
-        setTimeout(() => {
-          console.log("WebSocket 재연결 시도");
-          connectWebSocket();
-        }, 5000); // 5초 후 재연결 시도
-      }
+      console.log("DISCONNECTED");
     };
 
     ws.current.onmessage = async (event) => {
       const text = await new Response(event.data).text();
       const message = JSON.parse(text);
-      console.log("Received message:", message);
-
+      console.log("Received message:", message); // 수신된 메시지 출력
       const {
         low_price,
         high_price,
@@ -54,48 +47,30 @@ const useRealTimeData = () => {
         acc_trade_price_24h,
         change,
         signed_change_price,
-        change_rate,
+        change_rate,            
       } = message;
-
       setResult({
         low: low_price,
         high: high_price,
         price: trade_price,
         tradeVolume: acc_trade_volume_24h,
         tradePrice: acc_trade_price_24h,
-        change,
+        change: change,
         changeRate: change_rate,
         changePrice: signed_change_price,
-        timestamp,
+        timestamp:timestamp,
       });
     };
 
     ws.current.onerror = (event) => {
-      console.log("WebSocket 오류 발생:", event);
-      if (ws.current) {
-        ws.current.close();
-      }
+      console.log("Error", event);
+      ws.current.close();
     };
-  };
-
-  useEffect(() => {
-    // WebSocket 연결 설정
-    connectWebSocket();
-
-    // 10분 타이머 설정 후 만료 처리
-    const timeout = setTimeout(() => {
-      setTimer(true);
-    }, 10 * 60 * 1000);
 
     return () => {
-      // 컴포넌트 언마운트 시 WebSocket 닫기 및 타이머 정리
-      if (ws.current) {
-        ws.current.close();
-      }
-      clearTimeout(timeout);
+      ws.current.close();
     };
   }, []);
-
   return result;
 };
 
