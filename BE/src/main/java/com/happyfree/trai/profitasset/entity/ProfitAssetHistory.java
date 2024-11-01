@@ -3,7 +3,7 @@ package com.happyfree.trai.profitasset.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import com.happyfree.trai.common.BaseEntity;
+import com.happyfree.trai.global.common.BaseEntity;
 import com.happyfree.trai.user.entity.User;
 
 import jakarta.persistence.Entity;

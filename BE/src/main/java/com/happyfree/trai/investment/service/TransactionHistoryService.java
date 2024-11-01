@@ -19,7 +19,7 @@ public class TransactionHistoryService {
 	@Autowired
 	InvestmentHistoryRepository investmentHistoryRepository;
 
-	public List<LatestTransactionHistory> latest() {
+	public List<LatestTransactionHistory> getLatestTransaction() {
 		User loginUser = authService.getLoginUser();
 
 		List<InvestmentHistory> all = investmentHistoryRepository.findByUserOrderByCreatedAt(loginUser);

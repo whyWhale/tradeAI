@@ -1,4 +1,4 @@
-package com.happyfree.trai.config;
+package com.happyfree.trai.global.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

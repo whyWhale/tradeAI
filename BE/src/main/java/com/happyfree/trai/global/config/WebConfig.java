@@ -1,4 +1,4 @@
-package com.happyfree.trai.config;
+package com.happyfree.trai.global.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

@@ -1,4 +1,4 @@
-package com.happyfree.trai.common;
+package com.happyfree.trai.global.common;
 
 import java.time.LocalDateTime;
 
