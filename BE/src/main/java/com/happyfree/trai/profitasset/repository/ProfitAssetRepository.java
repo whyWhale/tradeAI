@@ -15,6 +15,8 @@ import com.happyfree.trai.user.entity.User;
 public interface ProfitAssetRepository extends JpaRepository<ProfitAssetHistory, Long> {
 	Page<ProfitAssetHistory> findByUser(User user, Pageable pageable);
 
+	List<ProfitAssetHistory> findByUser(User user);
+
 	Optional<ProfitAssetHistory> findByUserAndSettlementDate(@Param("user") User user,
 		@Param("yesterday") LocalDate yesterday);
 }
