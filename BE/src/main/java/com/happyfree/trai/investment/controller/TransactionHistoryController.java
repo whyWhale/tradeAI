@@ -24,15 +24,18 @@ public class TransactionHistoryController {
 	@Operation(summary = "일별 자산 비중 추이 조회")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
 	@GetMapping("")
-	public void a(@RequestParam("year") String year, @RequestParam("month") String month, @RequestParam("day") String day) {
+	public ResponseEntity<?> a(@RequestParam("year") String year, @RequestParam("month") String month,
+		@RequestParam("day") String day) {
 
+		return ResponseEntity.ok(transactionHistoryService.today(year, month, day));
 	}
 
 	@Operation(summary = "투자내역 이번달 조회 - 최근 거래 내역 조회")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
 	@GetMapping("/latest")
-	public ResponseEntity<?> getInvestmentSummary() {
-		return ResponseEntity.ok(transactionHistoryService.getLatestTransaction());
+	public ResponseEntity<?> b() {
+
+		return ResponseEntity.ok(transactionHistoryService.latest());
 	}
 
 }
