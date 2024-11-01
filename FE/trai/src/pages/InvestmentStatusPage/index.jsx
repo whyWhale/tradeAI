@@ -1,17 +1,32 @@
-import NavBar from '@components/NavBar'
+import React from 'react';
+import NavBar from '@components/NavBar';
+import './index.scss';
 
 const InvestmentStatus = () => {
   return (
-    <div className='flex bg-trai-background min-h-screen'>
-      <aside className='w-72 border border-blue-500'>
-        <NavBar/>
+    <div className="investment-status">
+      {/* Left Sidebar */}
+      <aside className="navbar">
+        <NavBar />
       </aside>
-      <section className='flex-1'>
-        <div>투자 현황 페이지입니다.</div>
-      </section>
-    </div>
-  )
 
-}
+      {/* Main Content */}
+      <div className="main-content">
+        {/* 투자 손익 상세 */}
+        <div className="info-card-large">
+          <div className="card-title">투자 손익 상세</div>
+        </div>
+        {/* 자산 비중 추이 */}
+        <div className="info-card-medium">
+          <div className="card-title">자산 비중 추이</div>
+        </div>
+        
+        <div className="info-card-small">
+          <div className="card-title">현재 자산 비중</div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default InvestmentStatus;
