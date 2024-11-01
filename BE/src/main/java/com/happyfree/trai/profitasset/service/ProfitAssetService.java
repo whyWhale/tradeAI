@@ -84,7 +84,7 @@ public class ProfitAssetService {
 			}
 		}
 
-		return InvestSummary.builder().totalTransactionCount(list.size()).latestTransactionTime(list.get(0).getOrderCreatedAt()).latestTransactionTime(list.get(list.size() - 1).getOrderCreatedAt()).bid(bid).ask(ask).hold(hold).profit(profit).build();
+		return InvestSummary.builder().totalTransactionCount(list.size()).firstTransactionTime(list.get(0).getOrderCreatedAt()).lastTransactionTime(list.get(list.size() - 1).getOrderCreatedAt()).bid(bid).ask(ask).hold(hold).profit(profit).build();
 	}
 
 	private BigDecimal tp(BigDecimal initialAsset) throws
