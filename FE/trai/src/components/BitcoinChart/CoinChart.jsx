@@ -8,6 +8,7 @@ import getLanguageOption from "./utils/getLanguageOption";
 import { chartStyle } from './chartStyle';
 import bitcoinIcon from './BC_Logo.png';
 import useRealTimeData from "./hooks/useRealTimeData";
+import useNewData from "./hooks/useNewData";
 import ChartButton from './ChartButton'
 
 const types = [
@@ -21,7 +22,8 @@ const CoinChart = () => {
   const chartRef = useRef(null);
   const [initialized, setInitialized] = useState(false);
   const [activeType, setActiveType] = useState("candle_solid"); // 현재 활성화된 차트 유형 상태
-  const realTimeData = useRealTimeData();
+  const realTimeData = useRealTimeData(); // chart detail용 데이터
+  const newData = useNewData(1); // chart용 데이터 가져오기
 
   const price = realTimeData ? realTimeData.price : null;
   const high = realTimeData ? realTimeData.high : null;
@@ -44,8 +46,8 @@ const CoinChart = () => {
 
     const fetchData = async () => {
       const dataList = await getInitialDataList(1);
-      chartRef.current.applyNewData(dataList);
-      setInitialized(true);
+      chartRef.current.applyNewData(dataList);  // 초기 데이터 적용
+      setInitialized(true); // 초기화 완료
     };
 
     fetchData();
@@ -54,6 +56,13 @@ const CoinChart = () => {
       dispose("coin-chart");
     };
   }, []);
+
+  useEffect(() => {
+    if (initialized) {      
+      chartRef.current.updateData(newData); // 차트 업데이트
+    }
+  }, [newData, initialized]); // newData와 initialized가 변경될 때마다 실행
+
 
   return (
     <>
