@@ -1,0 +1,44 @@
+server:
+  servlet:
+    session:
+      timeout: 12h
+
+mysql:
+  database: trade_ai
+  username: root
+  password: root
+
+spring:
+  application:
+    name: trade_ai
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/${mysql.database}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useUnicode=true
+    username: ${mysql.username}
+    password: ${mysql.password}
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+    generate-ddl: true
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+      data-locations: "classpath:db/data.sql"
+
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: debug
+    org.springframework.security: debug
+
+upbit:
+  api:
+    accesskey: 7sfo8Vcm4xc279da5NsXbVfWmxIRBgtuGxSwTx5S
+    secretkey: mbokyQoKerB2DTOyata0WCZKcSfhdfflsxiauV8r

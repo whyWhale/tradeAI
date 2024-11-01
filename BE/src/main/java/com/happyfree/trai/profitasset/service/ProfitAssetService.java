@@ -100,6 +100,7 @@ public class ProfitAssetService {
 		return bcv.multiply(cBp).add(m).subtract(initialAsset).add(with).subtract(de).divide(initialAsset.add(de), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100"));
 	}
 
+	// 오늘 출금 금액 전부
 	public BigDecimal with() throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		HashMap<String, String> params = new HashMap<>();
 		params.put("currency", "XRP");
@@ -177,6 +178,7 @@ public class ProfitAssetService {
 		return totalWithdrawal;
 	}
 
+	// 현재 비트코인 시세
 	public BigDecimal bitp() throws JsonProcessingException {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
@@ -197,6 +199,7 @@ public class ProfitAssetService {
 		return new BigDecimal(openingPrice);
 	}
 
+	// 총 평가액
 	public BigDecimal bcv() throws JsonProcessingException {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
@@ -228,6 +231,7 @@ public class ProfitAssetService {
 		return BigDecimal.ZERO;
 	}
 
+	// 총 보유액( 자산 - 평가액)
 	public BigDecimal tm() throws JsonProcessingException {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
@@ -262,6 +266,7 @@ public class ProfitAssetService {
 		return BigDecimal.ZERO;
 	}
 
+	// 오늘의 전체 입금액
 	public BigDecimal td() throws NoSuchAlgorithmException, UnsupportedEncodingException {
 		HashMap<String, String> params = new HashMap<>();
 		params.put("currency", "KRW");
@@ -343,5 +348,8 @@ public class ProfitAssetService {
 	public Page<ProfitAssetHistory> detail(Pageable page) {
 		User loginUser = authService.getLoginUser();
 		return profitAssetRepository.findByUser(loginUser, page);
+	}
+
+	public void save() {
 	}
 }

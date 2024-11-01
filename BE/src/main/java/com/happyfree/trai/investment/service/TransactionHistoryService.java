@@ -19,8 +19,6 @@ public class TransactionHistoryService {
 	AuthService authService;
 	@Autowired
 	InvestmentHistoryRepository investmentHistoryRepository;
-    @Autowired
-    private UserRepository userRepository;
 
 	public List<TodayTransactionHistory> today(String year, String month, String day) {
 		User loginUser = authService.getLoginUser();
