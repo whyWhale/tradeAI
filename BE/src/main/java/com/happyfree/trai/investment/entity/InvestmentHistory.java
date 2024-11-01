@@ -54,6 +54,10 @@ public class InvestmentHistory extends BaseEntity {
 
 	private Integer tradesCount;
 
+	private BigDecimal totalEvaluation;
+
+	private BigDecimal totalAmount;
+
 	private LocalDateTime orderCreatedAt;
 
 }
