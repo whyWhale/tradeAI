@@ -34,7 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.happyfree.trai.auth.service.AuthService;
 import com.happyfree.trai.investment.entity.InvestmentHistory;
 import com.happyfree.trai.investment.repository.InvestmentHistoryRepository;
-import com.happyfree.trai.profitasset.controller.dto.InvestSummary;
+import com.happyfree.trai.profitasset.dto.InvestSummary;
 import com.happyfree.trai.profitasset.entity.ProfitAssetHistory;
 import com.happyfree.trai.profitasset.repository.ProfitAssetRepository;
 import com.happyfree.trai.user.entity.User;

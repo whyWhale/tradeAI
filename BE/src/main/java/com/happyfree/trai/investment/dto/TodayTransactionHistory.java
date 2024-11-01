@@ -1,4 +1,4 @@
-package com.happyfree.trai.investment.controller.dto;
+package com.happyfree.trai.investment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

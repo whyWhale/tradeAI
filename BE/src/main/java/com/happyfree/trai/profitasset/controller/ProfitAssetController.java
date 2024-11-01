@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.happyfree.trai.profitasset.controller.dto.InvestSummary;
+import com.happyfree.trai.profitasset.dto.InvestSummary;
 import com.happyfree.trai.profitasset.service.ProfitAssetService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,7 +39,7 @@ public class ProfitAssetController {
 	@ApiResponses(value = {
 		@ApiResponse(
 			responseCode = "200",
-			description = "퀴즈 가져오기 성공",
+			description = "투자 요약 가져오기",
 			content = @Content(schema = @Schema(type = "string", example = "success", implementation = InvestSummary.class))
 		)
 	})

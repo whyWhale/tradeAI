@@ -1,4 +1,4 @@
-package com.happyfree.trai.investment.controller.dto;
+package com.happyfree.trai.investment.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
