@@ -1,5 +1,6 @@
 import { useState } from 'react';
 
+import DailyTradeHistory from '@components/DailyTradeHistory';
 import NavBar from '@components/NavBar';
 import BitBot from '@components/BitBot';
 
@@ -15,7 +16,7 @@ const TradeDetails = () => {
         <NavBar openModal={openModal} />
       </aside>
       <section className='flex-1'>
-        <div>거래 내역 상세 페이지입니다.</div>
+        <div><DailyTradeHistory /></div>
         {isModalOpen && <BitBot onClose={closeModal} />}
       </section>
     </div>
