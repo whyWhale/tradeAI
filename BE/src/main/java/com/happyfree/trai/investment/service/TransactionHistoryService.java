@@ -46,7 +46,7 @@ public class TransactionHistoryService {
 		return todayTransactionHistories;
 	}
 
-	public List<LatestTransactionHistory> getLatestTransaction() {
+	public List<LatestTransactionHistory> latest() {
 		User loginUser = authService.getLoginUser();
 
 		List<InvestmentHistory> all = investmentHistoryRepository.findByUserOrderByCreatedAt(loginUser);
@@ -68,4 +68,5 @@ public class TransactionHistoryService {
 
 		return latestTransactionHistories;
 	}
+
 }
