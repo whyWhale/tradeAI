@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +30,9 @@ public class ProfitAssetController {
 	ProfitAssetService profitAssetService;
 
 	@Operation(summary = "투자손익 조회")
-	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
+	@ApiResponses(value = {
+		@ApiResponse(responseCode = "200", content = @Content(schema = @Schema(implementation = Page.class)))
+	})
 	@GetMapping("")
 	public ResponseEntity<?> a(Pageable pageable) {
 		return ResponseEntity.ok(profitAssetService.detail(pageable));

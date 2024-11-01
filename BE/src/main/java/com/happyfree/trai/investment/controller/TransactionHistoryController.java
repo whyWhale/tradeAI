@@ -7,9 +7,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.happyfree.trai.investment.dto.LatestTransactionHistory;
+import com.happyfree.trai.investment.dto.TodayTransactionHistory;
 import com.happyfree.trai.investment.service.TransactionHistoryService;
+import com.happyfree.trai.profitasset.dto.AssetProportion;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,7 +28,13 @@ public class TransactionHistoryController {
 	TransactionHistoryService transactionHistoryService;
 
 	@Operation(summary = "일별 자산 비중 추이 조회")
-	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
+	@ApiResponses(value = {
+		@ApiResponse(
+			responseCode = "200",
+			description = "조회 성공",
+			content = @Content(array = @ArraySchema(schema = @Schema(implementation = TodayTransactionHistory.class)))
+		)
+	})
 	@GetMapping("")
 	public ResponseEntity<?> a(@RequestParam("year") String year, @RequestParam("month") String month,
 		@RequestParam("day") String day) {
@@ -31,7 +43,13 @@ public class TransactionHistoryController {
 	}
 
 	@Operation(summary = "투자내역 이번달 조회 - 최근 거래 내역 조회")
-	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
+	@ApiResponses(value = {
+		@ApiResponse(
+			responseCode = "200",
+			description = "조회 성공",
+			content = @Content(array = @ArraySchema(schema = @Schema(implementation = LatestTransactionHistory.class)))
+		)
+	})
 	@GetMapping("/latest")
 	public ResponseEntity<?> b() {
 
