@@ -3,6 +3,7 @@ package com.happyfree.trai.profitasset.entity;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.happyfree.trai.global.common.BaseEntity;
 import com.happyfree.trai.user.entity.User;
 
@@ -27,6 +28,7 @@ public class ProfitAssetHistory extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
 
@@ -42,7 +44,7 @@ public class ProfitAssetHistory extends BaseEntity {
 
 	private BigDecimal accumulationProfitRatio;
 
-	private Byte coinAssetPercentage;
+	private double coinAssetPercentage;
 
 	private LocalDate settlementDate;
 

@@ -34,6 +34,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.happyfree.trai.auth.service.AuthService;
 import com.happyfree.trai.investment.entity.InvestmentHistory;
 import com.happyfree.trai.investment.repository.InvestmentHistoryRepository;
+import com.happyfree.trai.profitasset.dto.AssetProportion;
 import com.happyfree.trai.profitasset.dto.InvestSummary;
 import com.happyfree.trai.profitasset.entity.ProfitAssetHistory;
 import com.happyfree.trai.profitasset.repository.ProfitAssetRepository;
@@ -63,14 +64,19 @@ public class ProfitAssetService {
 		User loginUser = authService.getLoginUser();
 		Optional<ProfitAssetHistory> pah = profitAssetRepository.findByUserAndSettlementDate(loginUser,
 			LocalDate.now().minusDays(1));
-		BigDecimal ia = profitAssetRepository.findByUserAndSettlementDate(loginUser, LocalDate.now().minusDays(1)).get().getStartingAssets();
+		BigDecimal ia = profitAssetRepository.findByUserAndSettlementDate(loginUser, LocalDate.now().minusDays(1))
+			.get()
+			.getStartingAssets();
 		BigDecimal yp = BigDecimal.ZERO;
 		if (pah.isPresent()) {
 			yp = pah.get().getDailyProfitRatio();
 		}
 		BigDecimal todayProfitRatio = tp(ia);
-		BigDecimal profit = yp.add(BigDecimal.ONE).multiply(BigDecimal.ONE.add(todayProfitRatio.divide(BigDecimal.valueOf(100)))).subtract(BigDecimal.ONE);
-		List<InvestmentHistory> list = investmentHistoryRepository.findByUserOrderByCreatedAt(authService.getLoginUser());
+		BigDecimal profit = yp.add(BigDecimal.ONE)
+			.multiply(BigDecimal.ONE.add(todayProfitRatio.divide(BigDecimal.valueOf(100))))
+			.subtract(BigDecimal.ONE);
+		List<InvestmentHistory> list = investmentHistoryRepository.findByUserOrderByCreatedAt(
+			authService.getLoginUser());
 		int bid = 0, hold = 0, ask = 0;
 		for (int i = 0; i < list.size(); i++) {
 			InvestmentHistory ih = list.get(i);
@@ -84,7 +90,15 @@ public class ProfitAssetService {
 			}
 		}
 
-		return InvestSummary.builder().totalTransactionCount(list.size()).firstTransactionTime(list.get(0).getOrderCreatedAt()).lastTransactionTime(list.get(list.size() - 1).getOrderCreatedAt()).bid(bid).ask(ask).hold(hold).profit(profit).build();
+		return InvestSummary.builder()
+			.totalTransactionCount(list.size())
+			.firstTransactionTime(list.get(0).getOrderCreatedAt())
+			.lastTransactionTime(list.get(list.size() - 1).getOrderCreatedAt())
+			.bid(bid)
+			.ask(ask)
+			.hold(hold)
+			.profit(profit)
+			.build();
 	}
 
 	private BigDecimal tp(BigDecimal initialAsset) throws
@@ -97,7 +111,13 @@ public class ProfitAssetService {
 		BigDecimal m = tm();
 		BigDecimal cBp = bitp();
 		BigDecimal tbv = bcv.multiply(cBp);
-		return bcv.multiply(cBp).add(m).subtract(initialAsset).add(with).subtract(de).divide(initialAsset.add(de), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100"));
+		return bcv.multiply(cBp)
+			.add(m)
+			.subtract(initialAsset)
+			.add(with)
+			.subtract(de)
+			.divide(initialAsset.add(de), 2, BigDecimal.ROUND_HALF_UP)
+			.multiply(new BigDecimal("100"));
 	}
 
 	public BigDecimal with() throws NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -343,5 +363,15 @@ public class ProfitAssetService {
 	public Page<ProfitAssetHistory> detail(Pageable page) {
 		User loginUser = authService.getLoginUser();
 		return profitAssetRepository.findByUser(loginUser, page);
+	}
+
+	public List<AssetProportion> assetProportion() {
+		List<ProfitAssetHistory> all = profitAssetRepository.findAll();
+		List<AssetProportion> list = new ArrayList<>();
+		for (ProfitAssetHistory profitAssetHistory : all) {
+			list.add(AssetProportion.builder().coinPercentage(profitAssetHistory.getCoinAssetPercentage()).createdAt(profitAssetHistory.getSettlementDate()).build());
+		}
+		return list;
+
 	}
 }
