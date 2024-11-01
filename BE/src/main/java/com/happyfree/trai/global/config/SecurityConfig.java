@@ -1,4 +1,4 @@
-package com.happyfree.trai.config;
+package com.happyfree.trai.global.config;
 
 import static jakarta.servlet.http.HttpServletResponse.SC_OK;
 import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
@@ -65,7 +65,7 @@ public class SecurityConfig {
 		http
 			.formLogin(form -> form.successHandler((request, response, authentication) -> {
 						response.setStatus(SC_OK);
-					})
+					}).loginProcessingUrl("/api/users/login")
 					.failureHandler((request, response, exception) -> {
 						log.error("login unauthorized------------------------------------------");
 						response.setStatus(SC_UNAUTHORIZED);
@@ -74,7 +74,7 @@ public class SecurityConfig {
 			)
 			.logout(logout -> logout.logoutSuccessHandler((request, response, authentication) -> {
 					response.setStatus(HttpServletResponse.SC_OK);
-				})
+				}).logoutUrl("/api/users/logout")
 			);
 
 		http.exceptionHandling((exceptionHandlingConfigurer) ->

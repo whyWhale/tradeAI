@@ -6,10 +6,9 @@ const LoginPage = () => {
 
   const { register, handleSubmit, formState: {errors}} = useForm();
 
-  // to: front , 로그아웃 url = http://localhost:8080/logout
   const handleLogin = async () => {
     try {
-      const response = await fetch('http://localhost:8080/login', {
+      const response = await fetch('https://https://www.trai-ai.site/api/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -26,6 +25,24 @@ const LoginPage = () => {
       }
     } catch (error) {
       console.error("Login error:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const response = await fetch('https://https://www.trai-ai.site/api/users/logout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+      } else {
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
     }
   };
 
