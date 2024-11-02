@@ -34,12 +34,14 @@ public class InvestmentHistory extends BaseEntity {
 
 	private String side;
 
+	@Builder.Default
 	private String orderType = "LOC";
 
 	private String price;
 
 	private String state;
 
+	@Builder.Default
 	private String market = "KRW-BTC";
 
 	private String volume;
