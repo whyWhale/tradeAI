@@ -48,4 +48,7 @@ public class ProfitAssetHistory extends BaseEntity {
 
 	private LocalDate settlementDate;
 
+	public void updateId(Long id) {
+		this.id = id;
+	}
 }
