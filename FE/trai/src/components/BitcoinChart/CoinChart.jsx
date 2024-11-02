@@ -4,6 +4,7 @@ import { init, dispose } from "klinecharts";
 import Layout from "./Layout";
 import "./chart.scss"; 
 import getInitialDataList from "./utils/getInitialDataList";
+import getInitialDetailList from "./utils/getInitialDetailList";
 import getLanguageOption from "./utils/getLanguageOption";
 import { chartStyle } from './chartStyle';
 import bitcoinIcon from './BC_Logo.png';
@@ -24,18 +25,24 @@ const CoinChart = () => {
   const [activeType, setActiveType] = useState("candle_solid"); // 현재 활성화된 차트 유형 상태
   const realTimeData = useRealTimeData(); // chart detail용 데이터
   const newData = useNewData(1); // chart용 데이터 가져오기
+  const [chartDetail, setChartDetail] = useState(null); // chartDetail을 상태로 관리
 
-  const price = realTimeData ? realTimeData.price : null;
-  const high = realTimeData ? realTimeData.high : null;
-  const low = realTimeData ? realTimeData.low : null;
-  const tradeVolume = realTimeData ? realTimeData.tradeVolume : null;
-  const tradePrice = realTimeData ? realTimeData.tradePrice : null;
-  const changeRate = realTimeData ? `${(realTimeData.changeRate * 100).toFixed(2)}%` : null;
-  const changePrice = realTimeData ? `${(realTimeData.change==="RISE"?"▲":(realTimeData.change==="FALL"?"▼":""))}${realTimeData.changePrice}`: null;
-  const priceStyle = {
-    color: realTimeData?.change === "RISE" ? "#F13B3B" : realTimeData?.change === "FALL" ? "#3030FD" : "#CBD5E0"
-  };
   const formatValue = (value) => (value !== null && value !== undefined ? value.toLocaleString() : "0");
+
+  const updateChartDetail = (data) => {
+    setChartDetail({
+        price: data.price,
+        high: data.high,
+        low: data.low,
+        tradeVolume: data.tradeVolume,
+        tradePrice: data.tradePrice,
+        changeRate: `${(data.changeRate * 100).toFixed(2)}%`,
+        changePrice: `${data.change === "RISE" ? "▲" : data.change === "FALL" ? "▼" : ""}${data.changePrice}`,
+        priceStyle: {
+            color: data.change === "RISE" ? "#F13B3B" : data.change === "FALL" ? "#3030FD" : "#CBD5E0"
+        }
+    });
+  };
 
   useEffect(() => {
     chartRef.current = init("coin-chart"); 
@@ -45,8 +52,15 @@ const CoinChart = () => {
     });
 
     const fetchData = async () => {
-      const dataList = await getInitialDataList(1);
-      chartRef.current.applyNewData(dataList);  // 초기 데이터 적용
+      const chartDataList = await getInitialDataList(1);
+      const detailDataList = await getInitialDetailList();
+      if (chartRef.current) {
+        chartRef.current.applyNewData(chartDataList); // 초기 데이터 적용
+      }
+
+      if (detailDataList && detailDataList[0]) {
+        updateChartDetail(detailDataList[0]);
+      }
       setInitialized(true); // 초기화 완료
     };
 
@@ -57,11 +71,19 @@ const CoinChart = () => {
     };
   }, []);
 
+
+
   useEffect(() => {
-    if (initialized) {      
+    if (initialized && newData) {      
       chartRef.current.updateData(newData); // 차트 업데이트
     }
   }, [newData, initialized]); // newData와 initialized가 변경될 때마다 실행
+
+  useEffect(() => {
+    if (realTimeData) {
+      updateChartDetail(realTimeData); // 실시간 데이터로 chartDetail 업데이트
+    }
+  }, [realTimeData]);// realTimeData 변경될 때마다 실행
 
 
   return (
@@ -72,20 +94,20 @@ const CoinChart = () => {
         <span>비트코인 </span>
         <span style={{ fontSize: '16px' }}>&nbsp;BTC/KRW</span>
       </div>
-      {price !== null && high !== null && low !== null && tradeVolume !== null && tradePrice !== null && changePrice !== null && changeRate !== null ? (
+      {chartDetail ? (
         <>
-          <div className="chart-price-container" style={ priceStyle }>
-            <div className="chart-price">{`${formatValue(price)}`}<span style={{ fontSize: '16px' }}>KRW</span></div>
+          <div className="chart-price-container" style={ chartDetail.priceStyle }>
+            <div className="chart-price">{`${formatValue(chartDetail.price)}`}<span style={{ fontSize: '16px' }}>KRW</span></div>
             <div className="change-text">
-              <span className="signed-price-rate">{`${formatValue(changeRate)}`}</span>
-              <span className="change-price">{`${formatValue(changePrice)}`}</span>
+              <span className="signed-price-rate">{`${formatValue(chartDetail.changeRate)}`}</span>
+              <span className="change-price">{`${formatValue(chartDetail.changePrice)}`}</span>
             </div>
           </div>
           <div className="chart-details">
-            <div className="high">고가&nbsp;<span className="high-value">{`${formatValue(high)} KRW`}</span></div>
-            <div className="low">저가&nbsp;<span className="low-value">{`${formatValue(low)} KRW`}</span></div>
-            <div className="volume24">거래량(24h)&nbsp;<span className="volume24-value">{`${formatValue(tradeVolume)}`}</span></div>
-            <div className="price24">거래대금(24H)&nbsp;<span className="price24-value">{`${formatValue(tradePrice)}`}</span></div>
+            <div className="high">고가&nbsp;<span className="high-value">{`${formatValue(chartDetail.high)} KRW`}</span></div>
+            <div className="low">저가&nbsp;<span className="low-value">{`${formatValue(chartDetail.low)} KRW`}</span></div>
+            <div className="volume24">거래량(24h)&nbsp;<span className="volume24-value">{`${formatValue(chartDetail.tradeVolume)}`}</span></div>
+            <div className="price24">거래대금(24H)&nbsp;<span className="price24-value">{`${formatValue(chartDetail.tradePrice)}`}</span></div>
           </div>
         </>
       ) : (
