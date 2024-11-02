@@ -1,4 +1,5 @@
 package com.happyfree.trai.investment.entity;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
