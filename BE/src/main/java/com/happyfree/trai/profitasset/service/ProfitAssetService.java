@@ -37,7 +37,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.happyfree.trai.auth.service.AuthService;
 import com.happyfree.trai.investment.entity.InvestmentHistory;
 import com.happyfree.trai.investment.repository.InvestmentHistoryRepository;
-import com.happyfree.trai.profitasset.controller.dto.InvestSummary;
+import com.happyfree.trai.profitasset.dto.AssetProportion;
+import com.happyfree.trai.profitasset.dto.InvestSummary;
 import com.happyfree.trai.profitasset.entity.ProfitAssetHistory;
 import com.happyfree.trai.profitasset.repository.ProfitAssetRepository;
 import com.happyfree.trai.user.entity.User;
@@ -70,14 +71,19 @@ public class ProfitAssetService {
 		Optional<ProfitAssetHistory> pah = profitAssetRepository.findByUserAndSettlementDate(loginUser,
 			LocalDate.now().minusDays(1));
 		// TODO: ia 위에꺼랑 중복 repository
-		BigDecimal ia = profitAssetRepository.findByUserAndSettlementDate(loginUser, LocalDate.now().minusDays(1)).get().getStartingAssets();
+		BigDecimal ia = profitAssetRepository.findByUserAndSettlementDate(loginUser, LocalDate.now().minusDays(1))
+			.get()
+			.getStartingAssets();
 		BigDecimal yp = BigDecimal.ZERO;
 		if (pah.isPresent()) {
 			yp = pah.get().getDailyProfitRatio(); // TODO: daily가 아닌 누적수익률 가져와야함
 		}
 		BigDecimal todayProfitRatio = tp(ia);
-		BigDecimal profit = yp.add(BigDecimal.ONE).multiply(BigDecimal.ONE.add(todayProfitRatio.divide(BigDecimal.valueOf(100)))).subtract(BigDecimal.ONE);
-		List<InvestmentHistory> list = investmentHistoryRepository.findByUserOrderByCreatedAt(authService.getLoginUser());
+		BigDecimal profit = yp.add(BigDecimal.ONE)
+			.multiply(BigDecimal.ONE.add(todayProfitRatio.divide(BigDecimal.valueOf(100))))
+			.subtract(BigDecimal.ONE);
+		List<InvestmentHistory> list = investmentHistoryRepository.findByUserOrderByCreatedAt(
+			authService.getLoginUser());
 		int bid = 0, hold = 0, ask = 0;
 		for (int i = 0; i < list.size(); i++) {
 			InvestmentHistory ih = list.get(i);
@@ -91,7 +97,15 @@ public class ProfitAssetService {
 			}
 		}
 
-		return InvestSummary.builder().totalTransactionCount(list.size()).latestTransactionTime(list.get(0).getOrderCreatedAt()).latestTransactionTime(list.get(list.size() - 1).getOrderCreatedAt()).bid(bid).ask(ask).hold(hold).profit(profit).build();
+		return InvestSummary.builder()
+			.totalTransactionCount(list.size())
+			.firstTransactionTime(list.get(0).getOrderCreatedAt())
+			.lastTransactionTime(list.get(list.size() - 1).getOrderCreatedAt())
+			.bid(bid)
+			.ask(ask)
+			.hold(hold)
+			.profit(profit)
+			.build();
 	}
 
 	private BigDecimal tp(BigDecimal initialAsset) throws
@@ -104,7 +118,13 @@ public class ProfitAssetService {
 		BigDecimal m = tm();
 		BigDecimal cBp = bitp();
 		BigDecimal tbv = bcv.multiply(cBp);
-		return bcv.multiply(cBp).add(m).subtract(initialAsset).add(with).subtract(de).divide(initialAsset.add(de), 2, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")); // TODO: 보통 DOWN(버림)을 사용한다고함
+		return bcv.multiply(cBp)
+			.add(m)
+			.subtract(initialAsset)
+			.add(with)
+			.subtract(de)
+			.divide(initialAsset.add(de), 2, BigDecimal.ROUND_HALF_UP) // TODO: 보통 DOWN(버림)을 사용한다고함
+			.multiply(new BigDecimal("100"));
 	}
 
 	// 해당 날짜의 전체 출금액
@@ -390,6 +410,22 @@ public class ProfitAssetService {
 		return profitAssetRepository.findByUser(loginUser, page);
 	}
 
+	public List<AssetProportion> assetProportion() {
+		User loginUser = authService.getLoginUser();
+		List<ProfitAssetHistory> all = profitAssetRepository.findByUser(loginUser);
+		List<AssetProportion> list = new ArrayList<>();
+		int count=30;
+		for (ProfitAssetHistory profitAssetHistory : all) {
+			list.add(AssetProportion.builder().coinPercentage(profitAssetHistory.getCoinAssetPercentage()).createdAt(profitAssetHistory.getSettlementDate()).build());
+			count--;
+			if(count==0){
+				break;
+			}
+		}
+		return list;
+
+	}
+
 	@Transactional
 	public void save() throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException {
 		List<User> allAdminUser = userRepository.findByRole("ADMIN");
@@ -397,7 +433,7 @@ public class ProfitAssetService {
 			LocalDate today = LocalDate.now();
 			LocalDate yesterday = today.minusDays(1);
 			LocalDate twoDaysAgo = today.minusDays(2);
-			
+
 			// 이틀 전 누적 수익률, 누적 손익 가져오기
 			BigDecimal beforeAccumulationProfitRatio = BigDecimal.ZERO;
 			BigDecimal beforeAccumulationProfitAndLoss = BigDecimal.ZERO;
