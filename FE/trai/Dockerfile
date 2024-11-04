@@ -2,6 +2,8 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+RUN apk add --no-cache tzdata
+
 RUN apk add --no-cache \
     python3 \
     py3-pip \
@@ -9,7 +11,7 @@ RUN apk add --no-cache \
 
 COPY package*.json ./
 
-RUN npm install
+RUN npm ci --only=production
 
 COPY . .
 
