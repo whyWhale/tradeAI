@@ -1,24 +1,25 @@
 import { useState, useEffect, useRef } from "react";
 const UPBIT_URL = "wss://api.upbit.com/websocket/v1";
 
-const useRealTimeData = () => {
+const useRealTimeData = (initialized) => {
   const [result, setResult] = useState();
-  const [timer, setTimer] = useState(false);
+  //const [timer, setTimer] = useState(false);
   const ws = useRef(null);
 
-  useEffect(() => {
-    // timer 종료 시 트리거
-    if (timer) {
-      alert("만료되었습니다.");
-      ws.current.close();
-    }
-  }, [timer]);
+  // useEffect(() => {
+  //   // timer 종료 시 트리거
+  //   if (timer) {
+  //     alert("만료되었습니다.");
+  //     ws.current.close();
+  //   }
+  // }, [timer]);
 
   useEffect(() => {
-    // 10분 지나면 종료 처리
-    setTimeout(() => {
-      setTimer(true);
-    }, 10 * 60 * 1000);
+    if (!initialized) return; // 초기화가 완료되지 않았으면 연결하지 않음
+    // // 10분 지나면 종료 처리
+    // setTimeout(() => {
+    //   setTimer(true);
+    // }, 10 * 60 * 1000);
 
     ws.current = new WebSocket(UPBIT_URL);
 
