@@ -75,7 +75,7 @@ const CoinChart = () => {
         }, 10000);
       } catch (error) {
         console.error("Failed to fetch initial chart data. Retrying in 10 seconds...", error);
-        setTimeout(fetchData, 5000); // 5초 후에 다시 fetchData 호출
+        setTimeout(fetchData, 10000); // 5초 후에 다시 fetchData 호출
       }
     };
 
