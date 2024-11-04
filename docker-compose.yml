@@ -21,6 +21,8 @@ services:
     container_name: frontend
     environment:
       TZ: Asia/Seoul
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     expose:
       - "5173"
     networks:
