@@ -53,18 +53,30 @@ const CoinChart = () => {
     });
 
     const fetchData = async () => {
-      const chartDataList = await getInitialDataList(1);
-      if (chartRef.current) {
-        chartRef.current.applyNewData(chartDataList); 
-      }
-
-      setTimeout(async () => {
-        const detailDataList = await getInitialDetailList();
-        if (detailDataList && detailDataList[0]) {
-          updateChartDetail(detailDataList[0]);
+      try {
+        // 차트 데이터 요청
+        const chartDataList = await getInitialDataList(1);
+        if (chartRef.current) {
+          chartRef.current.applyNewData(chartDataList);
         }
-        setInitialized(true); // 초기화 완료
-      }, 10000); 
+  
+        // 10초 지연 후 시세 정보 데이터 요청
+        setTimeout(async () => {
+          try {
+            const detailDataList = await getInitialDetailList();
+            if (detailDataList && detailDataList[0]) {
+              updateChartDetail(detailDataList[0]);
+            }
+            setInitialized(true); // 초기화 완료
+          } catch (error) {
+            console.error("Failed to fetch detail data. Retrying in 10 seconds...", error);
+            setTimeout(fetchData, 10000); // 10초 후에 다시 fetchData 호출
+          }
+        }, 10000);
+      } catch (error) {
+        console.error("Failed to fetch initial chart data. Retrying in 10 seconds...", error);
+        setTimeout(fetchData, 5000); // 5초 후에 다시 fetchData 호출
+      }
     };
 
     fetchData();
