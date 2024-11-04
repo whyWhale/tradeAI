@@ -1,13 +1,13 @@
 import React from 'react';
 import NavBar from '@components/NavBar';
 import './index.scss';
-import DecisionStatusChart from  '../../components/DonutChart/index.jsx';
+import DecisionStatusChart from  '../../components/DonutChart/decisionStatusChart.jsx';
 import CoinChart from '../../components/BitcoinChart/CoinChart.jsx';
 import Timeline from '../../components/Timeline/index.jsx';
 
 const AssetOverview = () => {
   return (
-    <div className="investment-status">
+    <div className="asset-overview">
       {/* Left Sidebar */}
       <aside className="navbar">
         <NavBar />
