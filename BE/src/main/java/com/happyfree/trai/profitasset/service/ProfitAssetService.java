@@ -428,7 +428,7 @@ public class ProfitAssetService {
 
 	@Transactional
 	public void save() throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException {
-		List<User> allAdminUser = userRepository.findByRole("ADMIN");
+		List<User> allAdminUser = userRepository.findByRole("ROLE_ADMIN");
 		for (User user : allAdminUser) {
 			LocalDate today = LocalDate.now();
 			LocalDate yesterday = today.minusDays(1);
