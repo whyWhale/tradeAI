@@ -39,8 +39,8 @@ logging:
     root: info
     org.hibernate.SQL: debug
     org.springframework.security: debug
-    com.zaxxer.hikari: DEBUG      # HikariCP 로깅 추가
-    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari: warn      # HikariCP 로깅 추가
+    com.zaxxer.hikari.HikariConfig: warn
 
 upbit:
   api:
