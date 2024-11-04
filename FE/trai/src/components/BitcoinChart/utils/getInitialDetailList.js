@@ -3,7 +3,7 @@ import axios from "axios";
 const getInitialDetailList = (unit) => {
   return axios.get(`https://api.upbit.com/v1/ticker`, { 
     params: {
-        markets: "KRW-BTC,KRW-ETH",
+        markets: "KRW-BTC",
     }
   })
     .then(res => res.data)
