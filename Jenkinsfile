@@ -36,7 +36,7 @@ pipeline {
                 dir('FE/trai') {
                     script {
                         echo 'Building Frontend Image...'
-                        sh 'docker build -t kimjaehyun158/trai-frontend:latest .'
+                        sh 'docker build --no-cache -t kimjaehyun158/trai-frontend:latest .'
                         echo 'Frontend Image Build Success!'
                     }
                 }
