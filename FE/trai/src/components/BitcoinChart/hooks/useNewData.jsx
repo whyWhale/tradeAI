@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const useNewData = (unit) => {
+const useNewData = (unit, initialized) => {
   const [newData, setNewData] = useState(null); // newData 상태
   const [lastFetchTime, setLastFetchTime] = useState(0); // lastFetchTime 상태 추가
 
   useEffect(() => {
+    if (!initialized) return; // 초기화가 완료되지 않았으면 연결하지 않음
+
     const fetchData = async () => {
       const currentTime = Date.now();
 
