@@ -52,18 +52,22 @@ const CoinChart = () => {
     });
 
     const fetchData = async () => {
+      // 차트 데이터 요청
       const chartDataList = await getInitialDataList(1);
-      const detailDataList = await getInitialDetailList();
       if (chartRef.current) {
         chartRef.current.applyNewData(chartDataList); // 초기 데이터 적용
       }
-
-      if (detailDataList && detailDataList[0]) {
-        updateChartDetail(detailDataList[0]);
-      }
-      setInitialized(true); // 초기화 완료
+  
+      //  // 시세 정보 데이터 요청
+      setTimeout(async () => {
+        const detailDataList = await getInitialDetailList();
+        if (detailDataList && detailDataList[0]) {
+          updateChartDetail(detailDataList[0]);
+        }
+        setInitialized(true); // 초기화 완료
+      }, 10000); // 10초 지연 (10,000밀리초)
     };
-
+  
     fetchData();
 
     return () => {
