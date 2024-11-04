@@ -1,6 +1,6 @@
 package com.happyfree.trai.user.entity;
 
-import com.happyfree.trai.common.BaseEntity;
+import com.happyfree.trai.global.common.BaseEntity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

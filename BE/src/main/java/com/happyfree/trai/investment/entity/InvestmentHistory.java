@@ -3,7 +3,7 @@ package com.happyfree.trai.investment.entity;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import com.happyfree.trai.common.BaseEntity;
+import com.happyfree.trai.global.common.BaseEntity;
 import com.happyfree.trai.user.entity.User;
 
 import jakarta.persistence.Entity;
@@ -34,12 +34,14 @@ public class InvestmentHistory extends BaseEntity {
 
 	private String side;
 
+	@Builder.Default
 	private String orderType = "LOC";
 
 	private String price;
 
 	private String state;
 
+	@Builder.Default
 	private String market = "KRW-BTC";
 
 	private String volume;
@@ -53,6 +55,10 @@ public class InvestmentHistory extends BaseEntity {
 	private BigDecimal averagePrice;
 
 	private Integer tradesCount;
+
+	private BigDecimal totalEvaluation;
+
+	private BigDecimal totalAmount;
 
 	private LocalDateTime orderCreatedAt;
 
