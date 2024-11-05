@@ -1,0 +1,56 @@
+
+server:
+  servlet:
+    session:
+      timeout: 12h
+
+spring:
+  application:
+    name: trade-ai
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/trai?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useUnicode=true
+    username: ssafy
+    password: ssafy
+    hikari:
+      maximum-pool-size: 8        # CPU 코어 수 * 2
+      minimum-idle: 4             # maximum-pool-size의 절반
+      connection-timeout: 20000   # 20초
+      idle-timeout: 300000        # 5분
+      max-lifetime: 1200000       # 20분
+      leak-detection-threshold: 30000  # 30초 - 커넥션 누수 감지
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+    generate-ddl: true
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+      data-locations: "classpath:db/data.sql"
+
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: debug
+    org.springframework.security: debug
+    com.zaxxer.hikari: warn      # HikariCP 로깅 추가
+    com.zaxxer.hikari.HikariConfig: warn
+
+upbit:
+  api:
+    accesskey: MiLLj4TTgWg1wuymFQSkxeyIvMlU4Nhggl3c8J9G
+    secretkey: tgbNLaN4iXdNsars3shoLjb1ix9CYXaAxd2Alo6L
+
+springdoc:
+  swagger-ui:
+    path: /api/swagger-ui.html
+    disable-swagger-default-url: true
+  api-docs:
+    path: /api/v3/api-docs
