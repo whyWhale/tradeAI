@@ -53,6 +53,9 @@ public class SecurityConfig {
 						configuration.setAllowedOrigins(
 							Arrays.asList("http://www.trai-ai-site", "https://www.trai-ai.site",
 								"http://localhost:5173", "http://localhost:5173/"));
+					
+						configuration.addAllowedOriginPattern("http://localhost:5173");
+						configuration.addAllowedOriginPattern("http://localhost:5173/");
 						configuration.setAllowedMethods(Collections.singletonList("*"));
 						configuration.setAllowedHeaders(Collections.singletonList("*"));
 						configuration.setAllowCredentials(true);
