@@ -79,6 +79,13 @@ def master_agent(state: State) -> State:
         total_sell += sell
         total_hold += hold
 
+    # 차트 분석 결정 카운트
+    if state.chart_pattern and "decision" in state.chart_pattern:
+        buy, sell, hold = count_decision(state.chart_pattern["decision"])
+        total_buy += buy
+        total_sell += sell
+        total_hold += hold
+
     # 투표 결과 결정
     if total_buy > total_sell and total_buy > total_hold:
         master_decision = "BUY"
