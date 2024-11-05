@@ -33,10 +33,8 @@ def capture_chart_screenshot():
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
     try:
-        print("Starting Chrome Driver")
         url = "https://upbit.com/full_chart?code=CRIX.UPBIT.KRW-BTC"
         driver.get(url)
-        print("Page loaded")
 
         WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH, "//*[@id='fullChartiq']")))
 
@@ -49,7 +47,6 @@ def capture_chart_screenshot():
             EC.element_to_be_clickable((By.XPATH, "//*[@id='fullChartiq']/div/div/div[1]/div/div/cq-menu[1]/cq-menu-dropdown/cq-item[9]"))
         )
         four_hour_button.click()
-        print("4-hour chart selected")
 
         time.sleep(2)
 
@@ -68,4 +65,3 @@ def capture_chart_screenshot():
 
     finally:
         driver.quit()
-        print("Driver quit")

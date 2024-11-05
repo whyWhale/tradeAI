@@ -50,7 +50,7 @@ def chart_pattern_agent(state: State) -> State:
         
         # 차트 이미지 캡처
         image_path = capture_chart_screenshot()
-        print("차트 패턴 분석 준비 완료:", image_path)
+        print("차트 패턴 분석 이미지 준비 완료:", image_path)
 
         # 이미지 인코딩
         encoded_image = encode_image_from_file(image_path)
