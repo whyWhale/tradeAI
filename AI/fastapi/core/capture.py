@@ -46,15 +46,18 @@ def capture_chart_screenshot():
         menu_button.click()
         print("Menu button clicked.")
 
+        time.sleep(1)
+
         print("Waiting for four-hour button to become clickable...")
+        four_hour_selector = "#fullChartiq > div > div > div.ciq-nav > div > div > cq-menu.ciq-menu.ciq-period.stxMenuActive > cq-menu-dropdown > cq-item:nth-child(11)"
         four_hour_button = WebDriverWait(driver, 15).until(
-            EC.element_to_be_clickable((By.XPATH, "//*[@id='fullChartiq']/div/div/div[1]/div/div/cq-menu[1]/cq-menu-dropdown/cq-item[9]"))
+            EC.element_to_be_clickable((By.CSS_SELECTOR, four_hour_selector))
         )
 
         four_hour_button.click()
         print("Four-hour button clicked.")
 
-        time.sleep(5)
+        time.sleep(2)
 
         # 스크린샷 저장 경로 설정
         current_dir = os.path.dirname(os.path.abspath(__file__))

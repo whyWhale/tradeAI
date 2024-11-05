@@ -91,7 +91,7 @@ def chart_pattern_agent(state: State) -> State:
         # 새 메시지 생성
         print(">>> Creating new message with analysis results")
         new_message = (f"Chart Analysis Decision: {result['decision']}, "
-                      f"Chart Analysis Summary: {result['summary']}")
+                        f"Chart Analysis Summary: {result['summary']}")
         print(f">>> New message created: {new_message}")
 
         # State 업데이트
