@@ -79,8 +79,8 @@ const LoginPage = () => {
       <div className="flex flex-col ml-[150px] w-[370px] mt-20 p-10">
         <div className="font-helveticaBold text-trai-mint text-[28px] mb-1">Welcome Back</div>
         <div className="font-helveticaLight text-trai-greytext text-[16px] mb-8">로그인 후 TRAI 서비스를 이용해보세요</div>
-        
-        <form onSubmit={handleSubmit(handleLoginWithAxios())} className="flex flex-col gap-6">
+
+        <form onSubmit={handleSubmit(handleLogin())} className="flex flex-col gap-6">
           <InputGroup>
             <label className="ml-1">Email</label>
             <Input
