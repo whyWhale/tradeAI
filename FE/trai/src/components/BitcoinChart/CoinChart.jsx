@@ -19,25 +19,7 @@ const types = [
   { key: "area", text: "Mountain" },
 ];
 
-const jwt = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3Nfa2V5IjoiN3NmbzhWY200eGMyNzlkYTVOc1hiVmZXbXhJUkJndHVHeFN3VHg1UyIsIm5vbmNlIjoiZDU0OTgwNDEtNzRlYS00MDBmLWE1ZWItZTA0MmE2Y2Y0OGMzIn0.gB-HZ83M-Y0cEwu2ltehIC24yyMo2NYMXZ2FSJ0sd9c";
-const fetchAccountData = async () => {
-  console.log("account data");
-  try {
-      const response = await axios.get(`https://api.upbit.com/v1/accounts`, {
-          headers: {
-              Authorization: `${jwt}`
-          }
-      });
-      console.log(response.data); // The response body
-  } catch (error) {
-      console.error('Error fetching account data:', error);
-  }
-};
-
-fetchAccountData();
-
 const CoinChart = () => {
-  fetchAccountData();
   const chartRef = useRef(null);
   const [initialized, setInitialized] = useState(false);
   const [activeType, setActiveType] = useState("candle_solid");
@@ -76,6 +58,7 @@ const CoinChart = () => {
         const chartDataList = await getInitialDataList(1);
         if (chartRef.current) {
           chartRef.current.applyNewData(chartDataList);
+
         }
   
         // 10초 지연 후 시세 정보 데이터 요청
@@ -84,8 +67,8 @@ const CoinChart = () => {
             const detailDataList = await getInitialDetailList();
             if (detailDataList && detailDataList[0]) {
               updateChartDetail(detailDataList[0]);
+              setInitialized(true); // 초기화 완료
             }
-            setInitialized(true); // 초기화 완료
           } catch (error) {
             console.error("Failed to fetch detail data. Retrying in 10 seconds...", error);
             setTimeout(fetchData, 10000); // 10초 후에 다시 fetchData 호출
