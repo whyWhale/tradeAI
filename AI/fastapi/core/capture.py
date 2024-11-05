@@ -21,8 +21,10 @@ def capture_chart_screenshot():
     else:
         raise EnvironmentError("Unsupported operating system. Only Windows and Linux are supported.")
 
+    print("Chrome driver path set to:", chrome_driver_path)
+
     chrome_options = Options()
-    chrome_options.binary_location = "/usr/bin/chromium-browser"  # Chromium의 경로 설정
+    chrome_options.binary_location = "/usr/bin/chromium-browser"
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
@@ -33,21 +35,30 @@ def capture_chart_screenshot():
     service = Service(chrome_driver_path)
     driver = webdriver.Chrome(service=service, options=chrome_options)
 
+    print("WebDriver initialized successfully.")
+
     try:
         url = "https://upbit.com/full_chart?code=CRIX.UPBIT.KRW-BTC"
+        print("Navigating to URL:", url)
         driver.get(url)
 
+        print("Waiting for chart element to load...")
         WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH, "//*[@id='fullChartiq']")))
+        print("Chart element loaded successfully.")
 
+        print("Waiting for menu button to become clickable...")
         menu_button = WebDriverWait(driver, 15).until(
             EC.element_to_be_clickable((By.XPATH, "//*[@id='fullChartiq']/div/div/div[1]/div/div/cq-menu[1]/span/cq-clickable"))
         )
         menu_button.click()
+        print("Menu button clicked.")
 
+        print("Waiting for four-hour button to become clickable...")
         four_hour_button = WebDriverWait(driver, 15).until(
             EC.element_to_be_clickable((By.XPATH, "//*[@id='fullChartiq']/div/div/div[1]/div/div/cq-menu[1]/cq-menu-dropdown/cq-item[9]"))
         )
         four_hour_button.click()
+        print("Four-hour button clicked.")
 
         time.sleep(2)
 
@@ -58,6 +69,7 @@ def capture_chart_screenshot():
         screenshot_path = os.path.join(screenshot_folder, f"{current_time}_upbit_full_chart_4hour.png")
 
         driver.save_screenshot(screenshot_path)
+        print("Screenshot saved at:", screenshot_path)
 
         return screenshot_path
 
@@ -66,3 +78,4 @@ def capture_chart_screenshot():
 
     finally:
         driver.quit()
+        print("WebDriver closed.")

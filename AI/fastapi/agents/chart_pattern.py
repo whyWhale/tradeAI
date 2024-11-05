@@ -8,18 +8,25 @@ from core.capture import capture_chart_screenshot
 from core.state import State
 import json
 
-# 차트 이미지 분석 결과를 위한 Pydantic 모델
 class ImageAnalysisResult(BaseModel):
     decision: Literal["BUY", "SELL", "HOLD"]
     summary: str
 
-# 이미지 파일을 base64로 인코딩하는 함수
 def encode_image_from_file(file_path: str) -> str:
-    with open(file_path, "rb") as image_file:
-        image_content = image_file.read()
-        file_ext = file_path.split('.')[-1].lower()
-        mime_type = "image/jpeg" if file_ext in ["jpg", "jpeg"] else "image/png"
-        return f"data:{mime_type};base64,{base64.b64encode(image_content).decode('utf-8')}"
+    print(">>> Starting image encoding process")
+    try:
+        with open(file_path, "rb") as image_file:
+            image_content = image_file.read()
+            file_ext = file_path.split('.')[-1].lower()
+            mime_type = "image/jpeg" if file_ext in ["jpg", "jpeg"] else "image/png"
+            encoded_data = base64.b64encode(image_content).decode('utf-8')
+            print(f">>> Successfully encoded image: {file_path}")
+            print(f">>> Image type: {mime_type}")
+            print(f">>> Encoded data length: {len(encoded_data)} characters")
+            return f"data:{mime_type};base64,{encoded_data}"
+    except Exception as e:
+        print(f">>> ERROR: Failed to encode image: {str(e)}")
+        raise
 
 # 프롬프트 템플릿 설정
 image_analysis_template = """당신은 비트코인 차트를 해석하는 시각적 패턴 분석 전문가입니다.
@@ -40,43 +47,56 @@ image_analysis_template = """당신은 비트코인 차트를 해석하는 시�
 }}
 """
 
+print(">>> Initializing prompt template and chain")
 image_prompt_template = PromptTemplate.from_template(image_analysis_template)
 image_output_parser = JsonOutputParser(pydantic_object=ImageAnalysisResult)
 image_chain = image_prompt_template | llm | image_output_parser
+print(">>> Chain initialization completed")
 
-# Chart Pattern Agent 함수
 def chart_pattern_agent(state: State) -> State:
+    print(">>> Starting chart pattern analysis")
     try:
-        
         # 차트 이미지 캡처
+        print(">>> Capturing chart screenshot...")
         image_path = capture_chart_screenshot()
-        print("차트 패턴 분석 이미지 준비 완료:", image_path)
+        print(f">>> Chart screenshot captured successfully: {image_path}")
 
         # 이미지 인코딩
+        print(">>> Starting image encoding process")
         encoded_image = encode_image_from_file(image_path)
+        print(">>> Image encoding completed")
 
         # dict 형태로 입력값 전달
-        input_data = {"image_data": encoded_image}  # 'image_data'는 프롬프트에서 참조할 변수 이름
+        print(">>> Preparing input data for LLM")
+        input_data = {"image_data": encoded_image}
+        print(">>> Input data prepared")
         
         # 이미지 분석 수행
+        print(">>> Invoking LLM for chart analysis...")
         result = image_chain.invoke(input_data)
-        print(f"차트 분석을 위한 LLM 호출 성공: {result}")
+        print(">>> LLM analysis completed")
+        print(f">>> Raw analysis result: {result}")
 
-        # 결과가 dict 형태로 올바르게 파싱되었는지 확인
+        # 결과 파싱 검증
         if not isinstance(result, dict):
-            print("Warning: Result is not a dict. Attempting to parse.")
+            print(">>> Warning: Result is not a dict. Attempting to parse JSON...")
             try:
                 result = json.loads(result)
+                print(">>> Successfully parsed result as JSON")
             except json.JSONDecodeError as json_err:
-                print(f"JSON parsing error: {json_err}")
-                raise ValueError("Failed to parse the result as JSON.")
+                print(f">>> ERROR: JSON parsing failed: {json_err}")
+                print(f">>> Raw result that failed to parse: {result}")
+                raise ValueError("Failed to parse the result as JSON")
 
+        # 새 메시지 생성
+        print(">>> Creating new message with analysis results")
         new_message = (f"Chart Analysis Decision: {result['decision']}, "
-                       f"Chart Analysis Summary: {result['summary']}")
+                      f"Chart Analysis Summary: {result['summary']}")
+        print(f">>> New message created: {new_message}")
 
+        # State 업데이트
+        print(">>> Updating state with new information")
         updated_messages = state.messages + [new_message]
-
-        # 반환할 state 객체에 chart_pattern 필드 추가
         updated_state = state.copy(update={
             "messages": updated_messages,
             "chart_pattern": {
@@ -84,9 +104,12 @@ def chart_pattern_agent(state: State) -> State:
                 "summary": result["summary"]
             }
         })
+        print(">>> State updated successfully")
 
         return updated_state
 
     except Exception as e:
-        print(f"chart_pattern_agent 처리 중 오류 발생: {e}")
+        print(f">>> ERROR: Exception in chart_pattern_agent: {str(e)}")
+        print(f">>> ERROR: Exception type: {type(e).__name__}")
+        print(f">>> ERROR: Full exception details: {e}")
         return state
