@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
+import axios from 'axios';
 const LoginPage = () => {
 
   const { register, handleSubmit, formState: {errors}} = useForm();
@@ -29,6 +29,33 @@ const LoginPage = () => {
     }
   };
 
+  const handleLoginWithAxios = async () => {
+    try {
+      const url = 'https://www.trai-ai.site/api/users/login';
+      const response = await axios.post(
+          url,
+          new URLSearchParams({
+            username: 'admin@naver.com',
+            password: '1'
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            withCredentials: true
+          }
+      );
+
+      if (response.status === 200) {
+        // 로그인 성공 처리
+      } else {
+        // 로그인 실패 처리
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    }
+  };
+
   const handleLogout = async () => {
     try {
       const response = await fetch('https://https://www.trai-ai.site/api/users/logout', {
@@ -53,7 +80,7 @@ const LoginPage = () => {
         <div className="font-helveticaBold text-trai-mint text-[28px] mb-1">Welcome Back</div>
         <div className="font-helveticaLight text-trai-greytext text-[16px] mb-8">로그인 후 TRAI 서비스를 이용해보세요</div>
         
-        <form onSubmit={handleSubmit(handleLogin())} className="flex flex-col gap-6">
+        <form onSubmit={handleSubmit(handleLoginWithAxios())} className="flex flex-col gap-6">
           <InputGroup>
             <label className="ml-1">Email</label>
             <Input
