@@ -54,6 +54,7 @@ public class SecurityConfig {
 						CorsConfiguration configuration = new CorsConfiguration();
 						configuration.setAllowedOrigins(Arrays.asList(allowedOrigins, "https://www.trai-ai.site"));
 						configuration.addAllowedOriginPattern("http://localhost:5173");
+						configuration.addAllowedOriginPattern("http://localhost:5173/");
 						configuration.setAllowedMethods(Collections.singletonList("*"));
 						configuration.setAllowedHeaders(Collections.singletonList("*"));
 						configuration.setAllowCredentials(true);
