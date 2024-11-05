@@ -13,10 +13,12 @@ public class WebConfig implements WebMvcConfigurer {
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
-			.allowedOrigins("https://www.trai-ai.site", "http://localhost:5173","http://localhost:5173/")
+			.allowedOrigins("https://www.trai-ai.site",
+				"http://www.trai-ai.site",
+				"http://localhost:5173")
 			.allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
 			.allowedHeaders("*")
-			.exposedHeaders("*")
+			.exposedHeaders("Set-Cookie")
 			.allowCredentials(true);
 	}
 }
