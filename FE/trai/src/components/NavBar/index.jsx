@@ -1,6 +1,7 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { instance } from '@api/axios';
 
 import { IoMdHelpCircleOutline } from 'react-icons/io';
 import { VscSettings } from 'react-icons/vsc';
@@ -10,9 +11,27 @@ import { MdCurrencyBitcoin, MdOutlineLogout } from 'react-icons/md';
 
 const NavBar = ({openModal}) => {
 
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try{
+      const response = await instance.post('/api/users/logout');
+
+      if(response.status === 200){
+        console.log('로그아웃 성공');
+        navigate('/');
+      }
+
+    } catch (error){
+      console.error("로그아웃 에러: ", error)
+    }
+
+  }
+
+
   return (
     <div className="flex flex-col items-center">
-      <LogoArea>
+      <LogoArea to="/">
         <div>로고</div>
         <p>T R A I</p>
       </LogoArea>
@@ -39,10 +58,10 @@ const NavBar = ({openModal}) => {
             <div className="PageIcon"><PiHeadCircuit /></div>
             <div className="PageName">투자 전략 페이지</div>
           </StyledNavLink>
-          <StyledNavLink to="/logout">
+          <StyledLogoutButton onClick={handleLogout}>
             <div className="PageIcon"><MdOutlineLogout /></div>
             <div className="PageName">로그아웃</div>
-          </StyledNavLink>
+          </StyledLogoutButton>
         </NavList>
       </NavContainer>
 
@@ -99,7 +118,37 @@ const StyledNavLink = styled(NavLink)`
   }
 `;
 
-const LogoArea = styled.div`
+
+const StyledLogoutButton = styled.div`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin: 3px;
+  padding: 8px 10px;
+  border-radius: 15px;
+  background-color: transparent;
+  cursor: pointer;
+
+  .PageIcon {
+    background-color: var(--trai-white);
+    color: var(--trai-mint);
+    font-size: 24px;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px var(--trai-disabled);
+  }
+
+  .PageName {
+    color: var(--trai-greytext);
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+`;
+
+
+const LogoArea = styled(NavLink)`
   display: flex;
   padding: 10px;
   margin: 20px auto; 
