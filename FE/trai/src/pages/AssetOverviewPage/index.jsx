@@ -4,6 +4,7 @@ import './index.scss';
 import DecisionStatusChart from  '../../components/DonutChart/decisionStatusChart.jsx';
 import CoinChart from '../../components/BitcoinChart/CoinChart.jsx';
 import Timeline from '../../components/Timeline/index.jsx';
+import bitcoinIcon from '../../components/BitcoinChart/BC_Logo.png';
 
 const AssetOverview = () => {
   return (
@@ -61,7 +62,12 @@ const AssetOverview = () => {
 
         {/* Bottom Chart and Sidebar */}
         <div className="chart">
-            <CoinChart/>
+          <div className="ticker">
+            <img src={bitcoinIcon} alt="Bitcoin Icon" style={{ width: '24px', height: '24px', marginRight: '8px', marginTop: '10px' }} />
+            <span>비트코인 </span>
+            <span style={{ fontSize: '16px' }}>&nbsp;BTC/KRW</span>
+          </div>
+          <CoinChart/>
         </div>
         
         <div className="sidebar">
