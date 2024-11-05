@@ -2,10 +2,9 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
-    chromium \
-    chromium-driver \
     wget \
     unzip \
     xvfb \
@@ -31,10 +30,16 @@ RUN apt-get update && apt-get install -y \
     libxss1 \
     libxtst6 \
     xdg-utils \
+    chromium \
+    chromium-driver \
     && rm -rf /var/lib/apt/lists/*
 
 # Set display port to avoid crash
 ENV DISPLAY=:99
+
+# Set Chrome and ChromeDriver paths
+ENV CHROME_BIN=/usr/bin/chromium
+ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
 
 COPY requirements.txt .
 
@@ -43,12 +48,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 EXPOSE 8000
-
-# Make sure ChromeDriver is executable
-RUN chmod +x /app/core/chromedriver-linux64/chromedriver
-
-# Add Chrome installation path to environment variables
-ENV CHROME_BIN=/usr/bin/chromium
-ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
 
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
