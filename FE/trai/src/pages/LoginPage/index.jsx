@@ -8,7 +8,8 @@ const LoginPage = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('https://https://www.trai-ai.site/api/users/login', {
+      let url = 'https://www.trai-ai.site/api/users/login';
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
