@@ -15,49 +15,68 @@ def capture_chart_screenshot():
     print(f"Using ChromeDriver path: {chrome_driver_path}")
 
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
+    # Chromium 특화 설정
+    chrome_options.add_argument("--headless=new")  # 새로운 headless 모드 사용
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--window-size=1920x1080")
     chrome_options.add_argument("--disable-gpu")
-    chrome_options.binary_location = os.getenv('CHROME_BIN', '/usr/bin/chromium')
-    
-    # Add ARM-specific options
     chrome_options.add_argument("--disable-software-rasterizer")
     chrome_options.add_argument("--disable-features=VizDisplayCompositor")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--disable-setuid-sandbox")
+    chrome_options.add_argument("--disable-web-security")
+    chrome_options.add_argument("--ignore-certificate-errors")
+    chrome_options.add_argument("--allow-running-insecure-content")
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+    
+    # User-Agent 설정
+    chrome_options.add_argument("--user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
+    
+    chrome_options.binary_location = os.getenv('CHROME_BIN', '/usr/bin/chromium')
     
     try:
         service = Service(chrome_driver_path)
         driver = webdriver.Chrome(service=service, options=chrome_options)
+        driver.set_window_size(1920, 1080)  # 명시적 창 크기 설정
         print("WebDriver initialized successfully")
 
         url = "https://upbit.com/full_chart?code=CRIX.UPBIT.KRW-BTC"
         print(f"Navigating to URL: {url}")
         driver.get(url)
 
+        # 페이지 로딩 대기 시간 증가
+        time.sleep(5)
+
         print("Waiting for chart element to load...")
-        WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH, "//*[@id='fullChartiq']")))
+        chart_element = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, "//*[@id='fullChartiq']"))
+        )
         print("Chart element loaded successfully.")
 
+        # JavaScript로 스크롤 실행
+        driver.execute_script("arguments[0].scrollIntoView(true);", chart_element)
+        time.sleep(2)
+
         print("Waiting for menu button to become clickable...")
-        menu_button = WebDriverWait(driver, 15).until(
-            EC.element_to_be_clickable((By.XPATH, "//*[@id='fullChartiq']/div/div/div[1]/div/div/cq-menu[1]/span/cq-clickable"))
+        menu_button = WebDriverWait(driver, 20).until(
+            EC.element_to_be_clickable((By.XPATH, "//cq-menu[contains(@class, 'period-menu')]/span/cq-clickable"))
         )
-        menu_button.click()
+        # JavaScript로 클릭 실행
+        driver.execute_script("arguments[0].click();", menu_button)
         print("Menu button clicked.")
 
-        time.sleep(1)
+        time.sleep(2)
 
         print("Waiting for four-hour button to become clickable...")
-        four_hour_selector = "#fullChartiq > div > div > div.ciq-nav > div > div > cq-menu.ciq-menu.ciq-period.stxMenuActive > cq-menu-dropdown > cq-item:nth-child(11)"
-        four_hour_button = WebDriverWait(driver, 15).until(
-            EC.element_to_be_clickable((By.CSS_SELECTOR, four_hour_selector))
+        four_hour_button = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, "//cq-item[contains(text(), '4시간')]"))
         )
-
-        four_hour_button.click()
+        # JavaScript로 클릭 실행
+        driver.execute_script("arguments[0].click();", four_hour_button)
         print("Four-hour button clicked.")
 
-        time.sleep(2)
+        time.sleep(3)  # 차트 업데이트 대기 시간 증가
 
         # 스크린샷 저장 경로 설정
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -66,6 +85,7 @@ def capture_chart_screenshot():
         current_time = datetime.now().strftime("%m%d_%H")
         screenshot_path = os.path.join(screenshot_folder, f"{current_time}_upbit_full_chart_4hour.png")
 
+        # 전체 페이지 스크린샷
         driver.save_screenshot(screenshot_path)
         print(f"Screenshot saved at: {screenshot_path}")
 
