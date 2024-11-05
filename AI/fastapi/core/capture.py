@@ -22,6 +22,7 @@ def capture_chart_screenshot():
         raise EnvironmentError("Unsupported operating system. Only Windows and Linux are supported.")
 
     chrome_options = Options()
+    chrome_options.binary_location = "/usr/bin/chromium-browser"  # Chromium의 경로 설정
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
