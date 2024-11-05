@@ -50,10 +50,11 @@ def capture_chart_screenshot():
         four_hour_button = WebDriverWait(driver, 15).until(
             EC.element_to_be_clickable((By.XPATH, "//*[@id='fullChartiq']/div/div/div[1]/div/div/cq-menu[1]/cq-menu-dropdown/cq-item[9]"))
         )
+
         four_hour_button.click()
         print("Four-hour button clicked.")
 
-        time.sleep(2)
+        time.sleep(5)
 
         # 스크린샷 저장 경로 설정
         current_dir = os.path.dirname(os.path.abspath(__file__))
