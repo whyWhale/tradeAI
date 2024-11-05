@@ -7,10 +7,10 @@ import getInitialDataList from "./utils/getInitialDataList";
 import getInitialDetailList from "./utils/getInitialDetailList";
 import getLanguageOption from "./utils/getLanguageOption";
 import { chartStyle } from './chartStyle';
-import bitcoinIcon from './BC_Logo.png';
 import useRealTimeData from "./hooks/useRealTimeData";
 import useNewData from "./hooks/useNewData";
 import ChartButton from './ChartButton';
+import axios from 'axios';
 
 const types = [
   { key: "candle_solid", text: "solid" },
@@ -19,7 +19,25 @@ const types = [
   { key: "area", text: "Mountain" },
 ];
 
+const jwt = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3Nfa2V5IjoiN3NmbzhWY200eGMyNzlkYTVOc1hiVmZXbXhJUkJndHVHeFN3VHg1UyIsIm5vbmNlIjoiZDU0OTgwNDEtNzRlYS00MDBmLWE1ZWItZTA0MmE2Y2Y0OGMzIn0.gB-HZ83M-Y0cEwu2ltehIC24yyMo2NYMXZ2FSJ0sd9c";
+const fetchAccountData = async () => {
+  console.log("account data");
+  try {
+      const response = await axios.get(`https://api.upbit.com/v1/accounts`, {
+          headers: {
+              Authorization: `${jwt}`
+          }
+      });
+      console.log(response.data); // The response body
+  } catch (error) {
+      console.error('Error fetching account data:', error);
+  }
+};
+
+fetchAccountData();
+
 const CoinChart = () => {
+  fetchAccountData();
   const chartRef = useRef(null);
   const [initialized, setInitialized] = useState(false);
   const [activeType, setActiveType] = useState("candle_solid");
@@ -101,11 +119,6 @@ const CoinChart = () => {
   return (
     <>
       <div className="chart-header">
-        <div className="ticker">
-          <img src={bitcoinIcon} alt="Bitcoin Icon" style={{ width: '24px', height: '24px', marginRight: '8px' }} />
-          <span>비트코인 </span>
-          <span style={{ fontSize: '16px' }}>&nbsp;BTC/KRW</span>
-        </div>
         {chartDetail ? (
           <>
             <div className="chart-price-container" style={ chartDetail.priceStyle }>
@@ -118,12 +131,12 @@ const CoinChart = () => {
             <div className="chart-details">
               <div className="high">고가<br/><span className="high-value">{`${formatValue(chartDetail.high)} KRW`}</span></div>
               <div className="low">저가<br/><span className="low-value">{`${formatValue(chartDetail.low)} KRW`}</span></div>
-              <div className="volume24">거래량(24h)<br/><span className="volume24-value">{`${formatValue(chartDetail.tradeVolume)}`}</span></div>
-              <div className="price24">거래대금(24H)<br/><span className="price24-value">{`${formatValue(chartDetail.tradePrice)}`}</span></div>
+              <div className="volume24">거래량(24h)<br/><span className="volume24-value">{`${formatValue(chartDetail.tradeVolume)} KRW`}</span></div>
+              <div className="price24">거래대금(24H)<br/><span className="price24-value">{`${formatValue(chartDetail.tradePrice)} KRW`}</span></div>
             </div>
           </>
         ) : (
-          <span class="loader"></span>
+          <div class="loader">&nbsp;&nbsp;&nbsp;시세&nbsp;정보를<br/>불러오는&nbsp;중입니다.</div>
         )}
       </div>
       <Layout>
