@@ -1,4 +1,4 @@
-package com.happyfree.trai.agent.dto;
+package com.happyfree.trai.agent.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.happyfree.trai.global.common.BaseEntity;
@@ -16,7 +16,8 @@ public class AnalysisResult extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT")
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     private String jsonData;
 
     @JsonIgnore

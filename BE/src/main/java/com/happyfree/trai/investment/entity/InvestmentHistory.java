@@ -35,7 +35,7 @@ public class InvestmentHistory extends BaseEntity {
 	private String side;
 
 	@Builder.Default
-	private String orderType = "LOC";
+	private String orderType = "limit";
 
 	private String price;
 
@@ -61,5 +61,11 @@ public class InvestmentHistory extends BaseEntity {
 	private BigDecimal totalAmount;
 
 	private LocalDateTime orderCreatedAt;
+
+	public void updateUser(User user) { this.user = user; }
+
+	public void updateTotalEvaluation(BigDecimal totalEvaluation) { this.totalEvaluation = totalEvaluation; }
+
+	public void updateTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
 
 }
