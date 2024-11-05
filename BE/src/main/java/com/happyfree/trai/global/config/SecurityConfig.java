@@ -51,15 +51,14 @@ public class SecurityConfig {
 						HttpServletRequest request) {
 						CorsConfiguration configuration = new CorsConfiguration();
 						configuration.setAllowedOrigins(
-							Arrays.asList("http://www.trai-ai-site", "https://www.trai-ai.site",
-								"http://localhost:5173", "http://localhost:5173/"));
-					
-						configuration.addAllowedOriginPattern("http://localhost:5173");
-						configuration.addAllowedOriginPattern("http://localhost:5173/");
+							Arrays.asList("http://www.trai-ai.site", "https://www.trai-ai.site",
+								"http://localhost:5173"));
 						configuration.setAllowedMethods(Collections.singletonList("*"));
 						configuration.setAllowedHeaders(Collections.singletonList("*"));
 						configuration.setAllowCredentials(true);
 						configuration.setMaxAge(3600L);
+						configuration.addExposedHeader("Set-Cookie");
+						configuration.addAllowedMethod("*");
 						return configuration;
 					}
 
