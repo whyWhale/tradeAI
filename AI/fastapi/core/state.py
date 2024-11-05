@@ -8,6 +8,7 @@ class State(BaseModel):
     fng: Optional[dict] = None
     news_search: Optional[dict] = None
     quant: Optional[dict] = None
+    chart_pattern: Optional[dict] = None
     master: Optional[dict] = None
 
     def copy(self, update=None):
