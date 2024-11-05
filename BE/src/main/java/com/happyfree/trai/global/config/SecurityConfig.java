@@ -6,7 +6,6 @@ import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 import java.util.Arrays;
 import java.util.Collections;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,13 +21,12 @@ import com.happyfree.trai.user.repository.UserRepository;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-	private String allowedOrigins = "https://localhost:8080";
 
 	@Autowired
 	private UserRepository userRepository;
@@ -52,7 +50,10 @@ public class SecurityConfig {
 					public CorsConfiguration getCorsConfiguration(
 						HttpServletRequest request) {
 						CorsConfiguration configuration = new CorsConfiguration();
-						configuration.setAllowedOrigins(Arrays.asList(allowedOrigins, "https://www.trai-ai.site"));
+						configuration.setAllowedOrigins(
+							Arrays.asList("http://www.trai-ai-site", "https://www.trai-ai.site",
+								"http://localhost:5173", "http://localhost:5173/"));
+					
 						configuration.addAllowedOriginPattern("http://localhost:5173");
 						configuration.addAllowedOriginPattern("http://localhost:5173/");
 						configuration.setAllowedMethods(Collections.singletonList("*"));
