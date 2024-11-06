@@ -7,11 +7,12 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
+@Table(name = "agent_history")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class AnalysisResult extends BaseEntity {
+public class Agent extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,8 +24,4 @@ public class AnalysisResult extends BaseEntity {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
-
-    public void updateUser(User user) {
-        this.user = user;
-    }
 }

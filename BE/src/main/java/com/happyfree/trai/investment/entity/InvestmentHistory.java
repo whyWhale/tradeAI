@@ -68,4 +68,7 @@ public class InvestmentHistory extends BaseEntity {
 
 	public void updateTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
 
+	public void updateSide(String side) { this.side = side; }
+
+	public void updateAveragePrice(BigDecimal averagePrice) { this.averagePrice = averagePrice; }
 }
