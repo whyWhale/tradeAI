@@ -27,14 +27,24 @@ def capture_chart_screenshot():
     chrome_options.add_argument("--disable-gpu")
     chrome_options.binary_location = os.getenv('CHROME_BIN', '/usr/bin/chromium')
 
-    # 추가 안정화 옵션
+    # 추가 안정화 및 최적화 옵션
     chrome_options.add_argument("--disable-software-rasterizer")
     chrome_options.add_argument("--disable-features=VizDisplayCompositor")
     chrome_options.add_argument("--no-zygote")
     chrome_options.add_argument("--single-process")
-    chrome_options.add_argument("--disable-background-timer-throttling")
-    chrome_options.add_argument("--disable-backgrounding-occluded-windows")
-    chrome_options.add_argument("--disable-renderer-backgrounding")
+    chrome_options.add_argument("--disable-infobars")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--disable-blink-features=AutomationControlled")
+    chrome_options.add_argument("--disable-browser-side-navigation")
+    chrome_options.add_argument("--disable-background-networking")
+    chrome_options.add_argument("--disable-client-side-phishing-detection")
+    chrome_options.add_argument("--disable-hang-monitor")
+    chrome_options.add_argument("--disable-popup-blocking")
+    chrome_options.add_argument("--disable-prompt-on-repost")
+    chrome_options.add_argument("--disable-sync")
+    chrome_options.add_argument("--metrics-recording-only")
+    chrome_options.add_argument("--no-first-run")
+    chrome_options.add_argument("--safebrowsing-disable-auto-update")
     chrome_options.add_argument("--remote-debugging-port=9222")
 
     try:
