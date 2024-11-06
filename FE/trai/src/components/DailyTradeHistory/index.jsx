@@ -114,7 +114,7 @@ const DailyTradeHistory = () => {
                 <td>{data.excutedFunds}</td>
                 <td>{data.totalEvaluation}</td>
                 <td>{data.totalAmount}</td>
-                <td>보기</td>
+                <td>회고</td>
               </tr>
             ))
           ) : (
