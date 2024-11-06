@@ -376,18 +376,18 @@ public class ProfitAssetService {
 		HttpHeaders headers = new HttpHeaders();
 		Algorithm algorithm = Algorithm.HMAC256(secretKey);
 		String jwtToken = JWT.create()
-				.withClaim("access_key", accessKey)
-				.withClaim("nonce", UUID.randomUUID().toString())
-				.sign(algorithm);
+			.withClaim("access_key", accessKey)
+			.withClaim("nonce", UUID.randomUUID().toString())
+			.sign(algorithm);
 		String authenticationToken = "Bearer " + jwtToken;
 		headers.set("Authorization", authenticationToken);
 		headers.set("Content-Type", "application/json");
 		HttpEntity<String> entity = new HttpEntity<>(headers);
 		ResponseEntity<String> response = restTemplate.exchange(
-				serverUrl + "/v1/accounts",
-				HttpMethod.GET,
-				entity,
-				String.class
+			serverUrl + "/v1/accounts",
+			HttpMethod.GET,
+			entity,
+			String.class
 		);
 
 		ObjectMapper mapper = new ObjectMapper();
@@ -459,7 +459,7 @@ public class ProfitAssetService {
 
 			// 기말자산
 			BigDecimal endingAssets = totalCoinEvaluation
-					.add(totalKRWAssets);
+				.add(totalKRWAssets);
 
 			// 전 날 전체 입금액
 			BigDecimal totalDepositAmount = td(yesterday);
@@ -469,63 +469,64 @@ public class ProfitAssetService {
 
 			// 일일 손익
 			BigDecimal dailyProfitAndLoss = endingAssets
-					.subtract(startingAssets)
-					.add(totalWithdrawAmount)
-					.subtract(totalDepositAmount);
+				.subtract(startingAssets)
+				.add(totalWithdrawAmount)
+				.subtract(totalDepositAmount);
 
 			// 누적 손익
 			BigDecimal accumulationProfitAndLoss = beforeAccumulationProfitAndLoss
-					.add(dailyProfitAndLoss);
+				.add(dailyProfitAndLoss);
 
 			// 일일 수익률
 			BigDecimal dailyProfitRatio = BigDecimal.ZERO;
 			if (startingAssets.add(totalDepositAmount).compareTo(BigDecimal.ZERO) > 0) {
 				dailyProfitRatio = dailyProfitAndLoss
-						.divide(startingAssets.add(totalDepositAmount), 4, RoundingMode.DOWN)
-						.multiply(BigDecimal.valueOf(100))
-						.setScale(2, RoundingMode.DOWN);
+					.divide(startingAssets.add(totalDepositAmount), 4, RoundingMode.DOWN)
+					.multiply(BigDecimal.valueOf(100))
+					.setScale(2, RoundingMode.DOWN);
 			}
 
 			// 누적 수익률
 			BigDecimal accumulationProfitRatio = beforeAccumulationProfitRatio
-					.add(BigDecimal.ONE)
-					.multiply(BigDecimal.ONE.add(dailyProfitRatio.divide(BigDecimal.valueOf(100), RoundingMode.DOWN)))
-					.subtract(BigDecimal.ONE)
-					.setScale(2, RoundingMode.DOWN);
+				.add(BigDecimal.ONE)
+				.multiply(BigDecimal.ONE.add(dailyProfitRatio.divide(BigDecimal.valueOf(100), RoundingMode.DOWN)))
+				.subtract(BigDecimal.ONE)
+				.setScale(2, RoundingMode.DOWN);
 
 			// 자산 비중 추이
 			byte coinAssetPercentage = 0;
 			if (endingAssets.compareTo(BigDecimal.ZERO) > 0) {
 				coinAssetPercentage = totalCoinEvaluation
-						.divide(endingAssets, 4, RoundingMode.DOWN)
-						.multiply(BigDecimal.valueOf(100))
-						.setScale(2, RoundingMode.DOWN)
-						.byteValue();
+					.divide(endingAssets, 4, RoundingMode.DOWN)
+					.multiply(BigDecimal.valueOf(100))
+					.setScale(2, RoundingMode.DOWN)
+					.byteValue();
 			}
 
 			ProfitAssetHistory profitAssetHistory = ProfitAssetHistory.builder()
-					.user(user)
-					.startingAssets(startingAssets)
-					.endingAssets(endingAssets)
-					.dailyProfitAndLoss(dailyProfitAndLoss)
-					.dailyProfitRatio(dailyProfitRatio)
-					.accumulationProfitAndLoss(accumulationProfitAndLoss)
-					.accumulationProfitRatio(accumulationProfitRatio)
-					.coinAssetPercentage(coinAssetPercentage)
-					.settlementDate(yesterday)
-					.build();
+				.user(user)
+				.startingAssets(startingAssets)
+				.endingAssets(endingAssets)
+				.dailyProfitAndLoss(dailyProfitAndLoss)
+				.dailyProfitRatio(dailyProfitRatio)
+				.accumulationProfitAndLoss(accumulationProfitAndLoss)
+				.accumulationProfitRatio(accumulationProfitRatio)
+				.coinAssetPercentage(coinAssetPercentage)
+				.settlementDate(yesterday)
+				.build();
 
-            yesterdayProfitAssetHistory.ifPresent(assetHistory -> profitAssetHistory.updateId(assetHistory.getId()));
+			yesterdayProfitAssetHistory.ifPresent(assetHistory -> profitAssetHistory.updateId(assetHistory.getId()));
 
 			profitAssetRepository.save(profitAssetHistory);
 
 			ProfitAssetHistory newProfitAssetHistory = ProfitAssetHistory.builder()
-					.user(user)
-					.startingAssets(endingAssets)
-					.settlementDate(today)
-					.build();
+				.user(user)
+				.startingAssets(endingAssets)
+				.settlementDate(today)
+				.build();
 
 			profitAssetRepository.save(newProfitAssetHistory);
 		}
 	}
 }
+
