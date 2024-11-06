@@ -5,11 +5,16 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from pyvirtualdisplay import Display
 import time
 import os
 
 def capture_chart_screenshot():
     print(">>> 스크린샷 캡처 시작")
+
+    # 가상 디스플레이 설정
+    display = Display(visible=0, size=(1920, 1080))
+    display.start()
 
     chrome_driver_path = os.getenv('CHROMEDRIVER_PATH', '/usr/bin/chromedriver')
     print(f"ChromeDriver 경로: {chrome_driver_path}")
@@ -82,3 +87,4 @@ def capture_chart_screenshot():
         if 'driver' in locals():
             driver.quit()
             print("WebDriver 닫힘.")
+        display.stop()  # 가상 디스플레이 종료
