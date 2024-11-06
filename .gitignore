@@ -30,3 +30,7 @@ certbot/www/
 
 # Environment variables
 .env
+
+# python
+trai-env/
+__pycache__/

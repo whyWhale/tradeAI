@@ -3,45 +3,37 @@
     grid-template-columns: 2fr 1fr 2fr;
     grid-template-rows: auto auto;
     gap: 1px;
+    height: 130px;
     width: 100%;
     align-items: center;
-
-    .ticker {
-        grid-area: 1 / 1 / 2 / 2;
-        display: flex;
-        align-items: center;
-        font-family: 'Pretendard';
-        font-weight: 700;
-        font-size: 24px;
-        color: #000000;
-    }
+    margin-top:10px;
     
     .chart-price-container{
-        grid-area: 3 / 1 / 4 / 2; 
-        .chart-price {
-            font-family: 'Pretendard';
-            font-weight: 800;
-            font-size: 32px;
-            display: flex;
-            align-items: center;
-        }
-    
-        .change-text {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            font-family: 'Pretendard';
-            font-weight: 600;
-            font-size: 24px;
-            .signed-price-rate{
-                text-align: 'left';
-            }
-            .change-price {
-                text-align: 'right';
-            }
-        }
-    }
+      grid-area: 3 / 1 / 4 / 2;
 
+      .chart-price {
+          font-family: 'Pretendard';
+          font-weight: 800;
+          font-size: 32px;
+          display: flex;
+          align-items: left;
+      }
+  
+      .change-text {
+          display: flex;
+          justify-content: space-between;
+          width: 100%;
+          font-family: 'Pretendard';
+          font-weight: 600;
+          font-size: 24px;
+          .signed-price-rate{
+              text-align: 'left';
+          }
+          .change-price {
+              text-align: 'right';
+          }
+      }
+    }
 
     .chart-details {
         grid-area: 3 / 3 / 4 / 4;
@@ -123,3 +115,57 @@
     top: 47%;
     left: 36%;
 }
+
+.loader {
+    grid-column: 2; /* 두 번째 열에 위치 */
+    color: var(--trai-disabled);
+    position: relative;
+    display: inline-block;
+    justify-content: center;
+    margin-top: 50px;
+    font-family: 'Pretendard';
+    font-size: 15px;
+    letter-spacing: 4px;
+    box-sizing: border-box;
+  }
+  
+  .loader::after {
+    content: '';  
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    left: 125px;
+    top: 2px;
+    border-radius: 50%;
+    background: var(--trai-mint);
+    box-sizing: border-box;
+    animation: animloader 1s linear infinite alternate;
+  }
+  
+  @keyframes animloader {
+    0% {
+      transform: translate(0px, 0px) scaleX(1);
+    }
+    14% {
+      transform: translate(-12px, -16px) scaleX(1.05);
+    }
+    28% {
+      transform: translate(-27px, -28px) scaleX(1.07);
+    }
+    42% {
+      transform: translate(-46px, -35px) scaleX(1.1);
+    }
+    57% {
+      transform: translate(-70px, -37px) scaleX(1.1);
+    }
+    71% {
+      transform: translate(-94px, -32px) scaleX(1.07);
+    }
+    85% {
+      transform: translate(-111px, -22px) scaleX(1.05);
+    }
+    100% {
+      transform: translate(-125px, -9px) scaleX(1);
+    }
+  }
+  
