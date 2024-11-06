@@ -1,10 +1,8 @@
 import base64
 from pydantic import BaseModel
-from typing import Literal
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import JsonOutputParser
+from typing import Literal, Optional
 from core.config import llm
-from core.capture import capture_chart_screenshot
+from core.capture_firefox import capture_chart_screenshot
 from core.state import State
 import json
 
@@ -28,7 +26,7 @@ def encode_image_from_file(file_path: str) -> str:
         print(f">>> ERROR: Failed to encode image: {str(e)}")
         raise
 
-# 프롬프트 템플릿 설정
+# 차트 패턴 분석 프롬프트
 image_analysis_template = """당신은 비트코인 차트를 해석하는 시각적 패턴 분석 전문가입니다.
 당신의 임무는 주어진 차트 이미지를 기반으로 주요 시각적 패턴과 거래 심리를 분석하여 사용자가 매수, 매도, 보류 중 하나의 결정을 내릴 수 있도록 도움을 주는 것입니다.
 
@@ -47,12 +45,6 @@ image_analysis_template = """당신은 비트코인 차트를 해석하는 시�
 }}
 """
 
-print(">>> Initializing prompt template and chain")
-image_prompt_template = PromptTemplate.from_template(image_analysis_template)
-image_output_parser = JsonOutputParser(pydantic_object=ImageAnalysisResult)
-image_chain = image_prompt_template | llm | image_output_parser
-print(">>> Chain initialization completed")
-
 def chart_pattern_agent(state: State) -> State:
     print(">>> Starting chart pattern analysis")
     try:
@@ -66,33 +58,29 @@ def chart_pattern_agent(state: State) -> State:
         encoded_image = encode_image_from_file(image_path)
         print(">>> Image encoding completed")
 
-        # dict 형태로 입력값 전달
-        print(">>> Preparing input data for LLM")
-        input_data = {"image_data": encoded_image}
-        print(">>> Input data prepared")
+        # 메시지 생성: 텍스트 프롬프트와 인코딩된 이미지 포함
+        messages = [
+            {"role": "system", "content": image_analysis_template},
+            {"role": "user", "content": [
+                {"type": "text", "text": "당신에게 주어진 이미지는 비트코인의 실시간 자산 변동 그래프입니다. 주요 시각적 패턴, 거래량 스파이크, 캔들스틱 반전 패턴, 추세의 시각적 흐름을 분석하고, 향후 4시간 내의 가격 예측 및 이에 따른 투자 전략을 JSON 형식으로 제안하세요."},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": encoded_image
+                    }
+                }
+            ]}
+        ]
+
+        # LLM 호출을 통한 이미지 분석 수행
+        result = llm.invoke(messages)
         
-        # 이미지 분석 수행
-        print(">>> Invoking LLM for chart analysis...")
-        result = image_chain.invoke(input_data)
-        print(">>> LLM analysis completed")
-        print(f">>> Raw analysis result: {result}")
+        # 결과가 JSON 형식의 문자열로 반환되므로 파싱하여 처리
+        parsed_content = json.loads(result.content.strip("```json\n").strip("\n```"))
+        print("차트 분석을 위한 LLM 호출 성공:", parsed_content)
 
-        # 결과 파싱 검증
-        if not isinstance(result, dict):
-            print(">>> Warning: Result is not a dict. Attempting to parse JSON...")
-            try:
-                result = json.loads(result)
-                print(">>> Successfully parsed result as JSON")
-            except json.JSONDecodeError as json_err:
-                print(f">>> ERROR: JSON parsing failed: {json_err}")
-                print(f">>> Raw result that failed to parse: {result}")
-                raise ValueError("Failed to parse the result as JSON")
-
-        # 새 메시지 생성
-        print(">>> Creating new message with analysis results")
-        new_message = (f"Chart Analysis Decision: {result['decision']}, "
-                        f"Chart Analysis Summary: {result['summary']}")
-        print(f">>> New message created: {new_message}")
+        new_message = (f"Chart Analysis Decision: {parsed_content['decision']}, "
+                       f"Chart Analysis Summary: {parsed_content['summary']}")
 
         # State 업데이트
         print(">>> Updating state with new information")
@@ -100,8 +88,8 @@ def chart_pattern_agent(state: State) -> State:
         updated_state = state.copy(update={
             "messages": updated_messages,
             "chart_pattern": {
-                "decision": result["decision"],
-                "summary": result["summary"]
+                "decision": parsed_content["decision"],
+                "summary": parsed_content["summary"]
             }
         })
         print(">>> State updated successfully")
