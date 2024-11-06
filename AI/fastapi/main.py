@@ -48,7 +48,7 @@ graph = graph_builder.compile()
 
 # Controller
 class UserInfo(BaseModel):
-    userId: int
+    user_id: int
     available_amount: float
     btc_balance_krw: float
 

@@ -59,8 +59,6 @@ def order_amount_calculator(decision, percent, available_order_amount, btc_holdi
     # 예외적으로 다른 값이 들어왔을 경우 0 반환
     return 0
 
-
-
 # 단일 결정 카운트 함수
 def count_decision(decision: Optional[str]) -> tuple[int, int, int]:
     if not decision:
@@ -129,7 +127,7 @@ def master_agent(state: State) -> State:
 
 
     # 주문 결정
-    orderAmount = order_amount_caculator(
+    orderAmount = order_amount_calculator(
         result["decision"],
         result["percentage"],
         state.user_info["available_amount"],
