@@ -63,10 +63,12 @@ class UserInfo(BaseModel):
 @router.post("/analysis")
 async def run_analysis(user_info: UserInfo):
     try:
+        current_time = (datetime.utcnow() + timedelta(hours=9)).isoformat()
+
         initial_state = State(
             messages=["Analysis Started"],
             user_info=user_info.dict(),
-            metadata={"date": (datetime.utcnow() + timedelta(hours=9)).isoformat()}
+            metadata={"current_time": current_time}
         )
         result_state = graph.invoke(initial_state)
         result_state = State(**result_state)
