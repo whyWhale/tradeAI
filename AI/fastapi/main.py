@@ -35,7 +35,7 @@ graph_builder.add_node("chart_pattern_agent", chart_pattern_agent)
 graph_builder.add_node("master_agent", master_agent)
 
 # 직렬
-graph_builder.add_edge(START, "fng_agent")
+# graph_builder.add_edge(START, "fng_agent")
 # graph_builder.add_edge("fng_agent", "news_search_agent")
 # graph_builder.add_edge("news_search_agent", "quant_agent")
 # graph_builder.add_edge("quant_agent", "chart_pattern_agent")
@@ -78,7 +78,17 @@ async def run_analysis(user_info: UserInfo):
 @router.post("/reports")
 async def run_analysis():
     try:
-        initial_state = State(messages=["Analysis Started"], )
+        user_info = UserInfo(
+            user_id=12345,
+            available_amount=1000000.0,
+            btc_balance_krw=500000.0
+        )
+
+        initial_state = State(
+            messages=["Analysis Started"],
+            user_info=user_info.dict(),
+            metadata={"date": (datetime.utcnow() + timedelta(hours=9)).isoformat()}
+        )
         result_state = graph.invoke(initial_state)
         result_state = State(**result_state)
         return result_state
