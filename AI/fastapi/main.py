@@ -68,7 +68,7 @@ async def run_analysis(user_info: UserInfo):
         initial_state = State(
             messages=["Analysis Started"],
             user_info=user_info.dict(),
-            data_info={"current_time": current_time}
+            # metadata={"current_time": current_time}
         )
         result_state = graph.invoke(initial_state)
         result_state = State(**result_state)
