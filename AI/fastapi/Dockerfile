@@ -34,11 +34,13 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xdg-utils \
     chromium \
     chromium-driver \
+    && apt-get remove -y build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 # Set environment variables for Chrome and ChromeDriver paths
 ENV CHROME_BIN=/usr/bin/chromium
 ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
+ENV PYTHONUNBUFFERED=1
 
 # Install Python dependencies
 COPY requirements.txt .
