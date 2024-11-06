@@ -52,7 +52,7 @@ class UserInfo(BaseModel):
     totalKRWAssets: float
     totalCoinEvaluation: float
 
-@router.get("/analysis")
+@router.post("/analysis")
 async def run_analysis(user_info: UserInfo):
     try:
         initial_state = State(
@@ -67,7 +67,7 @@ async def run_analysis(user_info: UserInfo):
         print("API 처리 중 오류 발생:", str(e))
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/reports")
+@router.post("/reports")
 async def run_analysis():
     try:
         initial_state = State(messages=["Analysis Started"], )
