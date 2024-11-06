@@ -1,10 +1,8 @@
 import base64
 from pydantic import BaseModel
-from typing import Literal
-from langchain_core.prompts import PromptTemplate
-from langchain_core.output_parsers import JsonOutputParser
+from typing import Literal, Optional
 from core.config import llm
-from core.capture import capture_chart_screenshot
+from core.capture_firefox import capture_chart_screenshot
 from core.state import State
 import json
 
@@ -21,7 +19,7 @@ def encode_image_from_file(file_path: str) -> str:
         mime_type = "image/jpeg" if file_ext in ["jpg", "jpeg"] else "image/png"
         return f"data:{mime_type};base64,{base64.b64encode(image_content).decode('utf-8')}"
 
-# 프롬프트 템플릿 설정
+# 차트 패턴 분석 프롬프트
 image_analysis_template = """당신은 비트코인 차트를 해석하는 시각적 패턴 분석 전문가입니다.
 당신의 임무는 주어진 차트 이미지를 기반으로 주요 시각적 패턴과 거래 심리를 분석하여 사용자가 매수, 매도, 보류 중 하나의 결정을 내릴 수 있도록 도움을 주는 것입니다.
 
@@ -40,14 +38,9 @@ image_analysis_template = """당신은 비트코인 차트를 해석하는 시�
 }}
 """
 
-image_prompt_template = PromptTemplate.from_template(image_analysis_template)
-image_output_parser = JsonOutputParser(pydantic_object=ImageAnalysisResult)
-image_chain = image_prompt_template | llm | image_output_parser
-
 # Chart Pattern Agent 함수
 def chart_pattern_agent(state: State) -> State:
     try:
-        
         # 차트 이미지 캡처
         image_path = capture_chart_screenshot()
         print("차트 패턴 분석 이미지 준비 완료:", image_path)
@@ -55,24 +48,29 @@ def chart_pattern_agent(state: State) -> State:
         # 이미지 인코딩
         encoded_image = encode_image_from_file(image_path)
 
-        # dict 형태로 입력값 전달
-        input_data = {"image_data": encoded_image}  # 'image_data'는 프롬프트에서 참조할 변수 이름
+        # 메시지 생성: 텍스트 프롬프트와 인코딩된 이미지 포함
+        messages = [
+            {"role": "system", "content": image_analysis_template},
+            {"role": "user", "content": [
+                {"type": "text", "text": "당신에게 주어진 이미지는 비트코인의 실시간 자산 변동 그래프입니다. 주요 시각적 패턴, 거래량 스파이크, 캔들스틱 반전 패턴, 추세의 시각적 흐름을 분석하고, 향후 4시간 내의 가격 예측 및 이에 따른 투자 전략을 JSON 형식으로 제안하세요."},
+                {
+                    "type": "image_url",
+                    "image_url": {
+                        "url": encoded_image
+                    }
+                }
+            ]}
+        ]
+
+        # LLM 호출을 통한 이미지 분석 수행
+        result = llm.invoke(messages)
         
-        # 이미지 분석 수행
-        result = image_chain.invoke(input_data)
-        print(f"차트 분석을 위한 LLM 호출 성공: {result}")
+        # 결과가 JSON 형식의 문자열로 반환되므로 파싱하여 처리
+        parsed_content = json.loads(result.content.strip("```json\n").strip("\n```"))
+        print("차트 분석을 위한 LLM 호출 성공:", parsed_content)
 
-        # 결과가 dict 형태로 올바르게 파싱되었는지 확인
-        if not isinstance(result, dict):
-            print("Warning: Result is not a dict. Attempting to parse.")
-            try:
-                result = json.loads(result)
-            except json.JSONDecodeError as json_err:
-                print(f"JSON parsing error: {json_err}")
-                raise ValueError("Failed to parse the result as JSON.")
-
-        new_message = (f"Chart Analysis Decision: {result['decision']}, "
-                       f"Chart Analysis Summary: {result['summary']}")
+        new_message = (f"Chart Analysis Decision: {parsed_content['decision']}, "
+                       f"Chart Analysis Summary: {parsed_content['summary']}")
 
         updated_messages = state.messages + [new_message]
 
@@ -80,8 +78,8 @@ def chart_pattern_agent(state: State) -> State:
         updated_state = state.copy(update={
             "messages": updated_messages,
             "chart_pattern": {
-                "decision": result["decision"],
-                "summary": result["summary"]
+                "decision": parsed_content["decision"],
+                "summary": parsed_content["summary"]
             }
         })
 
