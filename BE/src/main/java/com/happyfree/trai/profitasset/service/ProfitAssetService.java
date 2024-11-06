@@ -218,11 +218,11 @@ public class ProfitAssetService {
 		);
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode jsonArray = mapper.readTree(bit.getBody());
-		Double openingPrice = jsonArray.get(0).get("opening_price").asDouble(); // TODO: opening_price -> trade_price
-		if (openingPrice == null) {
-			openingPrice = 0.0;
+		Double tradePrice = jsonArray.get(0).get("trade_price").asDouble();
+		if (tradePrice == null) {
+			tradePrice = 0.0;
 		}
-		return new BigDecimal(openingPrice);
+		return new BigDecimal(tradePrice);
 	}
 
 	// 비트코인 개수
@@ -248,8 +248,8 @@ public class ProfitAssetService {
 		JsonNode jsonArray = mapper.readTree(response.getBody());
 		for (JsonNode node : jsonArray) {
 			String currency = node.get("currency").asText();
-			if ("KRW-BTC".equals(currency)) { // TODO: KRW-BTC -> BTC
-				Double balance = node.get("balance").asDouble(); // TODO: balance + lock
+			if ("BTC".equals(currency)) {
+				Double balance = node.get("balance").asDouble();
 				return new BigDecimal(balance);
 			}
 		}
