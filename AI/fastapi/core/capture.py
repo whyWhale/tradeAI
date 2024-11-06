@@ -9,10 +9,10 @@ import time
 import os
 
 def capture_chart_screenshot():
-    print(">>> Starting capture process")
-    
+    print(">>> 스크린샷 캡처 시작")
+
     chrome_driver_path = os.getenv('CHROMEDRIVER_PATH', '/usr/bin/chromedriver')
-    print(f"Using ChromeDriver path: {chrome_driver_path}")
+    print(f"ChromeDriver 경로: {chrome_driver_path}")
 
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -21,40 +21,41 @@ def capture_chart_screenshot():
     chrome_options.add_argument("--window-size=1920x1080")
     chrome_options.add_argument("--disable-gpu")
     chrome_options.binary_location = os.getenv('CHROME_BIN', '/usr/bin/chromium')
-    
-    # Add ARM-specific options
+
+    # ARM 기반 옵션 추가
     chrome_options.add_argument("--disable-software-rasterizer")
     chrome_options.add_argument("--disable-features=VizDisplayCompositor")
-    
+    chrome_options.add_argument("--no-zygote")
+    chrome_options.add_argument("--single-process")  # ARM에서 리소스 사용량을 줄이기 위해
+
     try:
         service = Service(chrome_driver_path)
         driver = webdriver.Chrome(service=service, options=chrome_options)
-        print("WebDriver initialized successfully")
+        print("WebDriver 초기화 성공")
 
         url = "https://upbit.com/full_chart?code=CRIX.UPBIT.KRW-BTC"
-        print(f"Navigating to URL: {url}")
+        print(f"URL로 이동 중: {url}")
         driver.get(url)
 
-        print("Waiting for chart element to load...")
+        print("차트 요소가 로드될 때까지 기다리는 중...")
         WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.XPATH, "//*[@id='fullChartiq']")))
-        print("Chart element loaded successfully.")
+        print("차트 요소 로드 완료.")
 
-        print("Waiting for menu button to become clickable...")
+        print("메뉴 버튼이 클릭 가능해질 때까지 기다리는 중...")
         menu_button = WebDriverWait(driver, 15).until(
             EC.element_to_be_clickable((By.XPATH, "//*[@id='fullChartiq']/div/div/div[1]/div/div/cq-menu[1]/span/cq-clickable"))
         )
         menu_button.click()
-        print("Menu button clicked.")
+        print("메뉴 버튼 클릭 완료.")
 
         time.sleep(1)
 
-        print("Waiting for four-hour button to become clickable...")
+        print("4시간 버튼이 클릭 가능해질 때까지 기다리는 중...")
         four_hour_button = WebDriverWait(driver, 15).until(
             EC.element_to_be_clickable((By.XPATH, "//*[@id='fullChartiq']/div/div/div[1]/div/div/cq-menu[1]/cq-menu-dropdown/cq-item[9]"))
         )
-
         four_hour_button.click()
-        print("Four-hour button clicked.")
+        print("4시간 버튼 클릭 완료.")
 
         time.sleep(2)
 
@@ -66,18 +67,18 @@ def capture_chart_screenshot():
         screenshot_path = os.path.join(screenshot_folder, f"{current_time}_upbit_full_chart_4hour.png")
 
         driver.save_screenshot(screenshot_path)
-        print(f"Screenshot saved at: {screenshot_path}")
+        print(f"스크린샷 저장 완료: {screenshot_path}")
 
         return screenshot_path
 
     except Exception as e:
-        print(f"Error in capture_chart_screenshot: {str(e)}")
-        print(f"Error type: {type(e).__name__}")
+        print(f"capture_chart_screenshot에서 오류 발생: {str(e)}")
+        print(f"오류 유형: {type(e).__name__}")
         import traceback
-        print(f"Traceback: {traceback.format_exc()}")
+        print(f"트레이스백: {traceback.format_exc()}")
         raise
 
     finally:
         if 'driver' in locals():
             driver.quit()
-            print("WebDriver closed.")
+            print("WebDriver 닫힘.")
