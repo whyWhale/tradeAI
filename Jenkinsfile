@@ -76,6 +76,7 @@ pipeline {
                     ]) {
                         sh '''
                             docker compose pull
+                            docker compose down
                             MYSQL_DATABASE=${MYSQL_DATABASE} \
                             MYSQL_USER=${MYSQL_USER} \
                             MYSQL_PASSWORD=${MYSQL_PASSWORD} \

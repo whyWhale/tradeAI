@@ -1,5 +1,8 @@
-package com.happyfree.trai.controller;
+package com.happyfree.trai.agent.controller;
 
+import com.happyfree.trai.agent.service.AgentService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,14 +14,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "에이전트")
-@RequestMapping("/api/agent-histories")
+@RequestMapping("/api/agent-history")
 @RestController
-public class AgentHistoriesController {
+@RequiredArgsConstructor
+public class AgentController {
+
+	private final AgentService agentService;
 
 	@Operation(summary = "에이전트 판단 조회")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
 	@GetMapping("")
-	public void a(@RequestParam("year") String year,@RequestParam("month") String month,@RequestParam("day") String day) {
+	public ResponseEntity<?> findAgentHistoryByDate(@RequestParam("year") String year, @RequestParam("month") String month, @RequestParam("day") String day) {
 
+		return ResponseEntity.ok(agentService.findAgentHistoryByDate(year, month, day));
 	}
 }

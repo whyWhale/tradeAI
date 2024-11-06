@@ -7,10 +7,10 @@ import getInitialDataList from "./utils/getInitialDataList";
 import getInitialDetailList from "./utils/getInitialDetailList";
 import getLanguageOption from "./utils/getLanguageOption";
 import { chartStyle } from './chartStyle';
-import bitcoinIcon from './BC_Logo.png';
 import useRealTimeData from "./hooks/useRealTimeData";
 import useNewData from "./hooks/useNewData";
 import ChartButton from './ChartButton';
+import axios from 'axios';
 
 const types = [
   { key: "candle_solid", text: "solid" },
@@ -58,6 +58,7 @@ const CoinChart = () => {
         const chartDataList = await getInitialDataList(1);
         if (chartRef.current) {
           chartRef.current.applyNewData(chartDataList);
+
         }
   
         // 10초 지연 후 시세 정보 데이터 요청
@@ -66,8 +67,8 @@ const CoinChart = () => {
             const detailDataList = await getInitialDetailList();
             if (detailDataList && detailDataList[0]) {
               updateChartDetail(detailDataList[0]);
+              setInitialized(true); // 초기화 완료
             }
-            setInitialized(true); // 초기화 완료
           } catch (error) {
             console.error("Failed to fetch detail data. Retrying in 10 seconds...", error);
             setTimeout(fetchData, 10000); // 10초 후에 다시 fetchData 호출
@@ -101,11 +102,6 @@ const CoinChart = () => {
   return (
     <>
       <div className="chart-header">
-        <div className="ticker">
-          <img src={bitcoinIcon} alt="Bitcoin Icon" style={{ width: '24px', height: '24px', marginRight: '8px' }} />
-          <span>비트코인 </span>
-          <span style={{ fontSize: '16px' }}>&nbsp;BTC/KRW</span>
-        </div>
         {chartDetail ? (
           <>
             <div className="chart-price-container" style={ chartDetail.priceStyle }>
@@ -118,12 +114,12 @@ const CoinChart = () => {
             <div className="chart-details">
               <div className="high">고가<br/><span className="high-value">{`${formatValue(chartDetail.high)} KRW`}</span></div>
               <div className="low">저가<br/><span className="low-value">{`${formatValue(chartDetail.low)} KRW`}</span></div>
-              <div className="volume24">거래량(24h)<br/><span className="volume24-value">{`${formatValue(chartDetail.tradeVolume)}`}</span></div>
-              <div className="price24">거래대금(24H)<br/><span className="price24-value">{`${formatValue(chartDetail.tradePrice)}`}</span></div>
+              <div className="volume24">거래량(24h)<br/><span className="volume24-value">{`${formatValue(chartDetail.tradeVolume)} KRW`}</span></div>
+              <div className="price24">거래대금(24H)<br/><span className="price24-value">{`${formatValue(chartDetail.tradePrice)} KRW`}</span></div>
             </div>
           </>
         ) : (
-          <span class="loader"></span>
+          <div class="loader">&nbsp;&nbsp;&nbsp;시세&nbsp;정보를<br/>불러오는&nbsp;중입니다.</div>
         )}
       </div>
       <Layout>

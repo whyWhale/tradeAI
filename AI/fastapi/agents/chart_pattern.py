@@ -6,18 +6,25 @@ from core.capture_firefox import capture_chart_screenshot
 from core.state import State
 import json
 
-# 차트 이미지 분석 결과를 위한 Pydantic 모델
 class ImageAnalysisResult(BaseModel):
     decision: Literal["BUY", "SELL", "HOLD"]
     summary: str
 
-# 이미지 파일을 base64로 인코딩하는 함수
 def encode_image_from_file(file_path: str) -> str:
-    with open(file_path, "rb") as image_file:
-        image_content = image_file.read()
-        file_ext = file_path.split('.')[-1].lower()
-        mime_type = "image/jpeg" if file_ext in ["jpg", "jpeg"] else "image/png"
-        return f"data:{mime_type};base64,{base64.b64encode(image_content).decode('utf-8')}"
+    print(">>> Starting image encoding process")
+    try:
+        with open(file_path, "rb") as image_file:
+            image_content = image_file.read()
+            file_ext = file_path.split('.')[-1].lower()
+            mime_type = "image/jpeg" if file_ext in ["jpg", "jpeg"] else "image/png"
+            encoded_data = base64.b64encode(image_content).decode('utf-8')
+            print(f">>> Successfully encoded image: {file_path}")
+            print(f">>> Image type: {mime_type}")
+            print(f">>> Encoded data length: {len(encoded_data)} characters")
+            return f"data:{mime_type};base64,{encoded_data}"
+    except Exception as e:
+        print(f">>> ERROR: Failed to encode image: {str(e)}")
+        raise
 
 # 차트 패턴 분석 프롬프트
 image_analysis_template = """당신은 비트코인 차트를 해석하는 시각적 패턴 분석 전문가입니다.
@@ -38,15 +45,18 @@ image_analysis_template = """당신은 비트코인 차트를 해석하는 시�
 }}
 """
 
-# Chart Pattern Agent 함수
 def chart_pattern_agent(state: State) -> State:
+    print(">>> Starting chart pattern analysis")
     try:
         # 차트 이미지 캡처
+        print(">>> Capturing chart screenshot...")
         image_path = capture_chart_screenshot()
-        print("차트 패턴 분석 이미지 준비 완료:", image_path)
+        print(f">>> Chart screenshot captured successfully: {image_path}")
 
         # 이미지 인코딩
+        print(">>> Starting image encoding process")
         encoded_image = encode_image_from_file(image_path)
+        print(">>> Image encoding completed")
 
         # 메시지 생성: 텍스트 프롬프트와 인코딩된 이미지 포함
         messages = [
@@ -72,9 +82,9 @@ def chart_pattern_agent(state: State) -> State:
         new_message = (f"Chart Analysis Decision: {parsed_content['decision']}, "
                        f"Chart Analysis Summary: {parsed_content['summary']}")
 
+        # State 업데이트
+        print(">>> Updating state with new information")
         updated_messages = state.messages + [new_message]
-
-        # 반환할 state 객체에 chart_pattern 필드 추가
         updated_state = state.copy(update={
             "messages": updated_messages,
             "chart_pattern": {
@@ -82,9 +92,12 @@ def chart_pattern_agent(state: State) -> State:
                 "summary": parsed_content["summary"]
             }
         })
+        print(">>> State updated successfully")
 
         return updated_state
 
     except Exception as e:
-        print(f"chart_pattern_agent 처리 중 오류 발생: {e}")
+        print(f">>> ERROR: Exception in chart_pattern_agent: {str(e)}")
+        print(f">>> ERROR: Exception type: {type(e).__name__}")
+        print(f">>> ERROR: Full exception details: {e}")
         return state
