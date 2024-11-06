@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import com.happyfree.trai.investment.dto.TodayTransactionHistory;
-import com.happyfree.trai.user.repository.UserRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.happyfree.trai.auth.service.AuthService;
@@ -29,15 +29,15 @@ public class TransactionHistoryService {
 		List<TodayTransactionHistory> todayTransactionHistories = new ArrayList<>();
 		for (InvestmentHistory investmentHistory : all) {
 			todayTransactionHistories.add(
-					TodayTransactionHistory.builder()
-							.price(investmentHistory.getPrice())
-							.averagePrice(investmentHistory.getAveragePrice())
-							.side(investmentHistory.getSide())
-							.executedFunds(investmentHistory.getExecutedFunds())
-							.totalEvaluation(investmentHistory.getTotalEvaluation())
-							.totalAmount(investmentHistory.getTotalAmount())
-							.orderCreatedAt(investmentHistory.getOrderCreatedAt())
-							.build()
+				TodayTransactionHistory.builder()
+					.price(investmentHistory.getPrice())
+					.averagePrice(investmentHistory.getAveragePrice())
+					.side(investmentHistory.getSide())
+					.executedFunds(investmentHistory.getExecutedFunds())
+					.totalEvaluation(investmentHistory.getTotalEvaluation())
+					.totalAmount(investmentHistory.getTotalAmount())
+					.orderCreatedAt(investmentHistory.getOrderCreatedAt())
+					.build()
 			);
 		}
 
