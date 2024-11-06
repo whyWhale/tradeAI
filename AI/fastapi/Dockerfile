@@ -1,10 +1,7 @@
-# Use a slim Python 3.11 image
 FROM python:3.11-slim
 
-# Set the working directory inside the container
 WORKDIR /app
 
-# Install Firefox and minimal required dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends \
     firefox-esr \
     libx11-xcb1 \
@@ -17,7 +14,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Make geckodriver executable
 RUN chmod +x /app/core/geckodriver-v0.35.0-linux-aarch64/geckodriver
 
 RUN mkdir -p images
