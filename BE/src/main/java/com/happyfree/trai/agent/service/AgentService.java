@@ -107,7 +107,8 @@ public class AgentService {
 
                 // 단일 AssetData 객체 생성
                 AssetData assetData = AssetData.builder()
-                        .currentBitcoinPrice(totalBTCAmount.multiply(tradePrice).floatValue())
+                        .userId(user.getId())
+                        .btcBalanceKrw(totalBTCAmount.multiply(tradePrice).floatValue())
                         .availableAmount(totalKRWAssets.floatValue())
                         .build();
 
@@ -123,7 +124,7 @@ public class AgentService {
                                 result -> {
                                     try {
                                         log.info("AI Response: {}", result.toString());
-                                        processAnalysisResult(user, result, assetData);
+                                        processAnalysisResult(result, assetData);
                                     } catch (Exception e) {
                                         System.err.println("Error processing result: " + e.getMessage());
                                         throw new CustomException(AI_PROCESS_ERROR);
@@ -142,11 +143,15 @@ public class AgentService {
         });
     }
 
-    private void processAnalysisResult(User user, JsonNode result, AssetData assetData) {
+    private void processAnalysisResult(JsonNode result, AssetData assetData) {
         try {
             // 매수, 매도 결정과 투자 퍼센트 추출
             String decision = result.path("master").path("decision").asText();
             int percentage = result.path("master").path("percentage").asInt();
+            long userId = result.path("user_info").path("user_id").asLong();
+
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
             // 매수, 매도 주문 처리
             if (decision.equals("BUY")) {
@@ -211,7 +216,6 @@ public class AgentService {
     // 업비트 주문하기
     public void order(String orderType, String amount) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         HashMap<String, String> params = new HashMap<>();
-
         params.put("market", "KRW-BTC");
         params.put("ord_type", "limit");
         params.put("side", orderType);
@@ -267,12 +271,12 @@ public class AgentService {
         params.put("state", "done");
         params.put("limit", "1");
         params.put("order_by", "desc");
-        log.info("param 넣기");
+
         ArrayList<String> queryElements = new ArrayList<>();
         for(Map.Entry<String, String> entity : params.entrySet()) {
             queryElements.add(entity.getKey() + "=" + entity.getValue());
         }
-        log.info("쿼리스트링 전");
+
         String queryString = String.join("&", queryElements.toArray(new String[0]));
 
         MessageDigest md = MessageDigest.getInstance("SHA-512");
@@ -289,7 +293,7 @@ public class AgentService {
                 .sign(algorithm);
 
         String authenticationToken = "Bearer " + jwtToken;
-        log.info("try 전");
+
         try {
             HttpClient client = HttpClientBuilder.create().build();
             HttpGet request = new HttpGet(serverUrl + "/v1/orders/closed?" + queryString);

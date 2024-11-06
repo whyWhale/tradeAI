@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AssetData {
+    private Long userId;
     private float availableAmount;
-    private float currentBitcoinPrice;
+    private float btcBalanceKrw;
 }
