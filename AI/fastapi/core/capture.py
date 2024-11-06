@@ -1,3 +1,4 @@
+from pyvirtualdisplay import Display
 from datetime import datetime
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
@@ -5,7 +6,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from pyvirtualdisplay import Display
 import time
 import os
 
@@ -27,11 +27,15 @@ def capture_chart_screenshot():
     chrome_options.add_argument("--disable-gpu")
     chrome_options.binary_location = os.getenv('CHROME_BIN', '/usr/bin/chromium')
 
-    # ARM 기반 옵션 추가
+    # 추가 안정화 옵션
     chrome_options.add_argument("--disable-software-rasterizer")
     chrome_options.add_argument("--disable-features=VizDisplayCompositor")
     chrome_options.add_argument("--no-zygote")
-    chrome_options.add_argument("--single-process")  # ARM에서 리소스 사용량을 줄이기 위해
+    chrome_options.add_argument("--single-process")
+    chrome_options.add_argument("--disable-background-timer-throttling")
+    chrome_options.add_argument("--disable-backgrounding-occluded-windows")
+    chrome_options.add_argument("--disable-renderer-backgrounding")
+    chrome_options.add_argument("--remote-debugging-port=9222")
 
     try:
         service = Service(chrome_driver_path)
