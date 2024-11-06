@@ -17,7 +17,7 @@ master_template = """당신은 비트코인 시장의 투자 분석 전문가입
     만약, 투자 전문가들의 의견이 "DRAW"라면 당신이 전반적인 내용을 종합하여 "BUY", "SELL", "HOLD" 중 하나를 골라주세요.
     해당 결정을 가지고 투자 자본을 얼만큼의 비중으로 진행할지 퍼센트도 결정해주세요.
 
-    현재 당신이 가지고 있는 투자 금액은 다음과 같습니다: {total_krw_assets}
+    현재 당신이 가지고 있는 투자 금액은 다음과 같습니다: {available_amount}
     만약, "BUY"인데 "5000"원 이하로 당신의 투자 금액이 있다면, "HOLD"를 해주세요.
     그리고 "BUY"에 대한 의사결정이 있었지만, 보유 금액 부족으로 "HOLD"를 하게 된 투자 결정에 대한 이유를 추가해주세요.
     
@@ -122,14 +122,19 @@ def master_agent(state: State) -> State:
 
     # 마스터 결정 진행
     result = master_chain.invoke({
-        "master_decision": master_decision, 
+        "master_decision": master_decision,
         "agents_analysis": state.messages,
-        "total_krw_assets": state.user_info.totalKRWAssets
+        "available_amount": state.user_info["available_amount"]
     })
 
+
     # 주문 결정
-    orderAmount = order_amount_caculator(result["decision"], result["percentage"], 
-                    state.user_info.totalKRWAssets, state.user_info.totalCoinEvaluation)
+    orderAmount = order_amount_caculator(
+        result["decision"],
+        result["percentage"],
+        state.user_info["available_amount"],
+        state.user_info["btc_balance_krw"]
+    )
 
     return state.copy(update={
         "messages": state.messages,

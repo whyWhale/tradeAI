@@ -49,8 +49,8 @@ graph = graph_builder.compile()
 # Controller
 class UserInfo(BaseModel):
     userId: int
-    totalKRWAssets: float
-    totalCoinEvaluation: float
+    available_amount: float
+    btc_balance_krw: float
 
 @router.post("/analysis")
 async def run_analysis(user_info: UserInfo):
