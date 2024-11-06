@@ -34,23 +34,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     xdg-utils \
     chromium \
     chromium-driver \
-    && apt-get remove -y build-essential \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# Set environment variables for Chrome and ChromeDriver paths
-ENV CHROME_BIN=/usr/bin/chromium
-ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
-ENV PYTHONUNBUFFERED=1
+# Set environment variables
+ENV CHROME_BIN=/usr/bin/chromium \
+    CHROMEDRIVER_PATH=/usr/bin/chromedriver \
+    PYTHONUNBUFFERED=1 \
+    DISPLAY=:99
 
 # Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy all project files into the container
+# Copy all project files
 COPY . .
 
-# Expose port 8000 for the FastAPI application
+# Create directory for screenshots
+RUN mkdir -p images
+
+# Expose port
 EXPOSE 8000
 
-# Run the FastAPI app with Uvicorn
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Start Xvfb and run the application
+CMD Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 & \
+    uvicorn main:app --host 0.0.0.0 --port 8000
