@@ -51,15 +51,14 @@ public class SecurityConfig {
 						HttpServletRequest request) {
 						CorsConfiguration configuration = new CorsConfiguration();
 						configuration.setAllowedOrigins(
-							Arrays.asList("http://www.trai-ai-site", "https://www.trai-ai.site",
-								"http://localhost:5173", "http://localhost:5173/"));
-					
-						configuration.addAllowedOriginPattern("http://localhost:5173");
-						configuration.addAllowedOriginPattern("http://localhost:5173/");
+							Arrays.asList("http://www.trai-ai.site", "https://www.trai-ai.site",
+								"http://localhost:5173","http://localhost","https://localhost"));
 						configuration.setAllowedMethods(Collections.singletonList("*"));
 						configuration.setAllowedHeaders(Collections.singletonList("*"));
 						configuration.setAllowCredentials(true);
 						configuration.setMaxAge(3600L);
+						configuration.addExposedHeader("*");
+						configuration.addAllowedMethod("*");
 						return configuration;
 					}
 
@@ -67,6 +66,10 @@ public class SecurityConfig {
 		http
 			.formLogin(form -> form.successHandler((request, response, authentication) -> {
 						response.setStatus(SC_OK);
+						String setCookieHeader = response.getHeader("Set-Cookie");
+						if (setCookieHeader != null) {
+							response.setHeader("Set-Cookie", setCookieHeader + "; SameSite=Lax");
+						}
 					}).loginProcessingUrl("/api/users/login")
 					.failureHandler((request, response, exception) -> {
 						log.error("login unauthorized------------------------------------------");
@@ -86,7 +89,7 @@ public class SecurityConfig {
 
 		http
 			.authorizeHttpRequests((auth) -> auth
-				.requestMatchers("/api/users/login", "/api/users/join").permitAll()
+				.requestMatchers("/api/users/login", "/api/users/join", "api/upbits/**").permitAll()
 				.requestMatchers("/swagger", "/h2-console*/", "/h2-console/**", "/swagger-ui.html", "/swagger-ui/**",
 					"/api-docs", "/api-docs/**", "/v3/api-docs/**", "/api/swagger-ui/**", "/api/swagger-ui.html",
 					"/api/v3/api-docs/**").permitAll()

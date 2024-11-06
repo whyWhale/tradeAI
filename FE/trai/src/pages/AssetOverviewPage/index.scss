@@ -133,6 +133,19 @@ body, html {
 	justify-content: center;
 	flex-wrap: wrap;
   padding: 2%;
+
+  .ticker {
+    position: absolute;
+    top: 10px;
+    left: 30px;
+    display: flex;
+    align-items: left;
+    font-family: 'Pretendard';
+    font-weight: 700;
+    font-size: 24px;
+    color: #000000;
+  }
+
 	.chart-container {
 		display: flex;
 		flex-direction: column;
