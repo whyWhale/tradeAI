@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { init, dispose } from "klinecharts";
+import { useDispatch } from "react-redux";
 
 import Layout from "./Layout";
 import "./chart.scss"; 
@@ -10,7 +11,7 @@ import { chartStyle } from './chartStyle';
 import useRealTimeData from "./hooks/useRealTimeData";
 import useNewData from "./hooks/useNewData";
 import ChartButton from './ChartButton';
-import axios from 'axios';
+import { updateBTCData } from "../../store/BTCDataSlice"
 
 const types = [
   { key: "candle_solid", text: "solid" },
@@ -27,6 +28,8 @@ const CoinChart = () => {
 
   const realTimeData = useRealTimeData(initialized); // 초기화가 완료된 후에만 실행
   const newData = useNewData(1, initialized); // 초기화가 완료된 후에만 실행
+  const dispatch = useDispatch(); // Redux dispatch 함수 정의
+
 
   const formatValue = (value) => (value !== null && value !== undefined ? value.toLocaleString() : "0");
 
@@ -67,6 +70,8 @@ const CoinChart = () => {
             const detailDataList = await getInitialDetailList();
             if (detailDataList && detailDataList[0]) {
               updateChartDetail(detailDataList[0]);
+              dispatch(updateBTCData(detailDataList[0].price)); // Redux 스토어에 데이터 업데이트
+              console.log(detailDataList[0].price);
               setInitialized(true); // 초기화 완료
             }
           } catch (error) {
