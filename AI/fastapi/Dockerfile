@@ -38,10 +38,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Set environment variables
-ENV CHROME_BIN=/usr/bin/chromium \
+ENV PYTHONUNBUFFERED=1 \
+    DISPLAY=:99 \
+    CHROME_BIN=/usr/bin/chromium \
     CHROMEDRIVER_PATH=/usr/bin/chromedriver \
-    PYTHONUNBUFFERED=1 \
-    DISPLAY=:99
+    DEBIAN_FRONTEND=noninteractive
 
 # Install Python dependencies
 COPY requirements.txt .
