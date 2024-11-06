@@ -38,7 +38,6 @@ public class TransactionHistoryController {
 	@GetMapping("")
 	public ResponseEntity<?> a(@RequestParam("year") String year, @RequestParam("month") String month,
 		@RequestParam("day") String day) {
-
 		return ResponseEntity.ok(transactionHistoryService.today(year, month, day));
 	}
 
@@ -52,7 +51,6 @@ public class TransactionHistoryController {
 	})
 	@GetMapping("/latest")
 	public ResponseEntity<?> b() {
-
 		return ResponseEntity.ok(transactionHistoryService.latest());
 	}
 
