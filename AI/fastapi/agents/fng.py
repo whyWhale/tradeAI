@@ -68,16 +68,16 @@ def fng_agent(state: State) -> State:
         new_message = f"FNG Analysis Decision: {result['decision']}, FNG Analysis Summary: {result['summary']}"
         updated_messages = state.messages + [new_message]
 
-    return state.copy(
-        update={
-            "messages": updated_messages,
-            "fng": {
-                "decision": result["decision"],
-                "summary": result["summary"]
+        return state.copy(
+            update={
+                "messages": updated_messages,
+                "fng": {
+                    "decision": result["decision"],
+                    "summary": result["summary"]
+                }
             }
-        }
-    )
+        )
 
     except Exception as e:
-            print("fng_agent 처리 중 오류 발생:", str(e))
-            raise
+        print("fng_agent 처리 중 오류 발생:", str(e))
+        raise
