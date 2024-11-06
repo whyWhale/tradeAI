@@ -215,6 +215,7 @@ public class AgentService {
         params.put("market", "KRW-BTC");
         params.put("ord_type", "limit");
         params.put("side", orderType);
+        params.put("time_in_force", "ioc");
         if (orderType.equals("bid")) {
             params.put("price", amount);
         } else {
@@ -253,7 +254,7 @@ public class AgentService {
             HttpResponse response = client.execute(request);
             HttpEntity entity = response.getEntity();
 
-            System.out.println(EntityUtils.toString(entity, "UTF-8"));
+            log.info(EntityUtils.toString(entity, "UTF-8"));
         } catch (Exception e) {
             throw new CustomException(ORDER_ERROR);
         }
