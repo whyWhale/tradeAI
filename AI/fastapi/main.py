@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 from langgraph.graph import StateGraph, START, END
@@ -11,9 +12,19 @@ from agents.master import master_agent
 from core.logging import langsmith
 
 
+# configuration
 app = FastAPI()
 router = APIRouter(prefix="/ai")
 langsmith(project_name="trai-v1", set_enable=True)
+
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "https://www.trai-ai.site"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 그래프 초기화 및 컴파일
 graph_builder = StateGraph(State)
