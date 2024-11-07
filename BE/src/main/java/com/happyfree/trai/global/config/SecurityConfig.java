@@ -1,23 +1,25 @@
 package com.happyfree.trai.global.config;
 
-import static jakarta.servlet.http.HttpServletResponse.SC_OK;
-import static jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
-
 import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.happyfree.trai.user.repository.UserRepository;
+import com.happyfree.trai.auth.filter.JWTFilter;
+import com.happyfree.trai.auth.filter.LoginFilter;
+import com.happyfree.trai.auth.util.JWTUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,10 +31,17 @@ import lombok.extern.slf4j.Slf4j;
 public class SecurityConfig {
 
 	@Autowired
-	private UserRepository userRepository;
-
-	@Autowired
 	private UserDetailsService userDetailsService;
+	@Autowired
+	private AuthenticationConfiguration authenticationConfiguration;
+	@Autowired
+	private JWTUtil jwtUtil;
+
+	@Bean
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
+		throws Exception {
+		return configuration.getAuthenticationManager();
+	}
 
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
@@ -52,7 +61,7 @@ public class SecurityConfig {
 						CorsConfiguration configuration = new CorsConfiguration();
 						configuration.setAllowedOrigins(
 							Arrays.asList("http://www.trai-ai.site", "https://www.trai-ai.site",
-								"http://localhost:5173","http://localhost","https://localhost"));
+								"http://localhost:5173", "http://localhost", "https://localhost"));
 						configuration.setAllowedMethods(Collections.singletonList("*"));
 						configuration.setAllowedHeaders(Collections.singletonList("*"));
 						configuration.setAllowCredentials(true);
@@ -61,27 +70,16 @@ public class SecurityConfig {
 						configuration.addAllowedMethod("*");
 						return configuration;
 					}
-
 				}));
-		http
-			.formLogin(form -> form.successHandler((request, response, authentication) -> {
-						response.setStatus(SC_OK);
-						String setCookieHeader = response.getHeader("Set-Cookie");
-						if (setCookieHeader != null) {
-							response.setHeader("Set-Cookie", setCookieHeader + "; SameSite=Lax");
-						}
-					}).loginProcessingUrl("/api/users/login")
-					.failureHandler((request, response, exception) -> {
-						log.error("login unauthorized------------------------------------------");
-						response.setStatus(SC_UNAUTHORIZED);
-					})
-					.permitAll()
-			)
-			.logout(logout -> logout.logoutSuccessHandler((request, response, authentication) -> {
-					response.setStatus(HttpServletResponse.SC_OK);
-				}).logoutUrl("/api/users/logout")
-			);
 
+		// jwt 권한 필터
+		http.addFilterBefore(new JWTFilter(jwtUtil),
+			UsernamePasswordAuthenticationFilter.class);
+
+		// 로그인 필터
+		http.addFilterAt(
+			new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
+			UsernamePasswordAuthenticationFilter.class);
 		http.exceptionHandling((exceptionHandlingConfigurer) ->
 			exceptionHandlingConfigurer.authenticationEntryPoint((request, response, authException) -> {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
