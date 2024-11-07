@@ -28,4 +28,13 @@ public class AgentController {
 
 		return ResponseEntity.ok(agentService.findAgentHistoryByDate(year, month, day));
 	}
+
+	@Operation(summary = "에이전트 요청")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
+	@GetMapping("/ai")
+	public ResponseEntity<?> requestAgent() {
+		agentService.sendAssetsDataToAgent();
+
+		return ResponseEntity.ok().build();
+	}
 }

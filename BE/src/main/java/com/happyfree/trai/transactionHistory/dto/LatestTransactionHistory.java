@@ -1,8 +1,7 @@
-package com.happyfree.trai.investment.dto;
+package com.happyfree.trai.transactionHistory.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;

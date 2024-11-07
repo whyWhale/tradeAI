@@ -1,4 +1,4 @@
-package com.happyfree.trai.profitasset.controller;
+package com.happyfree.trai.profitAsset.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.happyfree.trai.profitasset.dto.AssetProportion;
-import com.happyfree.trai.profitasset.service.ProfitAssetService;
+import com.happyfree.trai.profitAsset.dto.AssetProportion;
+import com.happyfree.trai.profitAsset.service.ProfitAssetService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
@@ -35,7 +35,7 @@ public class AssetController {
 		)
 	})
 	@GetMapping("/daily")
-	public ResponseEntity<?> a() {
+	public ResponseEntity<?> getDailyAssetPercentage() {
 		return ResponseEntity.ok(profitAssetService.assetProportion());
 	}
 }

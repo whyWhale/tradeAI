@@ -1,4 +1,4 @@
-package com.happyfree.trai.profitasset.entity;
+package com.happyfree.trai.profitAsset.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

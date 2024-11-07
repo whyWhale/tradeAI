@@ -2,6 +2,7 @@ package com.happyfree.trai.user.controller;
 
 import java.util.UUID;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +27,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Tag(name = "사용자")
 @RequestMapping("/api/users")
+@RequiredArgsConstructor
 @RestController
 public class UserController {
 
-	@Autowired
-	UserService userService;
-
-	@Value("${upbit.api.accesskey}")
-	private String accessKey;
-
-	@Value("${upbit.api.secretkey}")
-	private String secretKey;
+	private final UserService userService;
 
 	@Operation(summary = "jwt")
 	@ApiResponses(value = {
@@ -47,11 +42,8 @@ public class UserController {
 		)
 	})
 	@PostMapping("/token")
-	public ResponseEntity<?> signUp() {
-		return ResponseEntity.ok("Bearer " + JWT.create()
-			.withClaim("access_key", accessKey)
-			.withClaim("nonce", UUID.randomUUID().toString())
-			.sign(Algorithm.HMAC256(secretKey)));
+	public ResponseEntity<?> makeToken() {
+		return ResponseEntity.ok(userService.createToken());
 	}
 
 	@Operation(summary = "회원가입")

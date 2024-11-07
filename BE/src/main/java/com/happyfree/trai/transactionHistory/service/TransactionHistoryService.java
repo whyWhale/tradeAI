@@ -1,42 +1,47 @@
-package com.happyfree.trai.investment.service;
+package com.happyfree.trai.transactionHistory.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import com.happyfree.trai.investment.dto.TodayTransactionHistory;
+import com.happyfree.trai.transactionHistory.dto.TodayTransactionHistory;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.happyfree.trai.auth.service.AuthService;
-import com.happyfree.trai.investment.dto.LatestTransactionHistory;
-import com.happyfree.trai.investment.entity.InvestmentHistory;
-import com.happyfree.trai.investment.repository.InvestmentHistoryRepository;
+import com.happyfree.trai.transactionHistory.dto.LatestTransactionHistory;
+import com.happyfree.trai.transactionHistory.entity.TransactionHistory;
+import com.happyfree.trai.transactionHistory.repository.TransactionHistoryRepository;
 import com.happyfree.trai.user.entity.User;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
+@RequiredArgsConstructor
 public class TransactionHistoryService {
-	@Autowired
-	AuthService authService;
-	@Autowired
-	InvestmentHistoryRepository investmentHistoryRepository;
 
+	private final AuthService authService;
+
+	private final TransactionHistoryRepository transactionHistoryRepository;
+
+	@Transactional(readOnly = true)
 	public List<TodayTransactionHistory> today(String year, String month, String day) {
 		User loginUser = authService.getLoginUser();
 
 		LocalDate date = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
-		List<InvestmentHistory> all = investmentHistoryRepository.findByUserAndDate(loginUser, date);
+		List<TransactionHistory> all = transactionHistoryRepository.findByUserAndDate(loginUser, date);
 
 		List<TodayTransactionHistory> todayTransactionHistories = new ArrayList<>();
-		for (InvestmentHistory investmentHistory : all) {
+		for (TransactionHistory transactionHistory : all) {
 			todayTransactionHistories.add(
 				TodayTransactionHistory.builder()
-					.price(investmentHistory.getPrice())
-					.averagePrice(investmentHistory.getAveragePrice())
-					.side(investmentHistory.getSide())
-					.executedFunds(investmentHistory.getExecutedFunds())
-					.totalEvaluation(investmentHistory.getTotalEvaluation())
-					.totalAmount(investmentHistory.getTotalAmount())
-					.orderCreatedAt(investmentHistory.getOrderCreatedAt())
+					.price(transactionHistory.getPrice())
+					.averagePrice(transactionHistory.getAveragePrice())
+					.side(transactionHistory.getSide())
+					.executedFunds(transactionHistory.getExecutedFunds())
+					.totalEvaluation(transactionHistory.getTotalEvaluation())
+					.totalAmount(transactionHistory.getTotalAmount())
+					.orderCreatedAt(transactionHistory.getOrderCreatedAt())
 					.build()
 			);
 		}
@@ -44,11 +49,12 @@ public class TransactionHistoryService {
 		return todayTransactionHistories;
 	}
 
+	@Transactional(readOnly = true)
 	public List<LatestTransactionHistory> latest() {
 		User loginUser = authService.getLoginUser();
 
-		List<InvestmentHistory> all = investmentHistoryRepository.findByUserOrderByCreatedAt(loginUser);
-		ArrayList<InvestmentHistory> investmentHistories = new ArrayList<>();
+		List<TransactionHistory> all = transactionHistoryRepository.findByUserOrderByCreatedAt(loginUser);
+		ArrayList<TransactionHistory> investmentHistories = new ArrayList<>();
 		for (int i = 0; i < 30; i++) {
 			investmentHistories.add(all.get(i));
 		}

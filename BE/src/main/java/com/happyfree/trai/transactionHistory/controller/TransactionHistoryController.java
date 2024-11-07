@@ -1,17 +1,14 @@
-package com.happyfree.trai.investment.controller;
+package com.happyfree.trai.transactionHistory.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.happyfree.trai.investment.dto.LatestTransactionHistory;
-import com.happyfree.trai.investment.dto.TodayTransactionHistory;
-import com.happyfree.trai.investment.service.TransactionHistoryService;
-import com.happyfree.trai.profitasset.dto.AssetProportion;
-
+import com.happyfree.trai.transactionHistory.dto.LatestTransactionHistory;
+import com.happyfree.trai.transactionHistory.dto.TodayTransactionHistory;
+import com.happyfree.trai.transactionHistory.service.TransactionHistoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -22,10 +19,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 @Tag(name = "거래내역")
 @RequestMapping("/api/transaction-histories")
+@RequiredArgsConstructor
 @RestController
 public class TransactionHistoryController {
-	@Autowired
-	TransactionHistoryService transactionHistoryService;
+
+	private final TransactionHistoryService transactionHistoryService;
 
 	@Operation(summary = "일별 거래 내역 조회")
 	@ApiResponses(value = {
@@ -36,8 +34,8 @@ public class TransactionHistoryController {
 		)
 	})
 	@GetMapping("")
-	public ResponseEntity<?> a(@RequestParam("year") String year, @RequestParam("month") String month,
-		@RequestParam("day") String day) {
+	public ResponseEntity<?> getDailyTransactionHistory(
+			@RequestParam("year") String year, @RequestParam("month") String month, @RequestParam("day") String day) {
 		return ResponseEntity.ok(transactionHistoryService.today(year, month, day));
 	}
 
@@ -50,7 +48,7 @@ public class TransactionHistoryController {
 		)
 	})
 	@GetMapping("/latest")
-	public ResponseEntity<?> b() {
+	public ResponseEntity<?> findMonthlyTransactionHistory() {
 		return ResponseEntity.ok(transactionHistoryService.latest());
 	}
 

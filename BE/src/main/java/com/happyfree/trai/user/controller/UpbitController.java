@@ -1,11 +1,10 @@
-package com.happyfree.trai.controller;
+package com.happyfree.trai.user.controller;
 
 import java.util.UUID;
 
+import com.happyfree.trai.user.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +21,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @RequestMapping("/api/upbits/accounts")
 @RestController
 public class UpbitController {
-	@Value("${upbit.api.accesskey}")
-	private String accessKey;
 
-	@Value("${upbit.api.secretkey}")
-	private String secretKey;
+	private final UserService userService;
+
+	public UpbitController(UserService userService) {
+		this.userService = userService;
+	}
 
 	@Operation(
 		summary = "업비트 나의 자산 정보 가져오기"
@@ -38,25 +38,8 @@ public class UpbitController {
 		)
 	})
 	@PostMapping("")
-	public String acc(){
-		RestTemplate restTemplate = new RestTemplate();
-		HttpHeaders headers = new HttpHeaders();
-		String sign = JWT.create()
-			.withClaim("access_key", accessKey)
-			.withClaim("nonce", UUID.randomUUID().toString())
-			.sign(Algorithm.HMAC256(secretKey));
-		String authToken = "Bearer " + sign;
-		headers.set("Authorization", authToken);
-		headers.set("Content-Type", "application/json");
-		HttpEntity<String> entity = new HttpEntity<>(headers);
-		ResponseEntity<String> response = restTemplate.exchange(
-			"https://api.upbit.com/v1/accounts",
-			HttpMethod.GET,
-			entity,
-			String.class
-		);
-
-		return response.getBody();
+	public String getMyAccountInfo(){
+		return userService.getAccountInfo();
 	}
 
 

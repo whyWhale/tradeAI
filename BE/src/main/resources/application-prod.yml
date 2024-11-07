@@ -44,11 +44,6 @@ logging:
     com.zaxxer.hikari: warn      # HikariCP 로깅 추가
     com.zaxxer.hikari.HikariConfig: warn
 
-upbit:
-  api:
-    accesskey: ${UPBIT_ACCESS_KEY}
-    secretkey: ${UPBIT_SECRET_KEY}
-
 springdoc:
   swagger-ui:
     path: /api/swagger-ui.html
