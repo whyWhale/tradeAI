@@ -1,7 +1,7 @@
-package com.happyfree.trai.profitasset.scheduler;
+package com.happyfree.trai.profitAsset.scheduler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.happyfree.trai.profitasset.service.ProfitAssetService;
+import com.happyfree.trai.profitAsset.service.ProfitAssetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -17,6 +17,6 @@ public class ProfitAssetScheduler {
 
     @Scheduled(cron = "0 0 0 * * *") // 매일 자정
     public void saveProfitAssetHistory() throws UnsupportedEncodingException, NoSuchAlgorithmException, JsonProcessingException {
-        profitAssetService.save();
+        profitAssetService.saveDailyProfitAssetHistory();
     }
 }

@@ -1,7 +1,6 @@
-package com.happyfree.trai.profitasset.dto;
+package com.happyfree.trai.profitAsset.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -10,7 +9,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class InvestSummary {
+public class TransactionSummary {
 	@Schema(description = "총 거래수", example = "213781892739812")
 	private int totalTransactionCount;
 	@Schema(description = "처음 거래 시간", example = "2024-10-12:00:00:33")

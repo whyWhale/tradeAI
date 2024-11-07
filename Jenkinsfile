@@ -70,8 +70,6 @@ pipeline {
                         string(credentialsId: 'mysql-database', variable: 'MYSQL_DATABASE'),
                         string(credentialsId: 'mysql-user', variable: 'MYSQL_USER'),
                         string(credentialsId: 'mysql-password', variable: 'MYSQL_PASSWORD'),
-                        string(credentialsId: 'upbit-accesskey', variable: 'UPBIT_ACCESS_KEY'),
-                        string(credentialsId: 'upbit-secretkey', variable: 'UPBIT_SECRET_KEY'),
                         string(credentialsId: 'server-ip', variable: 'SERVER_IP')
                     ]) {
                         sh '''
@@ -80,8 +78,6 @@ pipeline {
                             MYSQL_DATABASE=${MYSQL_DATABASE} \
                             MYSQL_USER=${MYSQL_USER} \
                             MYSQL_PASSWORD=${MYSQL_PASSWORD} \
-                            UPBIT_ACCESS_KEY=${UPBIT_ACCESS_KEY} \
-                            UPBIT_SECRET_KEY=${UPBIT_SECRET_KEY} \
                             SERVER_IP=${SERVER_IP} \
                             docker compose up -d
                         '''

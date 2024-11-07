@@ -1,4 +1,4 @@
-package com.happyfree.trai.investment.entity;
+package com.happyfree.trai.transactionHistory.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,17 +12,14 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
 @Entity
-public class InvestmentHistory extends BaseEntity {
+public class TransactionHistory extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

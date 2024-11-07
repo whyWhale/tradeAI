@@ -11,25 +11,28 @@ import com.happyfree.trai.agent.dto.AssetData;
 import com.happyfree.trai.agent.repository.AgentRepository;
 import com.happyfree.trai.auth.service.AuthService;
 import com.happyfree.trai.global.exception.CustomException;
-import com.happyfree.trai.investment.entity.InvestmentHistory;
-import com.happyfree.trai.investment.repository.InvestmentHistoryRepository;
-import com.happyfree.trai.profitasset.service.ProfitAssetService;
+import com.happyfree.trai.transactionHistory.entity.TransactionHistory;
+import com.happyfree.trai.transactionHistory.repository.TransactionHistoryRepository;
+import com.happyfree.trai.profitAsset.service.ProfitAssetService;
 import com.happyfree.trai.user.entity.User;
 import com.happyfree.trai.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.springframework.http.HttpMethod;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -42,7 +45,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
 import static com.happyfree.trai.global.exception.ErrorCode.*;
 
 @Service
@@ -59,17 +61,11 @@ public class AgentService {
 
     private final AgentRepository agentRepository;
 
-    private final InvestmentHistoryRepository investmentHistoryRepository;
+    private final TransactionHistoryRepository transactionHistoryRepository;
 
     private final WebClient webClient;
 
     private final ObjectMapper mapper = new ObjectMapper();
-
-    @Value("${upbit.api.accesskey}")
-    private String accessKey;
-
-    @Value("${upbit.api.secretkey}")
-    private String secretKey;
 
     String serverUrl = "https://api.upbit.com";
 
@@ -100,10 +96,12 @@ public class AgentService {
 
         allAdminUser.forEach(user -> {
             try {
+                String accessKey = user.getAccessKey();
+                String secretKey = user.getSecretKey();
                 // 데이터 수집
-                BigDecimal totalBTCAmount = profitAssetService.bcv();
-                BigDecimal tradePrice = profitAssetService.bitp();
-                BigDecimal totalKRWAssets = profitAssetService.getTotalKRWAssets(accessKey, secretKey);
+                BigDecimal totalBTCAmount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
+                BigDecimal tradePrice = profitAssetService.getBitcoinCurrentPrice();
+                BigDecimal totalKRWAssets = profitAssetService.getTotalMoney(accessKey, secretKey);
 
                 // 단일 AssetData 객체 생성
                 AssetData assetData = AssetData.builder()
@@ -153,18 +151,21 @@ public class AgentService {
             User user = userRepository.findById(userId)
                     .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
+            String accessKey = user.getAccessKey();
+            String secretKey = user.getSecretKey();
+
             // 매수, 매도 주문 처리
             if (decision.equals("BUY")) {
                 BigDecimal orderAmount =  BigDecimal.valueOf(assetData.getAvailableAmount())
                         .multiply(BigDecimal.valueOf(percentage))
                         .divide(BigDecimal.valueOf(100), 0, RoundingMode.DOWN);
-                order("bid", orderAmount.toString());
+                order("bid", orderAmount.toString(), accessKey, secretKey);
             } else if (decision.equals("SELL")) {
-                BigDecimal totalBTCAmount = profitAssetService.bcv();
+                BigDecimal totalBTCAmount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
                 BigDecimal orderAmount = totalBTCAmount
                         .multiply(BigDecimal.valueOf(percentage))
                         .divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN);
-                order("ask", orderAmount.toString());
+                order("ask", orderAmount.toString(), accessKey, secretKey);
             }
 
             // 분석 결과 저장
@@ -173,30 +174,31 @@ public class AgentService {
                     .user(user)
                     .build();
             agentRepository.save(agent);
+
             log.info("decision : {}", decision);
             log.info("percentage : {}", percentage);
 
-            BigDecimal nowBitcoinPrice = profitAssetService.bitp();
-            BigDecimal nowBitcoinCount = profitAssetService.bcv();
+            BigDecimal nowBitcoinPrice = profitAssetService.getBitcoinCurrentPrice();
+            BigDecimal nowBitcoinCount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
 
             // 투자 내역 저장
             if (decision.equals("SELL") || decision.equals("BUY")) {
-                InvestmentHistory investmentHistory = searchInvestmentHistory();
-                if (investmentHistory != null) {
-                    investmentHistory.updateUser(user);
-                    investmentHistory.updateSide(decision);
-                    investmentHistory.updateTotalEvaluation(nowBitcoinPrice.multiply(nowBitcoinCount));
-                    investmentHistory.updateTotalAmount(profitAssetService.getTotalKRWAssets(accessKey, secretKey)
+                TransactionHistory transactionHistory = searchInvestmentHistory(accessKey, secretKey);
+                if (transactionHistory != null) {
+                    transactionHistory.updateUser(user);
+                    transactionHistory.updateSide(decision);
+                    transactionHistory.updateTotalEvaluation(nowBitcoinPrice.multiply(nowBitcoinCount));
+                    transactionHistory.updateTotalAmount(profitAssetService.getTotalMoney(accessKey, secretKey)
                             .add(nowBitcoinPrice.multiply(nowBitcoinCount)));
-                    investmentHistory.updateAveragePrice(getBTCAveragePrice(accessKey, secretKey));
-                    investmentHistoryRepository.save(investmentHistory);
+                    transactionHistory.updateAveragePrice(getBTCAveragePrice(accessKey, secretKey));
+                    transactionHistoryRepository.save(transactionHistory);
                 }
             } else {
-                InvestmentHistory investmentHistory = InvestmentHistory.builder()
+                TransactionHistory transactionHistory = TransactionHistory.builder()
                         .user(user)
                         .side(decision)
                         .totalEvaluation(nowBitcoinPrice.multiply(nowBitcoinCount))
-                        .totalAmount(profitAssetService.getTotalKRWAssets(accessKey, secretKey)
+                        .totalAmount(profitAssetService.getTotalMoney(accessKey, secretKey)
                                 .add(nowBitcoinPrice.multiply(nowBitcoinCount)))
                         .executedFunds(BigDecimal.ZERO)
                         .orderCreatedAt(LocalDateTime.now())
@@ -204,7 +206,7 @@ public class AgentService {
                         .price(nowBitcoinPrice.toString())
                         .build();
 
-                investmentHistoryRepository.save(investmentHistory);
+                transactionHistoryRepository.save(transactionHistory);
             }
 
             log.info("업비트 거래내역 검색 및 저장 완료");
@@ -214,15 +216,15 @@ public class AgentService {
     }
 
     // 업비트 주문하기
-    public void order(String orderType, String amount) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public void order(String orderType, String amount, String accessKey, String secretKey) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         HashMap<String, String> params = new HashMap<>();
         params.put("market", "KRW-BTC");
-        params.put("ord_type", "limit");
         params.put("side", orderType);
-        params.put("time_in_force", "ioc");
         if (orderType.equals("bid")) {
+            params.put("ord_type", "price");
             params.put("price", amount);
         } else {
+            params.put("ord_type", "market");
             params.put("volume", amount);
         }
 
@@ -265,7 +267,7 @@ public class AgentService {
     }
  
     // 업비트 거래내역 검색 
-    public InvestmentHistory searchInvestmentHistory() throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    public TransactionHistory searchInvestmentHistory(String accessKey, String secretKey) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         HashMap<String, String> params = new HashMap<>();
         params.put("market", "KRW-BTC");
         params.put("state", "done");
@@ -306,7 +308,7 @@ public class AgentService {
 
             if (jsonArray.isArray() && !jsonArray.isEmpty()) {
                 JsonNode jsonObject = jsonArray.get(0);
-                return InvestmentHistory.builder()
+                return TransactionHistory.builder()
                         .uuid(jsonObject.get("uuid").asText())
                         .orderType(jsonObject.get("ord_type").asText())
                         .price(jsonObject.get("price").asText())
@@ -363,6 +365,5 @@ public class AgentService {
 
         return new BigDecimal(0);
     }
-
 
 }

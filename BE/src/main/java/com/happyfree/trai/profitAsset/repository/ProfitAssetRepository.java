@@ -1,4 +1,4 @@
-package com.happyfree.trai.profitasset.repository;
+package com.happyfree.trai.profitAsset.repository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 
-import com.happyfree.trai.profitasset.entity.ProfitAssetHistory;
+import com.happyfree.trai.profitAsset.entity.ProfitAssetHistory;
 import com.happyfree.trai.user.entity.User;
 
 public interface ProfitAssetRepository extends JpaRepository<ProfitAssetHistory, Long> {

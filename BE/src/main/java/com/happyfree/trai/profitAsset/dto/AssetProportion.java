@@ -1,7 +1,6 @@
-package com.happyfree.trai.profitasset.dto;
+package com.happyfree.trai.profitAsset.dto;
 
 import java.time.LocalDate;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;

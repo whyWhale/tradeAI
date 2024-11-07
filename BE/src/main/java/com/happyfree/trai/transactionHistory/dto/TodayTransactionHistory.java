@@ -1,15 +1,13 @@
-package com.happyfree.trai.investment.dto;
+package com.happyfree.trai.transactionHistory.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Builder
-@Data
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class TodayTransactionHistory {
     private String price;
     private BigDecimal averagePrice;
