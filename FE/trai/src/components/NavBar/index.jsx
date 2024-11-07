@@ -5,7 +5,6 @@ import { instance } from '@api/axios';
 
 import { IoMdHelpCircleOutline } from 'react-icons/io';
 import { VscSettings } from 'react-icons/vsc';
-import { IoDocumentTextOutline } from 'react-icons/io5';
 import { PiChartLineUpLight, PiHeadCircuit } from 'react-icons/pi';
 import { MdCurrencyBitcoin, MdOutlineLogout } from 'react-icons/md';
 
@@ -40,23 +39,19 @@ const NavBar = ({openModal}) => {
         <NavList>
           <StyledNavLink to="/trade-settings">
             <div className="PageIcon"><VscSettings /></div>
-            <div className="PageName">거래 설정 페이지</div>
+            <div className="PageName">거래 설정</div>
           </StyledNavLink>
           <StyledNavLink to="/asset-overview">
             <div className="PageIcon"><PiChartLineUpLight /></div>
-            <div className="PageName">자산 현황 페이지</div>
+            <div className="PageName">자산 현황</div>
           </StyledNavLink>
           <StyledNavLink to="/investment-status">
             <div className="PageIcon"><MdCurrencyBitcoin /></div>
-            <div className="PageName">투자 현황 페이지</div>
+            <div className="PageName">투자 현황</div>
           </StyledNavLink>
           <StyledNavLink to="/trade-details">
-            <div className="PageIcon"><IoDocumentTextOutline /></div>
-            <div className="PageName">거래 내역 상세 페이지</div>
-          </StyledNavLink>
-          <StyledNavLink to="/strategy">
             <div className="PageIcon"><PiHeadCircuit /></div>
-            <div className="PageName">투자 전략 페이지</div>
+            <div className="PageName">거래 상세 및 전략</div>
           </StyledNavLink>
           <StyledLogoutButton onClick={handleLogout}>
             <div className="PageIcon"><MdOutlineLogout /></div>
@@ -68,7 +63,7 @@ const NavBar = ({openModal}) => {
       <BotArea>
         <div className="text-trai-white text-[24px] p-2"><IoMdHelpCircleOutline /></div>
         <div className="text-trai-white text-[16px] ml-2">도움이 필요하신가요?</div>
-        <div className="text-trai-white text-[12px] ml-2">아래의 버튼을 눌러 확인해보세요.</div>
+        <div className="text-trai-white text-[12px] ml-2 mb-2">아래의 버튼을 눌러 확인해보세요.</div>
         <BotButton onClick={openModal}>BitBot에게 물어보기</BotButton>
       </BotArea>
     </div>
@@ -167,9 +162,9 @@ const BotArea = styled.div`
   flex-direction: column;
   background-color: var(--trai-mint);
   border-radius: 20px;
-  width: 240px;
+  width: 220px;
   height: 180px;
-  padding: 10px;
+  padding: 8px;
   margin-top: 20px;
 `;
 
@@ -177,7 +172,7 @@ const BotButton = styled.button`
   background-color: var(--trai-white);
   color: var(--trai-mint);
   border-radius: 10px;
-  width: 210px;
+  width: 190px;
   height: 50px;
   display: flex;
   justify-content: center;

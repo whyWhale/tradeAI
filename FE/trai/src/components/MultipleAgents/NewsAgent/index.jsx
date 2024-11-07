@@ -2,8 +2,6 @@ import { useState } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-import { IoMdCloseCircle } from "react-icons/io";
-
 const NewsAgent = ({ className, newsData }) => {
   const [ isModalOpen, setIsModalOpen] = useState(false);
 
@@ -43,10 +41,10 @@ const NewsAgent = ({ className, newsData }) => {
                 <h2 className="font-bold text-[20px]">News Agent</h2>
                 <div className="flex flex-col">
                   <div className="text-[60px] mb-10">{newsData.decision}</div>
-                  <div>{newsData.summary}</div>
+                  <div className="mb-10">{newsData.summary}</div>
                 </div>
               </div>
-              <div>
+              <ModalNewsContainer>
                 {newsData.sources.map((news, index) => (
                   <ModalNewsItem key={index}>
                     <a 
@@ -60,7 +58,7 @@ const NewsAgent = ({ className, newsData }) => {
                     </a>
                   </ModalNewsItem>
                 ))}
-              </div>
+              </ModalNewsContainer>
             <CloseButton onClick={handleCloseModal}>페이지로 돌아가기</CloseButton>
             </div>
           </ModalContent>
@@ -126,11 +124,16 @@ const ModalContent = styled.div`
   background-color: var(--trai-white);
   padding: 30px;
   border-radius: 10px;
-  width: 1200px;
+  max-width: 1200px;
   height: 700px;
-  overflow-y: auto;
   position: relative;
 `
+
+const ModalNewsContainer = styled.div`
+  height: 550px;
+  overflow-y: auto;
+  padding: 8px;
+`;
 
 const CloseButton = styled.button`
   position: absolute;

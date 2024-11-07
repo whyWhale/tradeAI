@@ -12,7 +12,7 @@ const TradeDetails = () => {
   const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className='flex bg-trai-background min-h-screen' style={{ minWidth: '1200px' }}>
+    <div className='flex bg-trai-background min-h-screen' style={{ width: '1400px' }}>
       <aside className='w-72'>
         <NavBar openModal={openModal} />
       </aside>

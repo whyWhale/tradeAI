@@ -82,6 +82,46 @@ const fakeData = {
       {
         "title": "Companies Holding Bitcoin on Their Balance Sheets: A Strategic Investment",
         "url": "https://www.thestreet.com/crypto/innovation/companies-holding-bitcoin-on-their-balance-sheets-a-strategic-investment-"
+      },
+      {
+        "title": "Companies Holding Bitcoin on Their Balance Sheets: A Strategic Investment",
+        "url": "https://www.thestreet.com/crypto/innovation/companies-holding-bitcoin-on-their-balance-sheets-a-strategic-investment-"
+      },
+      {
+        "title": "Companies Holding Bitcoin on Their Balance Sheets: A Strategic Investment",
+        "url": "https://www.thestreet.com/crypto/innovation/companies-holding-bitcoin-on-their-balance-sheets-a-strategic-investment-"
+      },
+      {
+        "title": "Companies Holding Bitcoin on Their Balance Sheets: A Strategic Investment",
+        "url": "https://www.thestreet.com/crypto/innovation/companies-holding-bitcoin-on-their-balance-sheets-a-strategic-investment-"
+      },
+      {
+        "title": "Companies Holding Bitcoin on Their Balance Sheets: A Strategic Investment",
+        "url": "https://www.thestreet.com/crypto/innovation/companies-holding-bitcoin-on-their-balance-sheets-a-strategic-investment-"
+      },
+      {
+        "title": "Companies Holding Bitcoin on Their Balance Sheets: A Strategic Investment",
+        "url": "https://www.thestreet.com/crypto/innovation/companies-holding-bitcoin-on-their-balance-sheets-a-strategic-investment-"
+      },
+      {
+        "title": "Companies Holding Bitcoin on Their Balance Sheets: A Strategic Investment",
+        "url": "https://www.thestreet.com/crypto/innovation/companies-holding-bitcoin-on-their-balance-sheets-a-strategic-investment-"
+      },
+      {
+        "title": "Companies Holding Bitcoin on Their Balance Sheets: A Strategic Investment",
+        "url": "https://www.thestreet.com/crypto/innovation/companies-holding-bitcoin-on-their-balance-sheets-a-strategic-investment-"
+      },
+      {
+        "title": "Companies Holding Bitcoin on Their Balance Sheets: A Strategic Investment",
+        "url": "https://www.thestreet.com/crypto/innovation/companies-holding-bitcoin-on-their-balance-sheets-a-strategic-investment-"
+      },
+      {
+        "title": "Companies Holding Bitcoin on Their Balance Sheets: A Strategic Investment",
+        "url": "https://www.thestreet.com/crypto/innovation/companies-holding-bitcoin-on-their-balance-sheets-a-strategic-investment-"
+      },
+      {
+        "title": "Companies Holding Bitcoin on Their Balance Sheets: A Strategic Investment",
+        "url": "https://www.thestreet.com/crypto/innovation/companies-holding-bitcoin-on-their-balance-sheets-a-strategic-investment-"
       }
     ]
   },
@@ -1695,7 +1735,7 @@ const fakeData = {
   "master": {
     "decision": "HOLD",
     "percentage": 0,
-    "summary": "투자 전문가들의 의견이 엇갈리고 있어, 현재로서는 명확한 투자 방향을 결정하기 어렵습니다. FNG 분석에서는 시장의 변동성이 증가하고 있으며, 투자자들이 신중한 태도로 전환하고 있음을 시사하여 'HOLD'를 권장하고 있습니다. 반면, 뉴스 검색에서는 영국 연금 펀드의 비트코인 투자 소식이 긍정적인 신호로 해석되어 'BUY'를 제안하고 있습니다. 그러나, 양적 분석에서는 기술적 지표들이 하락 신호를 보내고 있어 'SELL'을 권장하고 있습니다. 이러한 상반된 의견을 종합해 볼 때, 현재 시장의 불확실성이 크므로 추가적인 정보와 시장 변화를 주의 깊게 관찰하며 'HOLD' 전략을 유지하는 것이 바람직합니다."
+    "summary": "투자 전문가들의 의견이 엇갈리고 있어, 현재로서는 명확한 투자 방향을 결정하기 어렵습니다. FNG 분석에서는 시장의 변동성이 증가하고 있으며, 투자자들이 신중한 태도로 전환하고 있음을 시사하여 'HOLD'를 권장하고 있습니다. 반면, 뉴스 검색에서는 영국 연금 펀드의 비트코인 투자 소식이 긍정적인 신호로 해석되어 'BUY'를 제안하고 있습니다. 그러나, 양적 분석에서는 기술적 지표들이 하락 신호를 보내고 있어 'SELL'을 권장하고 있습니다. 이러한 상반된 의견을 종합해 볼 때, 현재 시장의 불확실성이 크므로 추가적인 정보와 시장 변화를 주의 깊게 관찰하며 'HOLD' 전략을 유지하는 것이 바람직합니다. 투자 전문가들의 의견이 엇갈리고 있어, 현재로서는 명확한 투자 방향을 결정하기 어렵습니다. FNG 분석에서는 시장의 변동성이 증가하고 있으며, 투자자들이 신중한 태도로 전환하고 있음을 시사하여 'HOLD'를 권장하고 있습니다. 반면, 뉴스 검색에서는 영국 연금 펀드의 비트코인 투자 소식이 긍정적인 신호로 해석되어 'BUY'를 제안하고 있습니다. 그러나, 양적 분석에서는 기술적 지표들이 하락 신호를 보내고 있어 'SELL'을 권장하고 있습니다. 이러한 상반된 의견을 종합해 볼 때, 현재 시장의 불확실성이 크므로 추가적인 정보와 시장 변화를 주의 깊게 관찰하며 'HOLD' 전략을 유지하는 것이 바람직합니다. 반복) 투자 전문가들의 의견이 엇갈리고 있어, 현재로서는 명확한 투자 방향을 결정하기 어렵습니다. FNG 분석에서는 시장의 변동성이 증가하고 있으며, 투자자들이 신중한 태도로 전환하고 있음을 시사하여 'HOLD'를 권장하고 있습니다. 반면, 뉴스 검색에서는 영국 연금 펀드의 비트코인 투자 소식이 긍정적인 신호로 해석되어 'BUY'를 제안하고 있습니다. 그러나, 양적 분석에서는 기술적 지표들이 하락 신호를 보내고 있어 'SELL'을 권장하고 있습니다. 이러한 상반된 의견을 종합해 볼 때, 현재 시장의 불확실성이 크므로 추가적인 정보와 시장 변화를 주의 깊게 관찰하며 'HOLD' 전략을 유지하는 것이 바람직합니다. 투자 전문가들의 의견이 엇갈리고 있어, 현재로서는 명확한 투자 방향을 결정하기 어렵습니다. FNG 분석에서는 시장의 변동성이 증가하고 있으며, 투자자들이 신중한 태도로 전환하고 있음을 시사하여 'HOLD'를 권장하고 있습니다. 반면, 뉴스 검색에서는 영국 연금 펀드의 비트코인 투자 소식이 긍정적인 신호로 해석되어 'BUY'를 제안하고 있습니다. 그러나, 양적 분석에서는 기술적 지표들이 하락 신호를 보내고 있어 'SELL'을 권장하고 있습니다. 이러한 상반된 의견을 종합해 볼 때, 현재 시장의 불확실성이 크므로 추가적인 정보와 시장 변화를 주의 깊게 관찰하며 'HOLD' 전략을 유지하는 것이 바람직합니다."
   }
 }
 
@@ -1728,7 +1768,7 @@ const AgentAI = () => {
       <QuantAgent className="item"/>
       <PatternAgent className="item"/>
       <FngAgent className="item"/>
-      <MasterAgent className="item"/>
+      <MasterAgent className="item" masterData={data.master}/>
       {data && <NewsAgent className="item" newsData={data.news_search} />}
     </Container>
   )
@@ -1741,8 +1781,6 @@ const Container = styled.div`
   grid-template-columns: 6fr 4fr 4fr 5fr;
   grid-template-rows: 200px 200px;
   gap: 30px;
-
-  border: 1px solid black;
   padding: 20px;
 
   .item:nth-child(1) {
@@ -1751,7 +1789,7 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     border-radius: 20px;
-    padding: 10px;
+    padding: 20px;
     background-color: skyblue;
   }
 
@@ -1761,7 +1799,7 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     border-radius: 20px;
-    padding: 10px;
+    padding: 20px;
     background-color: skyblue;
   }
 
@@ -1771,7 +1809,7 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     border-radius: 20px;
-    padding: 10px;
+    padding: 20px;
     background-color: skyblue;
   }
 
@@ -1781,8 +1819,8 @@ const Container = styled.div`
     width: 100%;
     height: 100%;
     border-radius: 20px;
-    padding: 10px;
-    background-color: skyblue;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--trai-greytext), var(--trai-disabled));
   }
 
   .item:nth-child(5) {
