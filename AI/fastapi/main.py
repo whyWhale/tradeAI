@@ -31,7 +31,7 @@ graph_builder = StateGraph(State)
 graph_builder.add_node("fng_agent", fng_agent)
 graph_builder.add_node("news_search_agent", news_search_agent)
 graph_builder.add_node("quant_agent", quant_agent)
-# graph_builder.add_node("chart_pattern_agent", chart_pattern_agent)
+graph_builder.add_node("chart_pattern_agent", chart_pattern_agent)
 graph_builder.add_node("master_agent", master_agent)
 
 # 직렬
@@ -44,12 +44,12 @@ graph_builder.add_node("master_agent", master_agent)
 graph_builder.add_edge(START, "fng_agent")
 graph_builder.add_edge(START, "news_search_agent")
 graph_builder.add_edge(START, "quant_agent")
-# graph_builder.add_edge(START, "chart_pattern_agent")
+graph_builder.add_edge(START, "chart_pattern_agent")
 
 graph_builder.add_edge("fng_agent", "master_agent")
 graph_builder.add_edge("news_search_agent", "master_agent")
 graph_builder.add_edge("quant_agent", "master_agent")
-# graph_builder.add_edge("chart_pattern_agent", "master_agent")
+graph_builder.add_edge("chart_pattern_agent", "master_agent")
 
 graph_builder.add_edge("master_agent", END)
 graph = graph_builder.compile()
@@ -70,9 +70,9 @@ async def run_analysis(user_info: UserInfo):
         )
         result_state = graph.invoke(initial_state)
         # messages를 제외하고 반환
-        result_dict = dict(result_state)
-        result_dict.pop('messages', None)
-        return result_dict
+        # result_dict = dict(result_state)
+        # result_dict.pop('messages', None)
+        return result_state
     except Exception as e:
         print("API 처리 중 오류 발생:", str(e))
         raise HTTPException(status_code=500, detail=str(e))
@@ -92,10 +92,7 @@ async def run_analysis():
             metadata={"date": (datetime.utcnow() + timedelta(hours=9)).isoformat()}
         )
         result_state = graph.invoke(initial_state)
-        # messages를 제외하고 반환
-        result_dict = dict(result_state)
-        result_dict.pop('messages', None)
-        return result_dict
+        return result_state
     except Exception as e:
         print("API 처리 중 오류 발생:", str(e))
         raise HTTPException(status_code=500, detail=str(e))

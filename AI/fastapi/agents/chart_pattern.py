@@ -79,11 +79,11 @@ def chart_pattern_agent(state: State) -> State:
         parsed_content = json.loads(result.content.strip("```json\n").strip("\n```"))
         print("차트 분석을 위한 LLM 호출 성공:", parsed_content)
 
-        new_message = (f"Chart Analysis Decision: {parsed_content['decision']}, "
-                        f"Chart Analysis Summary: {parsed_content['summary']}")
+        # 새로운 메시지 추가
+        # new_message = (f"Chart Analysis Decision: {parsed_content['decision']}, "
+        #                 f"Chart Analysis Summary: {parsed_content['summary']}")
 
         return {
-            "messages": [new_message],
             "chart_pattern": {
                 "decision": parsed_content["decision"],
                 "summary": parsed_content["summary"]

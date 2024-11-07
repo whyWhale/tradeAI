@@ -64,16 +64,15 @@ def fng_agent(state: State) -> State:
         result = fng_chain.invoke({"info": fng_info})
         print("FNG을 위한 LLM 호출 성공:", result)
 
-        new_message = f"FNG Analysis Decision: {result['decision']}, FNG Analysis Summary: {result['summary']}"
+        # 새로운 메시지 추가
+        # new_message = f"FNG Analysis Decision: {result['decision']}, FNG Analysis Summary: {result['summary']}"
 
         return {
-            "messages": [new_message],
             "fng": {
                 "decision": result["decision"],
                 "summary": result["summary"]
             }
         }
-
 
     except Exception as e:
         print("fng_agent 처리 중 오류 발생:", str(e))

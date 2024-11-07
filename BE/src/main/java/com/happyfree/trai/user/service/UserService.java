@@ -4,11 +4,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.happyfree.trai.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import java.util.Optional;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.happyfree.trai.user.dto.SignUp;
@@ -70,4 +70,12 @@ public class UserService {
 		return response.getBody();
 	}
 
+	public boolean findByEmail(String email) {
+		Optional<User> byEmail = userRepository.findByEmail(email);
+		if (byEmail.isPresent()) {
+			return false;
+		}
+
+		return true;
+	}
 }

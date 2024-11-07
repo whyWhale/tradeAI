@@ -36,13 +36,11 @@ news_search_template = """당신은 비트코인 시장의 투자 분석 전문�
     }}
 """
 
-# 뉴스 검색 분석 Pydantic 모델
 class NewsSearchAnalysis(BaseModel):
     summary: str
     decision: Literal["BUY", "SELL", "HOLD"]
     sources: List[dict]
 
-# 뉴스 검색 출력 파서
 news_search_prompt_template = PromptTemplate.from_template(news_search_template)
 news_output_parser = JsonOutputParser(pydantic_object=NewsSearchAnalysis)
 news_search_chain = news_search_prompt_template | llm | news_output_parser
@@ -62,13 +60,12 @@ def news_search_agent(state: State) -> State:
         print("뉴스 검색 LLM 호출 성공:", result)
 
         # 새로운 메시지 추가
-        new_message = (f"News Search Decision: {result['decision']}, "
-                        f"News Search Summary: {result['summary']}, "
-                        f"Sources: {sources_list}")
+        # new_message = (f"News Search Decision: {result['decision']}, "
+        #                 f"News Search Summary: {result['summary']}, "
+        #                 f"Sources: {sources_list}")
 
         return {
-            "messages": [new_message],
-            "chart_pattern": {
+            "news_search": {
                 "decision": result["decision"],
                 "summary": result["summary"],
                 "sources": sources_list
