@@ -1,5 +1,7 @@
 package com.happyfree.trai.user.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,4 +23,12 @@ public class UserService {
 		userRepository.save(User.builder().email(signUp.getUsername()).password(bCryptPasswordEncoder.encode(signUp.getPassword())).role("ROLE_USER").build());
 	}
 
+	public boolean findByEmail(String email) {
+		Optional<User> byEmail = userRepository.findByEmail(email);
+		if(byEmail.isPresent()){
+			return false;
+		}
+
+		return true;
+	}
 }

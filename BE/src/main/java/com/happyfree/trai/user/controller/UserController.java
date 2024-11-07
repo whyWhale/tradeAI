@@ -5,9 +5,11 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.auth0.jwt.JWT;
@@ -38,32 +40,16 @@ public class UserController {
 	@Value("${upbit.api.secretkey}")
 	private String secretKey;
 
-	@Operation(summary = "jwt")
-	@ApiResponses(value = {
-		@ApiResponse(
-			responseCode = "200",
-			description = "토큰 가져오기 성공",
-			content = @Content(schema = @Schema(type = "string", example = "토큰 값"))
-		)
-	})
-	@PostMapping("/token")
-	public ResponseEntity<?> signUp() {
-		return ResponseEntity.ok("Bearer " + JWT.create()
-			.withClaim("access_key", accessKey)
-			.withClaim("nonce", UUID.randomUUID().toString())
-			.sign(Algorithm.HMAC256(secretKey)));
-	}
-
 	@Operation(summary = "회원가입")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
 	@PostMapping("/join")
-	public void signUp(@RequestBody SignUp signup) {
+	public void b(@RequestBody SignUp signup) {
 		userService.save(signup);
 	}
 
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
 	@PostMapping("/login")
-	public void login(@RequestBody SignUp signUp) {
+	public void login() {
 	}
 
 	@Operation(summary = "로그아웃")
@@ -71,5 +57,12 @@ public class UserController {
 	@PostMapping("/logout")
 	public void logout() {
 
+	}
+
+	@Operation(summary = "이메일 중복 확인")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
+	@GetMapping("/check")
+	public boolean logout(@RequestParam(name = "email") String email) {
+		return userService.findByEmail(email);
 	}
 }
