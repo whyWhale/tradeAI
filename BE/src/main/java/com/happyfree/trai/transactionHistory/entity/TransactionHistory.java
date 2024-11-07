@@ -31,8 +31,7 @@ public class TransactionHistory extends BaseEntity {
 
 	private String side;
 
-	@Builder.Default
-	private String orderType = "limit";
+	private String orderType;
 
 	private String price;
 
