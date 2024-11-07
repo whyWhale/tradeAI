@@ -66,7 +66,7 @@ const useInvestmentSummary = () => {
       .finally(() => {
         setLoading(false);
       });
-  });
+  },[]);
 
   return { investmentData, tradeInitialized, investmentLoading, investmentError};
 };
