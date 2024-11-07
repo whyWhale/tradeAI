@@ -11,7 +11,7 @@ public class AgentScheduler {
 
     private final AgentService agentService;
 
-    @Scheduled(cron = "0 0 0,4,8,12,16,20 * * *") // 4시간 단위
+    @Scheduled(cron = "0 0 0,3,6,9,12,15,18,21 * * *") // 4시간 단위
     public void saveProfitAssetHistory() {
         agentService.sendAssetsDataToAgent();
     }
