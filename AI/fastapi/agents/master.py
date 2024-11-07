@@ -25,11 +25,11 @@ master_template = """당신은 비트코인 시장의 투자 분석 전문가입
     해당 결정을 가지고 투자 자본을 얼만큼의 비중으로 진행할지 퍼센트도 결정해주세요.
 
     현재 당신이 가지고 있는 주문 가능 금액은 다음과 같습니다: {available_amount}
-    만약, "BUY"인데 "5000"원 이하로 당신의 투자 금액이 있다면, "HOLD"를 해주세요.
+    만약, "BUY"인데 "6000"원 이하로 당신의 투자 금액이 있다면, "HOLD"를 해주세요.
     그리고 "BUY"에 대한 의사결정이 있었지만, 보유 금액 부족으로 "HOLD"를 하게 된 투자 결정에 대한 이유를 추가해주세요.
 
     현재 당신이 가지고 있는 비트코인 원화 금액은 다음과 같습니다: {btc_balance_krw}
-    만약, "SELL"인데 "5000"원 이하로 당신의 비트코인 원화 금액이 있다면, "HOLD"를 해주세요.
+    만약, "SELL"인데 "6000"원 이하로 당신의 비트코인 원화 금액이 있다면, "HOLD"를 해주세요.
     그리고 "SELL"에 대한 의사결정이 있었지만, 보유 금액 부족으로 "HOLD"를 하게 된 투자 결정에 대한 이유를 추가해주세요.
     
     결과는 반드시 JSON 형식으로 출력하세요:
@@ -54,17 +54,15 @@ master_chain = master_prompt_template | llm | master_output_parser
 
 # 주문 금액 결정 함수
 def order_amount_calculator(decision, percent, available_order_amount, btc_holdings_in_krw):
-    # HOLD일 경우 0 반환
     if decision == 'HOLD':
         return 0
 
-    order_amount = percent * (available_order_amount if decision == 'BUY' else btc_holdings_in_krw)
+    order_amount = (percent / 100) * (available_order_amount if decision == 'BUY' else btc_holdings_in_krw)
 
-    # 주문 금액이 5천원 이상인지 확인하고, 초과하지 않도록 조정
     if decision == 'BUY':
-        return max(5000, order_amount)
+        return max(6000, order_amount)
     elif decision == 'SELL':
-        return max(5000, order_amount)
+        return max(6000, order_amount)
 
     # 예외적으로 다른 값이 들어왔을 경우 0 반환
     return 0
@@ -87,7 +85,6 @@ def extract_agent_decisions(state):
     
     for key in agents_name:
         agent_data = getattr(state, key)
-        # print(f"Key: {key}, Data: {agent_data}")  # 실제 데이터 구조 확인
         if agent_data:
             try:
                 analysis_text = f"{key.upper()} Analysis Decision: {agent_data['decision']}, {key.upper()} Analysis Summary: {agent_data['summary']}"
