@@ -70,9 +70,9 @@ async def run_analysis(user_info: UserInfo):
         )
         result_state = graph.invoke(initial_state)
         # messages를 제외하고 반환
-        result_dict = dict(result_state)
-        result_dict.pop('messages', None)
-        return result_dict
+        # result_dict = dict(result_state)
+        # result_dict.pop('messages', None)
+        return result_state
     except Exception as e:
         print("API 처리 중 오류 발생:", str(e))
         raise HTTPException(status_code=500, detail=str(e))
@@ -92,10 +92,7 @@ async def run_analysis():
             metadata={"date": (datetime.utcnow() + timedelta(hours=9)).isoformat()}
         )
         result_state = graph.invoke(initial_state)
-        # messages를 제외하고 반환
-        result_dict = dict(result_state)
-        result_dict.pop('messages', None)
-        return result_dict
+        return result_state
     except Exception as e:
         print("API 처리 중 오류 발생:", str(e))
         raise HTTPException(status_code=500, detail=str(e))
