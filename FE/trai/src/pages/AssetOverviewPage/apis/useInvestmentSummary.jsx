@@ -28,7 +28,7 @@ const useInvestmentSummary = () => {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(`https://wwww.trai-ai.site/api/investments/summary`, {
+      .get(`https://www.trai-ai.site/api/investments/summary', {
         headers: {
           access: `${token}`
         }
