@@ -14,7 +14,7 @@ const useAssetData = (BTCPrice) => {
     if (!BTCPrice) return;
     setLoading(true);
     axios
-      .post(`https://wwww.trai-ai.site/api/upbits/accounts`, {
+      .post(`https://www.trai-ai.site/api/upbits/accounts`, {
         headers: {
           access: `${token}`
         }
