@@ -68,5 +68,5 @@ public class TransactionHistory extends BaseEntity {
 
 	public void updateAveragePrice(BigDecimal averagePrice) { this.averagePrice = averagePrice; }
 
-	public void updatePrice(String price) { this.price = price;	}
+	public void updatePrice(String price) { this.price = price; }
 }

@@ -317,7 +317,7 @@ public class AgentService {
                         .executedVolume(jsonObject.get("executed_volume").asText())
                         .executedFunds(new BigDecimal(jsonObject.get("executed_funds").asText()))
                         .tradesCount(jsonObject.get("trades_count").asInt())
-                        .orderCreatedAt(LocalDateTime.parse(jsonObject.get("created_at").asText().replace("+09:00", "")))  // timezone 부분 제거
+                        .orderCreatedAt(LocalDateTime.parse(jsonObject.get("created_at").asText().replace("+09:00", "")))
                         .build();
             }
 
