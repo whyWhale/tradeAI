@@ -64,6 +64,7 @@ public class TransactionHistoryService {
 			latestTransactionHistories.add(
 				LatestTransactionHistory.builder()
 					.money(investmentHistories.get(i).getExecutedFunds())
+					.volume(investmentHistories.get(i).getExecutedVolume())
 					.kind(investmentHistories.get(i).getSide())
 					.createdAt(investmentHistories.get(i).getOrderCreatedAt())
 					.build()
