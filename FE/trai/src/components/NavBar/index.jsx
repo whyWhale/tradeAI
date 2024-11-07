@@ -1,18 +1,36 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { instance } from '@api/axios';
 
 import { IoMdHelpCircleOutline } from 'react-icons/io';
 import { VscSettings } from 'react-icons/vsc';
-import { IoDocumentTextOutline } from 'react-icons/io5';
 import { PiChartLineUpLight, PiHeadCircuit } from 'react-icons/pi';
 import { MdCurrencyBitcoin, MdOutlineLogout } from 'react-icons/md';
 
 const NavBar = ({openModal}) => {
 
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try{
+      const response = await instance.post('/api/users/logout');
+
+      if(response.status === 200){
+        console.log('로그아웃 성공');
+        navigate('/');
+      }
+
+    } catch (error){
+      console.error("로그아웃 에러: ", error)
+    }
+
+  }
+
+
   return (
     <div className="flex flex-col items-center">
-      <LogoArea>
+      <LogoArea to="/">
         <div>로고</div>
         <p>T R A I</p>
       </LogoArea>
@@ -21,35 +39,31 @@ const NavBar = ({openModal}) => {
         <NavList>
           <StyledNavLink to="/trade-settings">
             <div className="PageIcon"><VscSettings /></div>
-            <div className="PageName">거래 설정 페이지</div>
+            <div className="PageName">거래 설정</div>
           </StyledNavLink>
           <StyledNavLink to="/asset-overview">
             <div className="PageIcon"><PiChartLineUpLight /></div>
-            <div className="PageName">자산 현황 페이지</div>
+            <div className="PageName">자산 현황</div>
           </StyledNavLink>
           <StyledNavLink to="/investment-status">
             <div className="PageIcon"><MdCurrencyBitcoin /></div>
-            <div className="PageName">투자 현황 페이지</div>
+            <div className="PageName">투자 현황</div>
           </StyledNavLink>
           <StyledNavLink to="/trade-details">
-            <div className="PageIcon"><IoDocumentTextOutline /></div>
-            <div className="PageName">거래 내역 상세 페이지</div>
-          </StyledNavLink>
-          <StyledNavLink to="/strategy">
             <div className="PageIcon"><PiHeadCircuit /></div>
-            <div className="PageName">투자 전략 페이지</div>
+            <div className="PageName">거래 상세 및 전략</div>
           </StyledNavLink>
-          <StyledNavLink to="/logout">
+          <StyledLogoutButton onClick={handleLogout}>
             <div className="PageIcon"><MdOutlineLogout /></div>
             <div className="PageName">로그아웃</div>
-          </StyledNavLink>
+          </StyledLogoutButton>
         </NavList>
       </NavContainer>
 
       <BotArea>
         <div className="text-trai-white text-[24px] p-2"><IoMdHelpCircleOutline /></div>
         <div className="text-trai-white text-[16px] ml-2">도움이 필요하신가요?</div>
-        <div className="text-trai-white text-[12px] ml-2">아래의 버튼을 눌러 확인해보세요.</div>
+        <div className="text-trai-white text-[12px] ml-2 mb-2">아래의 버튼을 눌러 확인해보세요.</div>
         <BotButton onClick={openModal}>BitBot에게 물어보기</BotButton>
       </BotArea>
     </div>
@@ -99,7 +113,37 @@ const StyledNavLink = styled(NavLink)`
   }
 `;
 
-const LogoArea = styled.div`
+
+const StyledLogoutButton = styled.div`
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  margin: 3px;
+  padding: 8px 10px;
+  border-radius: 15px;
+  background-color: transparent;
+  cursor: pointer;
+
+  .PageIcon {
+    background-color: var(--trai-white);
+    color: var(--trai-mint);
+    font-size: 24px;
+    padding: 8px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 2px var(--trai-disabled);
+  }
+
+  .PageName {
+    color: var(--trai-greytext);
+  }
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+`;
+
+
+const LogoArea = styled(NavLink)`
   display: flex;
   padding: 10px;
   margin: 20px auto; 
@@ -118,9 +162,9 @@ const BotArea = styled.div`
   flex-direction: column;
   background-color: var(--trai-mint);
   border-radius: 20px;
-  width: 240px;
+  width: 220px;
   height: 180px;
-  padding: 10px;
+  padding: 8px;
   margin-top: 20px;
 `;
 
@@ -128,7 +172,7 @@ const BotButton = styled.button`
   background-color: var(--trai-white);
   color: var(--trai-mint);
   border-radius: 10px;
-  width: 210px;
+  width: 190px;
   height: 50px;
   display: flex;
   justify-content: center;
