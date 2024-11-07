@@ -16,7 +16,6 @@ search = SerpAPIWrapper(params={
     "filter": "1"  # 중복된 기사 필터링 활성화
 })
 
-
 # 뉴스 검색 템플릿
 news_search_template = """당신은 비트코인 시장의 투자 분석 전문가입니다. 
     최신 뉴스에서 비트코인 관련 시장 동향을 조사하고 이를 분석하여 결정하세요.
@@ -36,7 +35,6 @@ news_search_template = """당신은 비트코인 시장의 투자 분석 전문�
         ]
     }}
 """
-news_search_prompt_template = PromptTemplate.from_template(news_search_template)
 
 # 뉴스 검색 분석 Pydantic 모델
 class NewsSearchAnalysis(BaseModel):
@@ -45,6 +43,7 @@ class NewsSearchAnalysis(BaseModel):
     sources: List[dict]
 
 # 뉴스 검색 출력 파서
+news_search_prompt_template = PromptTemplate.from_template(news_search_template)
 news_output_parser = JsonOutputParser(pydantic_object=NewsSearchAnalysis)
 news_search_chain = news_search_prompt_template | llm | news_output_parser
 
@@ -64,19 +63,17 @@ def news_search_agent(state: State) -> State:
 
         # 새로운 메시지 추가
         new_message = (f"News Search Decision: {result['decision']}, "
-                       f"News Search Summary: {result['summary']}, "
-                       f"Sources: {sources_list}")
-        updated_messages = state.messages + [new_message]
+                        f"News Search Summary: {result['summary']}, "
+                        f"Sources: {sources_list}")
 
-        # 상태 업데이트 및 반환
-        return state.copy(update={
-            "messages": updated_messages,
-            "news_search": {
+        return {
+            "messages": [new_message],
+            "chart_pattern": {
                 "decision": result["decision"],
                 "summary": result["summary"],
                 "sources": sources_list
             }
-        })
+        }
     except Exception as e:
         print("news_search_agent 처리 중 오류 발생:", str(e))
         raise

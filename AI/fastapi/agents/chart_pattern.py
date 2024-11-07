@@ -80,21 +80,15 @@ def chart_pattern_agent(state: State) -> State:
         print("차트 분석을 위한 LLM 호출 성공:", parsed_content)
 
         new_message = (f"Chart Analysis Decision: {parsed_content['decision']}, "
-                       f"Chart Analysis Summary: {parsed_content['summary']}")
+                        f"Chart Analysis Summary: {parsed_content['summary']}")
 
-        # State 업데이트
-        print(">>> Updating state with new information")
-        updated_messages = state.messages + [new_message]
-        updated_state = state.copy(update={
-            "messages": updated_messages,
+        return {
+            "messages": [new_message],
             "chart_pattern": {
                 "decision": parsed_content["decision"],
                 "summary": parsed_content["summary"]
             }
-        })
-        print(">>> State updated successfully")
-
-        return updated_state
+        }
 
     except Exception as e:
         print(f">>> ERROR: Exception in chart_pattern_agent: {str(e)}")

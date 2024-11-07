@@ -5,7 +5,11 @@ from langchain_core.output_parsers import JsonOutputParser
 from core.config import llm
 from core.state import State
 
-# 마스터 템플릿
+
+# 에이전트 관리
+agents_name = ["fng", "quant", "news_search", "chart_pattern"]
+
+
 master_template = """당신은 비트코인 시장의 투자 분석 전문가입니다.
     현재 당신 회사에 속한 투자 전문가들은 비트코인 투자 결정을 다음과 같이 했습니다:
     {master_decision}
@@ -51,7 +55,6 @@ def order_amount_calculator(decision, percent, available_order_amount, btc_holdi
     if decision == 'HOLD':
         return 0
 
-    # percent에 따라 주문 금액 계산
     order_amount = percent * (available_order_amount if decision == 'BUY' else btc_holdings_in_krw)
 
     # 주문 금액이 5천원 이상인지 확인하고, 초과하지 않도록 조정
@@ -74,62 +77,55 @@ def count_decision(decision: Optional[str]) -> tuple[int, int, int]:
         return (0, 1, 0)
     elif decision == "HOLD":
         return (0, 0, 1)
-    return (0, 0, 0)  # 유효하지 않은 결정의 경우
+    return (0, 0, 0)  # 유효하지 않은 결정의 경우 제외
 
+def extract_agent_decisions(state):
+    combined_analysis = []
+    
+    for key in agents_name:
+        agent_data = getattr(state, key)
+        if agent_data is not None:
+            analysis_text = f"{key.upper()} Analysis Decision: {agent_data['decision']}, {key.upper()} Analysis Summary: {agent_data['summary']}"
+            combined_analysis.append(analysis_text)
+
+    return "\n".join(combined_analysis)
+
+# 에이전트
 def master_agent(state: State) -> State:
     total_buy = 0
     total_sell = 0
     total_hold = 0
+    
+    # 각 에이전트의 결정을 카운트
+    for agent in agents_name:
+        if getattr(state, agent) and "decision" in getattr(state, agent):
+            buy, sell, hold = count_decision(getattr(state, agent)["decision"])
+            total_buy += buy
+            total_sell += sell
+            total_hold += hold
 
-    # Fear & Greed 결정 카운트
-    if state.fng and "decision" in state.fng:
-        buy, sell, hold = count_decision(state.fng["decision"])
-        total_buy += buy
-        total_sell += sell
-        total_hold += hold
-
-    # 뉴스 검색 결정 카운트
-    if state.news_search and "decision" in state.news_search:
-        buy, sell, hold = count_decision(state.news_search["decision"])
-        total_buy += buy
-        total_sell += sell
-        total_hold += hold
-
-    # 퀀트 분석 결정 카운트
-    if state.quant and "decision" in state.quant:
-        buy, sell, hold = count_decision(state.quant["decision"])
-        total_buy += buy
-        total_sell += sell
-        total_hold += hold
-
-    # 차트 분석 결정 카운트
-    if state.chart_pattern and "decision" in state.chart_pattern:
-        buy, sell, hold = count_decision(state.chart_pattern["decision"])
-        total_buy += buy
-        total_sell += sell
-        total_hold += hold
-
-    # 투표 결과 결정
-    if total_buy > total_sell and total_buy > total_hold:
-        master_decision = "BUY"
-    elif total_sell > total_buy and total_sell > total_hold:
-        master_decision = "SELL"
-    elif total_hold > total_buy and total_hold > total_sell:
-        master_decision = "HOLD"
-    else:
+    counts = {
+        "BUY": total_buy,
+        "SELL": total_sell,
+        "HOLD": total_hold
+    }
+    master_decision = max(counts, key=counts.get)
+    
+    # 동점인 경우 "DRAW" 처리
+    if list(counts.values()).count(max(counts.values())) > 1:
         master_decision = "DRAW"
 
     print(f"decision count: BUY({total_buy}), SELL({total_sell}), HOLD({total_hold})")
     print(f"Master: {master_decision}")
 
     # 마스터 결정 진행
+    agents_analysis = extract_agent_decisions(state)
     result = master_chain.invoke({
         "master_decision": master_decision,
-        "agents_analysis": state.messages,
+        "agents_analysis": agents_analysis,
         "available_amount": state.user_info["available_amount"],
         "btc_balance_krw": state.user_info["btc_balance_krw"]
     })
-
 
     # 주문 결정
     orderAmount = order_amount_calculator(
@@ -139,12 +135,11 @@ def master_agent(state: State) -> State:
         state.user_info["btc_balance_krw"]
     )
 
-    return state.copy(update={
-        "messages": state.messages,
+    return {
         "master": {
             "decision": result["decision"],
             "percentage": result["percentage"],
             "orderAmount": orderAmount,
             "summary": result["summary"]
         }
-    })
+    }
