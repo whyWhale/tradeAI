@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    options {
+        disableConcurrentBuilds(abortPrevious: true)
+    }
     environment {
         DOCKER_HUB_CREDENTIALS_ID = 'dockerhub-access-jaehyun'             
     }
