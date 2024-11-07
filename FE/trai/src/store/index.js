@@ -6,6 +6,7 @@ import rootReducer from './reducers'; // 리듀서 모음 (필요에 따라 설�
 const store = configureStore({
   reducer: {
     BTCData: BTCDataReducer,
+    auth: authReducer,
   },
 });
 

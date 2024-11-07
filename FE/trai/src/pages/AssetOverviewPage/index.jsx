@@ -74,7 +74,7 @@ const AssetOverview = () => {
             </div>
           : 
             <div className='card-content'>
-              {tradeInitialized ? <div> 거래가 아직 시작되지 않았습니다. </div> :
+              {tradeInitialized ? <div> &nbsp;&nbsp;&nbsp;투자가 아직 시작되지 않았습니다. </div> :
                 <>
                   <div>누적 수익률</div>
                   <div style={{ fontSize: "17px" }}>{`${investmentData.returnRate}`} %</div>
@@ -86,7 +86,6 @@ const AssetOverview = () => {
                   <div style={{ color: "#A0AEC0" }}>{`${investmentData.lastTransactionTime}`}</div>
                 </>
               }
-
             </div>
           }
           </>
@@ -109,7 +108,11 @@ const AssetOverview = () => {
         </div>
         
         <div className="sidebar">
-          <div className="card-title">투자 내역</div>
+          <div className="card-title" style={{  
+            position: 'absolute',
+            top: '2.5%',
+            left: '5%',      
+            paddingBottom: "5%"}}>투자 내역</div>
           <Timeline/>
         </div>
       </div>
