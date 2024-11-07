@@ -17,6 +17,9 @@ master_template = """당신은 비트코인 시장의 투자 분석 전문가입
     
     해당 결정을 뒷받침하는 투자 전문가들의 의견을 종합해주세요:
     {agents_analysis}
+
+    당신의 투자 성향은 다음과 같습니다:
+    공격적인 투자로 단기간에 수익을 내야 합니다.
     
     만약, 투자 전문가들의 의견이 "DRAW"라면 당신이 전반적인 내용을 종합하여 "BUY", "SELL", "HOLD" 중 하나를 골라주세요.
     해당 결정을 가지고 투자 자본을 얼만큼의 비중으로 진행할지 퍼센트도 결정해주세요.
@@ -84,9 +87,14 @@ def extract_agent_decisions(state):
     
     for key in agents_name:
         agent_data = getattr(state, key)
-        if agent_data is not None:
-            analysis_text = f"{key.upper()} Analysis Decision: {agent_data['decision']}, {key.upper()} Analysis Summary: {agent_data['summary']}"
-            combined_analysis.append(analysis_text)
+        # print(f"Key: {key}, Data: {agent_data}")  # 실제 데이터 구조 확인
+        if agent_data:
+            try:
+                analysis_text = f"{key.upper()} Analysis Decision: {agent_data['decision']}, {key.upper()} Analysis Summary: {agent_data['summary']}"
+                combined_analysis.append(analysis_text)
+            except KeyError as e:
+                print(f"Missing key in {key} data: {e}")
+                continue
 
     return "\n".join(combined_analysis)
 
@@ -128,7 +136,7 @@ def master_agent(state: State) -> State:
     })
 
     # 주문 결정
-    orderAmount = order_amount_calculator(
+    order_amount = order_amount_calculator(
         result["decision"],
         result["percentage"],
         state.user_info["available_amount"],
@@ -139,7 +147,7 @@ def master_agent(state: State) -> State:
         "master": {
             "decision": result["decision"],
             "percentage": result["percentage"],
-            "orderAmount": orderAmount,
+            "order_amount": order_amount,
             "summary": result["summary"]
         }
     }

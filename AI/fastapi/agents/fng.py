@@ -74,7 +74,6 @@ def fng_agent(state: State) -> State:
             }
         }
 
-
     except Exception as e:
         print("fng_agent 처리 중 오류 발생:", str(e))
         raise
