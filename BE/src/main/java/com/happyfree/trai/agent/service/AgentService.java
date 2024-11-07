@@ -20,19 +20,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.springframework.http.HttpMethod;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -191,6 +187,7 @@ public class AgentService {
                     transactionHistory.updateTotalAmount(profitAssetService.getTotalMoney(accessKey, secretKey)
                             .add(nowBitcoinPrice.multiply(nowBitcoinCount)));
                     transactionHistory.updateAveragePrice(getBTCAveragePrice(accessKey, secretKey));
+                    transactionHistory.updatePrice(nowBitcoinPrice.toString());
                     transactionHistoryRepository.save(transactionHistory);
                 }
             } else {
@@ -308,10 +305,11 @@ public class AgentService {
 
             if (jsonArray.isArray() && !jsonArray.isEmpty()) {
                 JsonNode jsonObject = jsonArray.get(0);
+                log.info("주문 조회: {}", jsonObject.toString());
+
                 return TransactionHistory.builder()
                         .uuid(jsonObject.get("uuid").asText())
                         .orderType(jsonObject.get("ord_type").asText())
-                        .price(jsonObject.get("price").asText())
                         .state(jsonObject.get("state").asText())
                         .market(jsonObject.get("market").asText())
                         .volume(jsonObject.get("volume").asText())
@@ -319,7 +317,7 @@ public class AgentService {
                         .executedVolume(jsonObject.get("executed_volume").asText())
                         .executedFunds(new BigDecimal(jsonObject.get("executed_funds").asText()))
                         .tradesCount(jsonObject.get("trades_count").asInt())
-                        .orderCreatedAt(LocalDateTime.parse(jsonObject.get("created_at").asText()))
+                        .orderCreatedAt(LocalDateTime.parse(jsonObject.get("created_at").asText().replace("+09:00", "")))  // timezone 부분 제거
                         .build();
             }
 
