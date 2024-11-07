@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from typing import List, Optional, Literal, TypedDict
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
+from langgraph.graph import add_messages
 from core.config import llm
 from core.state import State
 
@@ -60,23 +61,18 @@ def get_fng():
 def fng_agent(state: State) -> State:
     try:
         fng_info = get_fng()
-        print("FNG 데이터 준비 완료:", fng_info)
-
         result = fng_chain.invoke({"info": fng_info})
         print("FNG을 위한 LLM 호출 성공:", result)
 
-        new_message = f"FNG Analysis Decision: {result['decision']}, FNG Analysis Summary: {result['summary']}"
-        updated_messages = state.messages + [new_message]
+        # 새로운 메시지 추가
+        # new_message = f"FNG Analysis Decision: {result['decision']}, FNG Analysis Summary: {result['summary']}"
 
-        return state.copy(
-            update={
-                "messages": updated_messages,
-                "fng": {
-                    "decision": result["decision"],
-                    "summary": result["summary"]
-                }
+        return {
+            "fng": {
+                "decision": result["decision"],
+                "summary": result["summary"]
             }
-        )
+        }
 
     except Exception as e:
         print("fng_agent 처리 중 오류 발생:", str(e))

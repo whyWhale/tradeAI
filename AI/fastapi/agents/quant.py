@@ -28,7 +28,6 @@ quant_template = """당신은 비트코인 시장의 투자 분석 전문가입�
     }}
     """
 
-# Quant Analysis Pydantic 모델
 class QuantAnalysis(BaseModel):
     summary: str
     decision: Literal["BUY", "SELL", "HOLD"]
@@ -152,22 +151,22 @@ def analyze_market(market: str, unit: int = 240) -> Tuple[str, pd.DataFrame]:
     analysis_text = ". ".join(analysis) + "."
     return analysis_text, df
 
-# Quant Agent 함수
 def quant_agent(state: State) -> State:
     try:
         analysis_text, raw_data = analyze_market("KRW-BTC", unit=240)
         result = quant_chain.invoke({"analysis": analysis_text})
-        new_message = (f"Quant Analysis Decision: {result['decision']}, Quant Analysis Summary: {result['summary']}")
-        updated_messages = state.messages + [new_message]
 
-        return state.copy(update={
-            "messages": updated_messages,
+        # 새로운 메시지 추가
+        # new_message = (f"Quant Analysis Decision: {result['decision']}, Quant Analysis Summary: {result['summary']}")
+
+        return {
             "quant": {
                 "decision": result["decision"],
                 "summary": result["summary"],
                 "raw_data": df_to_json(raw_data),
             }
-        })
+        }
+
     except Exception as e:
         print(f"Error in quant_agent: {e}")
         return state

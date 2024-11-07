@@ -18,7 +18,7 @@ def langsmith(project_name=None, set_enable=True):
         )
         os.environ["LANGCHAIN_TRACING_V2"] = "true"  # 활성화
         os.environ["LANGCHAIN_PROJECT"] = project_name  # 프로젝트명
-        print(f"LangSmith 추적을 시작합니다.\n[프로젝트명]\n{project_name}")
+        print(f"LangSmith에서 {project_name} 프로젝트 추적을 시작합니다.")
     else:
         os.environ["LANGCHAIN_TRACING_V2"] = "false" # 비활성화
         print("LangSmith 추적을 하지 않습니다.")

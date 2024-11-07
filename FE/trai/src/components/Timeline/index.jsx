@@ -1,28 +1,17 @@
 import React from "react";
 import styled from "styled-components";
+import useTimelineData from "./useTimelineData";
 
-// 더미 데이터
-const timelineData = [
-  { type: "sell", amount: "0.00003 BTC", price: "2840.50 KRW", date: "10월 17일 04:00 AM" },
-  { type: "hold", date: "10월 17일 08:00 AM" },
-  { type: "hold", date: "10월 17일 12:00 PM" },
-  { type: "sell", amount: "0.00003 BTC", price: "2840.50 KRW", date: "10월 17일 04:00 PM" },
-  { type: "buy", amount: "0.00003 BTC", price: "2840.50 KRW", date: "10월 18일 00:00 AM" },
-  { type: "buy", amount: "0.00003 BTC", price: "2840.50 KRW", date: "10월 18일 04:00 AM" },
-  { type: "buy", amount: "0.00003 BTC", price: "2840.50 KRW", date: "10월 18일 04:00 AM" },
-  { type: "sell", amount: "0.00003 BTC", price: "2840.50 KRW", date: "10월 18일 04:00 AM" },
-  { type: "buy", amount: "0.00003 BTC", price: "2840.50 KRW", date: "10월 18일 04:00 AM" },
-  { type: "sell", amount: "0.00003 BTC", price: "2840.50 KRW", date: "10월 18일 04:00 AM" },
-  { type: "buy", amount: "0.00003 BTC", price: "2840.50 KRW", date: "10월 18일 04:00 AM" },
-  { type: "sell", amount: "0.00003 BTC", price: "2840.50 KRW", date: "10월 18일 04:00 AM" },
-];
+
 
 const Timeline = () => {
+  const { timelineData, timelineLoading, timelineError, isEmpty } = useTimelineData();
   return (
+    timelineLoading||timelineError?<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}><span className="spinner"></span></div>
+    :isEmpty?<div>투자 내역이 없습니다.</div>:
     <TimelineContainer>
-      <Header>
+      <Header >
         <Title>이번달</Title>
-        <Profit>+30%</Profit>
       </Header>
       <TimelineList>
         {timelineData.map((item, index) => (
@@ -34,12 +23,13 @@ const Timeline = () => {
 };
 
 const TimelineItem = ({ item }) => {
+
   return (
     <Item>
-      <Icon type={item.type} />
+      <Icon type={item.kind} />
       <Content>
-        {item.amount && <Amount>{item.amount}, {item.price}</Amount>}
-        {item.type==="hold"?'hold':''}
+        {item.volume && <Amount>{item.volume} BTC, {item.money} KRW</Amount>}
+        {item.kind==="HOLD"?'HOLD':''}
         <Date>{item.date}</Date>
       </Content>
     </Item>
@@ -106,7 +96,7 @@ const Icon = styled.div`
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background-color: ${({ type }) => (type === "buy" ? "#EB5757" : type === "sell" ? "#2D9CDB" : "#CBD5E0")};
+  background-color: ${({ type }) => (type === "BUY" ? "#EB5757" : type === "SELL" ? "#2D9CDB" : "#CBD5E0")};
   margin-right: 10px;
 `;
 

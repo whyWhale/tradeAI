@@ -63,15 +63,15 @@ class UserInfo(BaseModel):
 @router.post("/analysis")
 async def run_analysis(user_info: UserInfo):
     try:
-        current_time = (datetime.utcnow() + timedelta(hours=9)).isoformat()
-
         initial_state = State(
             messages=["Analysis Started"],
             user_info=user_info.dict(),
-            # metadata={"current_time": current_time}
+            metadata={"date": (datetime.utcnow() + timedelta(hours=9)).isoformat()}
         )
         result_state = graph.invoke(initial_state)
-        result_state = State(**result_state)
+        # messages를 제외하고 반환
+        # result_dict = dict(result_state)
+        # result_dict.pop('messages', None)
         return result_state
     except Exception as e:
         print("API 처리 중 오류 발생:", str(e))
@@ -92,7 +92,6 @@ async def run_analysis():
             metadata={"date": (datetime.utcnow() + timedelta(hours=9)).isoformat()}
         )
         result_state = graph.invoke(initial_state)
-        result_state = State(**result_state)
         return result_state
     except Exception as e:
         print("API 처리 중 오류 발생:", str(e))
@@ -101,7 +100,6 @@ async def run_analysis():
 @router.get("/health")
 async def health_check():
     return {"status": "healthy"}
-
 
 app.include_router(router)
 
