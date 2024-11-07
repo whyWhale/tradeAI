@@ -10,6 +10,33 @@ from core.config import llm
 from core.state import State
 
 
+# 프롬프트 템플릿 설정
+quant_template = """당신은 비트코인 시장의 투자 분석 전문가입니다.
+    현재 당신 회사는 4시간 마다 자동으로 비트코인 투자 결정을 내려야 합니다.
+    당신은 기술적 분석을 통해 투자 의사결정을 내려야 합니다.
+    현재 4시간 단위 캔들 데이터를 통해 골든 크로스 & 데드 크로스 판단, RSI 과매수/과매도 판단, MACD 교차 판단, 볼린저 밴드 판단을 합니다.
+    
+    현재 4시간 캔들 데이터를 바탕으로 분석한 결과는 다음과 같습니다:
+    {analysis}
+    
+    해당 부분을 고려해서, 투자 결정 및 투자 결정에 대한 이유를 제공해주세요.
+
+    결과는 반드시 JSON 형식으로 출력하세요:
+    {{
+        "decision": "BUY 또는 SELL 또는 HOLD 중 하나로만 작성",
+        "summary": "투자 결정에 대한 이유를 자세히 서술"
+    }}
+    """
+
+# Quant Analysis Pydantic 모델
+class QuantAnalysis(BaseModel):
+    summary: str
+    decision: Literal["BUY", "SELL", "HOLD"]
+
+quant_prompt_template = PromptTemplate.from_template(quant_template)
+quant_output_parser = JsonOutputParser(pydantic_object=QuantAnalysis)
+quant_chain = quant_prompt_template | llm | quant_output_parser
+
 # DataFrame을 JSON으로 변환하는 유틸리티 함수
 def df_to_json(df: pd.DataFrame) -> dict:
     def convert_value(value):
@@ -124,32 +151,6 @@ def analyze_market(market: str, unit: int = 240) -> Tuple[str, pd.DataFrame]:
 
     analysis_text = ". ".join(analysis) + "."
     return analysis_text, df
-
-# Quant Analysis Pydantic 모델
-class QuantAnalysis(BaseModel):
-    summary: str
-    decision: Literal["BUY", "SELL", "HOLD"]
-
-# 프롬프트 템플릿 설정
-quant_template = """당신은 비트코인 시장의 투자 분석 전문가입니다.
-    현재 당신 회사는 4시간 마다 자동으로 비트코인 투자 결정을 내려야 합니다.
-    당신은 기술적 분석을 통해 투자 의사결정을 내려야 합니다.
-    현재 4시간 단위 캔들 데이터를 통해 골든 크로스 & 데드 크로스 판단, RSI 과매수/과매도 판단, MACD 교차 판단, 볼린저 밴드 판단을 합니다.
-    
-    현재 4시간 캔들 데이터를 바탕으로 분석한 결과는 다음과 같습니다:
-    {analysis}
-    
-    해당 부분을 고려해서, 투자 결정 및 투자 결정에 대한 이유를 제공해주세요.
-
-    결과는 반드시 JSON 형식으로 출력하세요:
-    {{
-        "decision": "BUY 또는 SELL 또는 HOLD 중 하나로만 작성",
-        "summary": "투자 결정에 대한 이유를 자세히 서술"
-    }}
-    """
-quant_prompt_template = PromptTemplate.from_template(quant_template)
-quant_output_parser = JsonOutputParser(pydantic_object=QuantAnalysis)
-quant_chain = quant_prompt_template | llm | quant_output_parser
 
 # Quant Agent 함수
 def quant_agent(state: State) -> State:

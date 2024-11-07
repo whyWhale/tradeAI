@@ -6,6 +6,8 @@ server:
 spring:
   application:
     name: trade-ai
+  jwt:
+    secret: asdnjkansjdknajksndjkansjkdnqeojrdiuwejnadscmsadnfjhbwakjfdlmscjauwfjnkasndjansdjkanskjdbnkj1u823y127hurbhnj423874721yh3iukj
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://${SERVER_IP}:3306/${MYSQL_DATABASE}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useUnicode=true
@@ -22,7 +24,7 @@ spring:
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     defer-datasource-initialization: true
     generate-ddl: true
     show-sql: false

@@ -11,7 +11,6 @@ const getInitialDataList = (unit) => {
     .then(res => res.data)
     .then((data) => {
       return data.map((item) => {
-        console.log(data);
         const { opening_price, low_price, high_price, trade_price, timestamp, candle_acc_trade_volume } = item;
         return {
           open: opening_price,
