@@ -20,13 +20,11 @@ const SignupPage = () => {
         mode: "onChange"
     });
 
-
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
     const handleAgreementChange = (e) => {
         setIsAgreed(e.target.checked);
     };
-
 
     const password = watch('password');
     const confirmPassword = watch('confirmPassword');

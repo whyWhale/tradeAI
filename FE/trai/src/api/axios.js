@@ -14,9 +14,9 @@ let axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
     (config) => {
         let store = configureStore({reducer: authSlice});
-        const tk = store.getState().token;
+        const tk = localStorage.getItem('token');
         if (tk !==null && tk) {
-            config.headers['access'] = token;
+            config.headers['access'] = tk;
         }
         return config;
     },
