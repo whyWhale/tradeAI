@@ -1,6 +1,6 @@
 import axios from 'axios';
-import authSlice from '@store/authSlice';
 import {configureStore} from "@reduxjs/toolkit";
+import authSlice from "@store/reducers/authSlice.jsx";
 
 let axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,

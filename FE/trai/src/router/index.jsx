@@ -10,11 +10,11 @@ import PublicRouter from "@router/PublicRouter.jsx";
 
 const routerInfo = [
     {
-        path: 'login',
+        path: '/login',
         element: <PublicRouter element={<LoginPage/>} /> ,
     },
     {
-        path: 'signup',
+        path: '/signup',
         element: <PublicRouter element={<SignupPage/>} />,
     },
     {
