@@ -14,9 +14,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import com.happyfree.trai.auth.filter.CustomLogoutFilter;
 import com.happyfree.trai.auth.filter.JWTFilter;
 import com.happyfree.trai.auth.filter.LoginFilter;
 import com.happyfree.trai.auth.util.JWTUtil;
@@ -60,14 +62,13 @@ public class SecurityConfig {
 						HttpServletRequest request) {
 						CorsConfiguration configuration = new CorsConfiguration();
 						configuration.setAllowedOrigins(
-							Arrays.asList("http://www.trai-ai.site", "https://www.trai-ai.site",
-								"http://localhost:5173", "http://localhost", "https://localhost"));
+							Arrays.asList("https://www.trai-ai.site", "http://localhost:5173"));
 						configuration.setAllowedMethods(Collections.singletonList("*"));
 						configuration.setAllowedHeaders(Collections.singletonList("*"));
 						configuration.setAllowCredentials(true);
 						configuration.setMaxAge(3600L);
-						configuration.addExposedHeader("*");
-						configuration.addAllowedMethod("*");
+						configuration.setExposedHeaders(Collections.singletonList("access"));
+						configuration.setAllowedMethods(Collections.singletonList("*"));
 						return configuration;
 					}
 				}));
@@ -80,6 +81,9 @@ public class SecurityConfig {
 		http.addFilterAt(
 			new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
 			UsernamePasswordAuthenticationFilter.class);
+		http
+			.addFilterBefore(new CustomLogoutFilter(jwtUtil),
+				LogoutFilter.class);
 		http.exceptionHandling((exceptionHandlingConfigurer) ->
 			exceptionHandlingConfigurer.authenticationEntryPoint((request, response, authException) -> {
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -87,7 +91,7 @@ public class SecurityConfig {
 
 		http
 			.authorizeHttpRequests((auth) -> auth
-				.requestMatchers("/api/users/login", "/api/users/join", "api/upbits/**","api/users/check*").permitAll()
+				.requestMatchers("/api/users/login", "/api/users/join", "api/upbits/**", "api/users/check*").permitAll()
 				.requestMatchers("/swagger", "/h2-console*/", "/h2-console/**", "/swagger-ui.html", "/swagger-ui/**",
 					"/api-docs", "/api-docs/**", "/v3/api-docs/**", "/api/swagger-ui/**", "/api/swagger-ui.html",
 					"/api/v3/api-docs/**").permitAll()
