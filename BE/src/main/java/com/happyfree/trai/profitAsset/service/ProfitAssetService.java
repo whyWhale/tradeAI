@@ -473,6 +473,7 @@ public class ProfitAssetService {
                     .user(user)
                     .startingAssets(endingAssets)
                     .settlementDate(today)
+                    .coinAssetPercentage(0)
                     .build();
 
             profitAssetRepository.save(newProfitAssetHistory);
