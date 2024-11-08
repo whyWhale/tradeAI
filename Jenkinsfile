@@ -39,8 +39,8 @@ pipeline {
                 dir('FE/trai') {
                     script {
                         echo 'Building Frontend Image...'
-                        withCredentials([file(credentialsId: 'front-env', variable: 'FRONT_ENV_FILE')]) {
-                            sh 'docker build --build-arg FRONT_ENV_FILE="$(cat $FRONT_ENV_FILE)" -t kimjaehyun158/trai-frontend:latest .'
+                        withCredentials([file(credentialsId: 'front-env', variable: 'VITE_ENV_FILE')]) {
+                            sh 'docker build --build-arg VITE_ENV_FILE="$(cat $VITE_ENV_FILE)" -t kimjaehyun158/trai-frontend:latest .'
                         }
                         echo 'Frontend Image Build Success!'
                     }
