@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useDispatch } from 'react-redux';
+import { setCounts } from '../../store/reducers/decisionCountSlice';
 
 function formatDate(isoString) {
     const date = new Date(isoString);
-    const year = date.getFullYear();
     const month = date.getMonth() + 1;
     const day = date.getDate();
     let hours = date.getHours();
@@ -14,10 +15,12 @@ function formatDate(isoString) {
     const period = hours >= 12 ? "PM" : "AM";
     hours = hours % 12 || 12; // 12시간제로 변환 (0시는 12로 표시)
   
-    return `${year}년 ${month}월 ${day}일 ${hours}:${minutes}:${seconds} ${period}`;
+    return `${month}월 ${day}일 ${hours}:${minutes}:${seconds} ${period}`;
   }
   
 const useTimelineData = () => {
+
+  const dispatch = useDispatch();
 
   const [timelineData, setData] = useState({});
   const [timelineLoading, setLoading] = useState(true);
@@ -36,13 +39,21 @@ const useTimelineData = () => {
       })
       .then((res) => res.data)
       .then((data) => {
+        const counts = { hold: 0, buy: 0, sell: 0 };
         if (Array.isArray(data) && data.length > 0) {
-            const formattedData = data.map((transaction) => {
+            // 최대 30개의 데이터만 가져오기
+            const limitedData = data.slice(0, 30);
+            const formattedData = limitedData.map((transaction) => {
                 const money = parseInt(transaction.money);
                 const date = formatDate(String(transaction.createdAt));
                 const kind = transaction.kind;
-                const volume = data.volume;
+                const volume = transaction.volume;
 
+                // 각 종류에 따라 카운트 증가
+                if (kind === "HOLD") counts.hold += 1;
+                if (kind === "BUY") counts.buy += 1;
+                if (kind === "SELL") counts.sell += 1;
+                
                 return {
                   money,
                   volume,
@@ -52,6 +63,8 @@ const useTimelineData = () => {
             });
             setData(formattedData);
             setEmpty(false);
+            // Redux 상태 업데이트
+            dispatch(setCounts(counts));
         } else {
             // 빈 배열이 올 경우
             setEmpty(true);
@@ -64,7 +77,7 @@ const useTimelineData = () => {
       .finally(() => {
         setLoading(false);
       });
-  },[]);
+  },[dispatch]);
 
   return { timelineData, timelineLoading, timelineError, isEmpty};
 };
