@@ -12,6 +12,7 @@ public enum ErrorCode {
     ASSET_DATA_ERROR(HttpStatus.BAD_REQUEST, "Asset 데이터를 만들던 중에 오류가 발생했습니다."),
     SEARCH_INVESTMENT_ERROR(HttpStatus.BAD_REQUEST, "거래 내역 검색 중 오류가 발생했습니다."),
     ORDER_ERROR(HttpStatus.BAD_REQUEST, "주문하기 진행 중 오류가 발생했습니다."),
+    ORDER_AMOUNT_TOO_SMALL(HttpStatus.BAD_REQUEST, "주문 금액이 6000원 이하입니다."),
     ;
 
     private final HttpStatus httpStatus;

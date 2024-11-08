@@ -147,18 +147,25 @@ public class AgentService {
 
             String accessKey = user.getAccessKey();
             String secretKey = user.getSecretKey();
+            BigDecimal nowBitcoinPrice = profitAssetService.getBitcoinCurrentPrice();
 
             // 매수, 매도 주문 처리
             if (decision.equals("BUY")) {
                 BigDecimal orderAmount =  BigDecimal.valueOf(assetData.getAvailableAmount())
                         .multiply(BigDecimal.valueOf(percentage))
                         .divide(BigDecimal.valueOf(100), 0, RoundingMode.DOWN);
+
+                checkAmount(orderAmount);
+
                 order("bid", orderAmount.toString(), accessKey, secretKey);
             } else if (decision.equals("SELL")) {
                 BigDecimal totalBTCAmount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
                 BigDecimal orderAmount = totalBTCAmount
                         .multiply(BigDecimal.valueOf(percentage))
                         .divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN);
+
+                checkAmount(orderAmount.multiply(nowBitcoinPrice));
+
                 order("ask", orderAmount.toString(), accessKey, secretKey);
             }
 
@@ -172,7 +179,6 @@ public class AgentService {
             log.info("decision : {}", decision);
             log.info("percentage : {}", percentage);
 
-            BigDecimal nowBitcoinPrice = profitAssetService.getBitcoinCurrentPrice();
             BigDecimal nowBitcoinCount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
             BigDecimal averageBitcoinPrice = getBTCAveragePrice(accessKey, secretKey);
 
@@ -190,7 +196,8 @@ public class AgentService {
                     if (decision.equals("SELL")) {
                         BigDecimal profitAndLoss = new BigDecimal(transactionHistory.getPrice())
                                 .subtract(averageBitcoinPrice)
-                                .multiply(new BigDecimal(transactionHistory.getExecutedVolume()));
+                                .multiply(new BigDecimal(transactionHistory.getExecutedVolume()))
+                                .subtract(new BigDecimal(transactionHistory.getPaidFee()).multiply(new BigDecimal("2")));
 
                         transactionHistory.updateProfitAndLoss(profitAndLoss);
                     }
@@ -328,7 +335,7 @@ public class AgentService {
                         .orderType(jsonObject.get("ord_type").asText())
                         .state(jsonObject.get("state").asText())
                         .market(jsonObject.get("market").asText())
-                        .reservedFee(jsonObject.get("reserved_fee").asText())
+                        .paidFee(jsonObject.get("paid_fee").asText())
                         .executedVolume(jsonObject.get("executed_volume").asText())
                         .executedFunds(new BigDecimal(jsonObject.get("executed_funds").asText()))
                         .tradesCount(jsonObject.get("trades_count").asInt())
@@ -378,6 +385,13 @@ public class AgentService {
         }
 
         return new BigDecimal(0);
+    }
+
+    private void checkAmount(BigDecimal orderAmount){
+        if (orderAmount.compareTo(new BigDecimal("6000")) <= 0) {
+            log.info("주문 금액이 6000원 이하입니다: {}", orderAmount);
+            throw new CustomException(ORDER_AMOUNT_TOO_SMALL);
+        }
     }
 
 }
