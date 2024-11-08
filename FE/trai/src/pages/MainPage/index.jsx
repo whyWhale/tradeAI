@@ -1,38 +1,14 @@
-import {useState} from 'react';
-import {NavLink, useNavigate} from 'react-router-dom';
+import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from "prop-types";
-import {instance} from "@api/axios.js";
-import {useDispatch} from "react-redux";
-import authSlice, {clearToken} from "@store/reducers/authSlice.jsx";
-import {configureStore} from "@reduxjs/toolkit";
+import Logout from '@components/Logout';
 
 const MainPage = () => {
-    let navigate = useNavigate();
-    const dispatch = useDispatch();
-    const handleLogout = async () => {
-        try {
-            const response = await instance.post('/api/users/logout', null, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                withCredentials: true,
-            });
-
-            if (response.status === 200) {
-                dispatch(clearToken());
-                navigate("/login");
-            }
-
-        } catch (error) {
-            console.error("Logout error:", error);
-        }
-    };
 
     return (
         <div className="w-full flex flex-col">
-            <div className='flex justify-end pr-12 gap-5 bg-trai-navy'>
-                <button onClick={handleLogout}>로그아웃</button>
+            <div className='flex justify-end pr-12 bg-trai-navy'>
                 <StyledLink to={'/trade-settings'}>
                     거래 설정
                 </StyledLink>
@@ -45,6 +21,7 @@ const MainPage = () => {
                 <StyledLink to={'/trade-details'}>
                     거래 상세 및 전략
                 </StyledLink>
+                <Logout/>
             </div>
 
             <FirstContainer className="flex gap-10">
