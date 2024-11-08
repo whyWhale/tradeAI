@@ -12,6 +12,7 @@ const useAssetProportionHistory = () => {
   const [assetProportionData, setData] = useState([]);
   const [assetProportionLoading, setLoading] = useState(true);
   const [assetProportionError, setError] = useState(null);
+  const [isEmpty, setEmpty] = useState(false);
 
   useEffect(() => {
     setLoading(true);
@@ -28,7 +29,7 @@ const useAssetProportionHistory = () => {
             '기타 비중': 100 - coinPercentage,
         };
         });
-
+        
         setData(formattedData);
     })
     .catch((err) => {
