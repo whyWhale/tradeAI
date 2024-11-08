@@ -20,7 +20,7 @@ services:
     environment:
       TZ: Asia/Seoul
     expose:
-      - "5173"
+      - "80"
     networks:
       - trai_network
       
