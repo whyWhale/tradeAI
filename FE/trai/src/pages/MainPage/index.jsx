@@ -4,8 +4,6 @@ import styled from 'styled-components';
 import PropTypes from "prop-types";
 import {instance} from "@api/axios.js";
 import {useDispatch} from "react-redux";
-import authSlice, {clearToken} from "@store/reducers/authSlice.jsx";
-import {configureStore} from "@reduxjs/toolkit";
 
 const MainPage = () => {
     let navigate = useNavigate();
@@ -20,7 +18,7 @@ const MainPage = () => {
             });
 
             if (response.status === 200) {
-                dispatch(clearToken());
+                localStorage.removeItem('token');
                 navigate("/login");
             }
 
