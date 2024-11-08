@@ -18,6 +18,8 @@ const AssetOverview = () => {
   const { assetData, assetLoading, assetError } = useAssetData(BTCData);
   const { investmentData, tradeInitialized, investmentLoading, investmentError } = useInvestmentSummary();
 
+  const decisionCount = useSelector((state) => state.decisionCount.totalCount);
+
   return (
     <div className="asset-overview">
       {/* Left Sidebar */}
@@ -61,14 +63,14 @@ const AssetOverview = () => {
         </>
         {/* Right Side Info Cards */}
         <div className="info-card-medium">
-          <div className="card-title" style={{  
+          <div className="card-title" style={{
             position: 'absolute',
             top: '2.5%',
             left: '5%',      
             paddingBottom: "5%"}}>투자 요약</div>
           
           <>
-          { investmentLoading || investmentError ? 
+          { investmentLoading || investmentError ?
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
               <div className="spinner"></div>
             </div>
@@ -89,11 +91,10 @@ const AssetOverview = () => {
             </div>
           }
           </>
-
         </div>
         
         <div className="info-card-large">
-          <div className="card-title">최근 거래 30회 의사결정 현황</div>
+          <div className="card-title">최근 거래 {decisionCount}회 의사결정 현황</div>
             <DecisionStatusChart />
         </div>
 
@@ -108,7 +109,7 @@ const AssetOverview = () => {
         </div>
         
         <div className="sidebar">
-          <div className="card-title" style={{  
+          <div className="card-title" style={{
             position: 'absolute',
             top: '2.5%',
             left: '5%',      

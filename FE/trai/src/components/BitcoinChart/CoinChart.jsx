@@ -11,7 +11,7 @@ import { chartStyle } from './chartStyle';
 import useRealTimeData from "./hooks/useRealTimeData";
 import useNewData from "./hooks/useNewData";
 import ChartButton from './ChartButton';
-import { updateBTCData } from "../../store/BTCDataSlice"
+import { updateBTCData } from "../../store/reducers/BTCDataSlice"
 
 const types = [
   { key: "candle_solid", text: "solid" },
@@ -29,7 +29,6 @@ const CoinChart = () => {
   const realTimeData = useRealTimeData(initialized); // 초기화가 완료된 후에만 실행
   const newData = useNewData(1, initialized); // 초기화가 완료된 후에만 실행
   const dispatch = useDispatch(); // Redux dispatch 함수 정의
-
 
   const formatValue = (value) => (value !== null && value !== undefined ? value.toLocaleString() : "0");
 
