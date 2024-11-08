@@ -58,10 +58,9 @@ const SignupPage = () => {
             })
 
             if (response.status === 200) {
-                console.log("회원가입 성공")
                 navigate('/login')
             } else {
-                console.log('회원가입 실패')
+
             }
 
         } catch (error) {
