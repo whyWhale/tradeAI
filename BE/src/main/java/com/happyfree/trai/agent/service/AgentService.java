@@ -117,21 +117,19 @@ public class AgentService {
                         .subscribe(
                                 result -> {
                                     try {
-                                        log.info("AI Response: {}", result.toString());
                                         processAnalysisResult(result, assetData);
                                     } catch (Exception e) {
-                                        System.err.println("Error processing result: " + e.getMessage());
+                                        log.error("Error processing result: {}", e.getMessage());
                                         throw new CustomException(AI_PROCESS_ERROR);
                                     }
                                 },
                                 error -> {
-                                    System.err.println("AI Server Error: " + error.getMessage());
-                                    error.printStackTrace();
+                                    log.error("AI Server Error: {}", error.getMessage());
                                 }
                         );
 
             } catch (Exception e) {
-                System.err.println("Error processing user " + user.getId() + ": " + e.getMessage());
+                log.error("Error processing user {}: {}", user.getId(), e.getMessage());
                 throw new CustomException(ASSET_DATA_ERROR);
             }
         });
@@ -206,7 +204,7 @@ public class AgentService {
                 transactionHistoryRepository.save(transactionHistory);
             }
 
-            log.info("업비트 거래내역 검색 및 저장 완료");
+            log.info("업비트 Agent 처리 완료");
         } catch (Exception e) {
             throw new CustomException(AI_PROCESS_ERROR);
         }
