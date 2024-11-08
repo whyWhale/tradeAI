@@ -22,16 +22,10 @@ const useInvestmentSummary = () => {
   const [investmentLoading, setLoading] = useState(true);
   const [investmentError, setError] = useState(null);
 
-  const token ='eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoiYWRtaW5AbmF2ZXIuY29tIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE3MzA4NzIwODIsImV4cCI6MTAxNzMwODcyMDgyfQ.saDJ6_TfVvQxS32DWE13k1tHt8Ong6uF5fLc3SXqLJ0'
-
-
   useEffect(() => {
     setLoading(true);
     axios
       .get(`https://www.trai-ai.site/api/investments/summary`, {
-        headers: {
-          access: `${token}`
-        }
       })
       .then((res) => res.data)
       .then((data) => {

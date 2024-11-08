@@ -18,7 +18,7 @@ const LogoutButton = () => {
             });
 
             if (response.status === 200) {
-                dispatch(clearToken());
+                localStorage.removeItem('token');
                 navigate("/login");
             }
 

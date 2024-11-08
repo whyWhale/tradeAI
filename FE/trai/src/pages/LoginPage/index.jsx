@@ -1,16 +1,13 @@
 import {useForm} from "react-hook-form";
 import {Link, useNavigate} from "react-router-dom";
 import styled from "styled-components";
-import {useDispatch, useSelector} from 'react-redux';
 import {instance} from "@api/axios.js";
 import {useState} from "react";
-import {setToken} from "@store/reducers/authSlice.jsx";
 
 const LoginPage = () => {
 
     const {register, handleSubmit, formState: {errors}} = useForm();
     let navigate = useNavigate();
-    const dispatch = useDispatch();
     const [loginStatus, setLoginStatus] = useState(null);
     const login = async (data) => {
         try {
@@ -29,7 +26,7 @@ const LoginPage = () => {
 
             if (response.status === 200) {
                 const token = response.headers['access'];
-                dispatch(setToken(token));
+                localStorage.setItem('token', token);
                 navigate("/");
             }
         } catch (error) {

@@ -6,6 +6,7 @@ import Logout from '@components/Logout';
 
 const MainPage = () => {
 
+
     return (
         <div className="w-full flex flex-col">
             <div className='flex justify-end pr-12 bg-trai-navy'>

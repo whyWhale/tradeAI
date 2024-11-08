@@ -54,6 +54,8 @@ public class TransactionHistory extends BaseEntity {
 
 	private BigDecimal totalAmount;
 
+	private BigDecimal profitAndLoss;
+
 	private LocalDateTime orderCreatedAt;
 
 	public void updateUser(User user) { this.user = user; }
@@ -66,5 +68,5 @@ public class TransactionHistory extends BaseEntity {
 
 	public void updateAveragePrice(BigDecimal averagePrice) { this.averagePrice = averagePrice; }
 
-	public void updatePrice(String price) { this.price = price; }
+	public void updateProfitAndLoss(BigDecimal profitAndLoss) { this.profitAndLoss = profitAndLoss; }
 }

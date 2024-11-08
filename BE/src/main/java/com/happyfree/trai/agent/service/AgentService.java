@@ -174,6 +174,7 @@ public class AgentService {
 
             BigDecimal nowBitcoinPrice = profitAssetService.getBitcoinCurrentPrice();
             BigDecimal nowBitcoinCount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
+            BigDecimal averageBitcoinPrice = getBTCAveragePrice(accessKey, secretKey);
 
             // 투자 내역 저장
             if (decision.equals("SELL") || decision.equals("BUY")) {
@@ -181,11 +182,19 @@ public class AgentService {
                 if (transactionHistory != null) {
                     transactionHistory.updateUser(user);
                     transactionHistory.updateSide(decision);
-                    transactionHistory.updateTotalEvaluation(nowBitcoinPrice.multiply(nowBitcoinCount));
+                    transactionHistory.updateTotalEvaluation(BigDecimal.valueOf(Long.parseLong(transactionHistory.getPrice())).multiply(nowBitcoinCount));
                     transactionHistory.updateTotalAmount(profitAssetService.getTotalMoney(accessKey, secretKey)
                             .add(nowBitcoinPrice.multiply(nowBitcoinCount)));
-                    transactionHistory.updateAveragePrice(getBTCAveragePrice(accessKey, secretKey));
-                    transactionHistory.updatePrice(nowBitcoinPrice.toString());
+                    transactionHistory.updateAveragePrice(averageBitcoinPrice);
+
+                    if (decision.equals("SELL")) {
+                        BigDecimal profitAndLoss = new BigDecimal(transactionHistory.getPrice())
+                                .subtract(averageBitcoinPrice)
+                                .multiply(new BigDecimal(transactionHistory.getExecutedVolume()));
+
+                        transactionHistory.updateProfitAndLoss(profitAndLoss);
+                    }
+
                     transactionHistoryRepository.save(transactionHistory);
                 }
             } else {
@@ -197,7 +206,7 @@ public class AgentService {
                                 .add(nowBitcoinPrice.multiply(nowBitcoinCount)))
                         .executedFunds(BigDecimal.ZERO)
                         .orderCreatedAt(LocalDateTime.now())
-                        .averagePrice(getBTCAveragePrice(accessKey, secretKey))
+                        .averagePrice(averageBitcoinPrice)
                         .price(nowBitcoinPrice.toString())
                         .build();
 
@@ -304,12 +313,15 @@ public class AgentService {
             request.addHeader("Authorization", authenticationToken);
             HttpResponse response = client.execute(request);
             String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
-
+            log.info(jsonResponse);
             JsonNode jsonArray = mapper.readTree(jsonResponse);
 
             if (jsonArray.isArray() && !jsonArray.isEmpty()) {
                 JsonNode jsonObject = jsonArray.get(0);
                 log.info("주문 조회: {}", jsonObject.toString());
+
+                BigDecimal executedFunds = new BigDecimal(jsonObject.get("executed_funds").asText());
+                BigDecimal executedVolume = new BigDecimal(jsonObject.get("executed_volume").asText());
 
                 return TransactionHistory.builder()
                         .uuid(jsonObject.get("uuid").asText())
@@ -320,6 +332,7 @@ public class AgentService {
                         .executedVolume(jsonObject.get("executed_volume").asText())
                         .executedFunds(new BigDecimal(jsonObject.get("executed_funds").asText()))
                         .tradesCount(jsonObject.get("trades_count").asInt())
+                        .price(String.valueOf(executedFunds.divide(executedVolume, 0, RoundingMode.HALF_UP)))
                         .orderCreatedAt(LocalDateTime.parse(jsonObject.get("created_at").asText().replace("+09:00", "")))
                         .build();
             }

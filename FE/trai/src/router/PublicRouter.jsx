@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 
 const PublicRoute = ({ element }) => {
-    const token = useSelector((state) => state.auth.token);
+    const token = localStorage.getItem('token');
     if (token) {
         return <Navigate to="/" replace />;
     }
