@@ -61,7 +61,7 @@ public class ProfitAssetService {
             yp = pah.get().getAccumulationProfitRatio();
             ia = pah.get().getStartingAssets();
         }
-        BigDecimal todayProfitRatio = getTodayProfit(ia, loginUser.getAccessKey(), loginUser.getSecretKey());
+        BigDecimal todayProfitRatio = getTodayProfit(loginUser.getAccessKey(), loginUser.getSecretKey(), ia);
         BigDecimal profit = yp.add(BigDecimal.ONE)
                 .multiply(BigDecimal.ONE.add(todayProfitRatio.divide(BigDecimal.valueOf(100))))
                 .subtract(BigDecimal.ONE);
@@ -91,11 +91,11 @@ public class ProfitAssetService {
                 .build();
     }
 
-    private BigDecimal getTodayProfit(BigDecimal initialAsset, String accessKey, String secretKey) throws
+    private BigDecimal getTodayProfit(String accessKey, String secretKey, BigDecimal initialAsset) throws
             NoSuchAlgorithmException,
             UnsupportedEncodingException,
             JsonProcessingException {
-        BigDecimal with = getTotalWithdraws(LocalDate.now());
+        BigDecimal with = getTotalWithdraws(accessKey, secretKey, LocalDate.now());
         BigDecimal de = getTotalDeposit(accessKey, secretKey, LocalDate.now());
         BigDecimal bcv = getBitcoinAmount(accessKey, secretKey);
         BigDecimal m = getTotalMoney(accessKey, secretKey);
@@ -111,9 +111,7 @@ public class ProfitAssetService {
     }
 
     // 해당 날짜의 전체 출금액
-    public BigDecimal getTotalWithdraws(LocalDate today) throws NoSuchAlgorithmException, UnsupportedEncodingException {
-        User loginUser = authService.getLoginUser();
-
+    public BigDecimal getTotalWithdraws(String accessKey, String secretKey, LocalDate today) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         HashMap<String, String> params = new HashMap<>();
         params.put("currency", "XRP");
 
@@ -135,9 +133,9 @@ public class ProfitAssetService {
 
         String queryHash = String.format("%0128x", new BigInteger(1, md.digest()));
 
-        Algorithm algorithm = Algorithm.HMAC256(loginUser.getSecretKey());
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
         String jwtToken = JWT.create()
-                .withClaim("access_key", loginUser.getAccessKey())
+                .withClaim("access_key", accessKey)
                 .withClaim("nonce", UUID.randomUUID().toString())
                 .withClaim("query_hash", queryHash)
                 .withClaim("query_hash_alg", "SHA512")
@@ -341,7 +339,6 @@ public class ProfitAssetService {
         );
 
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(response.getBody());
         JsonNode jsonArray = mapper.readTree(response.getBody());
 
         for (JsonNode node : jsonArray) {
@@ -418,7 +415,7 @@ public class ProfitAssetService {
             BigDecimal totalDepositAmount = getTotalDeposit(accessKey, secretKey, yesterday);
 
             // 전 날 전체 출금액
-            BigDecimal totalWithdrawAmount = getTotalWithdraws(yesterday);
+            BigDecimal totalWithdrawAmount = getTotalWithdraws(accessKey, secretKey, yesterday);
 
             // 일일 손익
             BigDecimal dailyProfitAndLoss = endingAssets
