@@ -3,8 +3,9 @@ import {NavLink, useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from "prop-types";
 import {instance} from "@api/axios.js";
-import {setToken} from "@store/authSlice.jsx";
 import {useDispatch} from "react-redux";
+import authSlice, {clearToken} from "@store/reducers/authSlice.jsx";
+import {configureStore} from "@reduxjs/toolkit";
 
 const MainPage = () => {
     let navigate = useNavigate();
@@ -19,7 +20,7 @@ const MainPage = () => {
             });
 
             if (response.status === 200) {
-                dispatch(setToken(token));
+                dispatch(clearToken());
                 navigate("/login");
             }
 
