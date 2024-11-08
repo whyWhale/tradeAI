@@ -1,1 +1,1 @@
-insert into user (created_at, updated_at, api_key, email, password, role) VALUES ('2024-10-29 16:18:41.000000', '2024-10-29 16:18:44.000000', null, 'admin@naver.com', '$2a$10$wJevCJqmRaXF7YpmMqz0H.v4cUofzZ3JljB/uwUCBrLNQhpuADD0e', 'ROLE_ADMIN');
+INSERT INTO user (created_at, id, updated_at, access_key, email, password, role, secret_key) VALUES ('2024-11-08 13:03:44.000000', null, '2024-11-08 13:03:46.000000', ' .', 'admin@naver.com', '$2a$10$wJevCJqmRaXF7YpmMqz0H.v4cUofzZ3JljB/uwUCBrLNQhpuADD0e', 'ROLE_ADMIN', ' .')
