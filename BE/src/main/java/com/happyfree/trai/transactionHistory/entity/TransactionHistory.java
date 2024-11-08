@@ -40,8 +40,6 @@ public class TransactionHistory extends BaseEntity {
 	@Builder.Default
 	private String market = "KRW-BTC";
 
-	private String volume;
-
 	private String reservedFee;
 
 	private String executedVolume;
