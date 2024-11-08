@@ -13,6 +13,9 @@ COPY package*.json ./
 
 RUN npm install
 
+ARG FRONT_ENV_FILE
+ENV FRONT_ENV_FILE=$FRONT_ENV_FILE
+
 COPY . .
 
 RUN npm run build
