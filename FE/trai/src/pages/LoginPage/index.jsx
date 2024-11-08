@@ -73,13 +73,12 @@ const LoginPage = () => {
                         />
                     </InputGroup>
                     <LoginButton>Login</LoginButton>
+                    <div className="flex gap-2 justify-center mt-2 text-[12px]">
+                        <div className="text-trai-greytext">계정이 없으신가요?</div>
+                        <Link to='/signup' className="text-trai-mint">회원가입</Link>
+                    </div>
                 </form>
             </button>
-            <div className="flex gap-2 justify-center mt-2 text-[12px]">
-                <div className="text-trai-greytext">계정이 없으신가요?</div>
-                <Link to='/signup' className="text-trai-mint">회원가입</Link>
-            </div>
-
             <div className="flex justify-end relative">
                 <LoginImage className="flex flex-end w-[800px] h-[700px]" src="/images/trai_login_background.png"
                             alt="image"/>
