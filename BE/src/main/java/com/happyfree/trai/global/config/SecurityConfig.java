@@ -94,7 +94,7 @@ public class SecurityConfig {
 				.requestMatchers("/api/users/login", "/api/users/join", "api/upbits/**", "api/users/check*").permitAll()
 				.requestMatchers("/swagger", "/h2-console*/", "/h2-console/**", "/swagger-ui.html", "/swagger-ui/**",
 					"/api-docs", "/api-docs/**", "/v3/api-docs/**", "/api/swagger-ui/**", "/api/swagger-ui.html",
-					"/api/v3/api-docs/**").permitAll()
+					"/api/v3/api-docs/**", "api/agent-history/ai").permitAll()
 				.anyRequest().authenticated());
 
 		http.csrf(csrf -> csrf.disable());
