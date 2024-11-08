@@ -274,7 +274,7 @@ public class AgentService {
     public TransactionHistory searchInvestmentHistory(String accessKey, String secretKey) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         HashMap<String, String> params = new HashMap<>();
         params.put("market", "KRW-BTC");
-        params.put("limit", "10");
+        params.put("limit", "1");
         params.put("order_by", "desc");
         String[] states = {
                 "done",
