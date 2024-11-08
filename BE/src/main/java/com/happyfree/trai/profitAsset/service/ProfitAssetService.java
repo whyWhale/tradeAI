@@ -339,7 +339,6 @@ public class ProfitAssetService {
         );
 
         ObjectMapper mapper = new ObjectMapper();
-        JsonNode root = mapper.readTree(response.getBody());
         JsonNode jsonArray = mapper.readTree(response.getBody());
 
         for (JsonNode node : jsonArray) {
