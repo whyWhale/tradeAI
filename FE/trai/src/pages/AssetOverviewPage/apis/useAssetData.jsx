@@ -8,16 +8,12 @@ const useAssetData = (BTCPrice) => {
   const [assetLoading, setLoading] = useState(true);
   const [assetError, setError] = useState(null);
 
-  const token ='eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoiYWRtaW5AbmF2ZXIuY29tIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE3MzA4NzIwODIsImV4cCI6MTAxNzMwODcyMDgyfQ.saDJ6_TfVvQxS32DWE13k1tHt8Ong6uF5fLc3SXqLJ0'
 
   useEffect(() => {
     if (!BTCPrice) return;
     setLoading(true);
     axios
       .post(`https://www.trai-ai.site/api/upbits/accounts`, {
-        headers: {
-          access: `${token}`
-        }
       })
       .then((res) => res.data)
       .then((data) => {

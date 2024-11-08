@@ -1,24 +1,15 @@
 import React from "react";
 import styled from "styled-components";
 import { ResponsiveBar } from '@nivo/bar';
+import useAssetProportionHistory from '../../pages/InvestmentStatusPage/apis/useAssetProportionHistory';
 
-// 더미 데이터
-const historyData = [
-    { "date": "2024-11-04", "코인 비중": 70, "기타 비중": 30 },
-    { "date": "2024-11-03", "코인 비중": 60, "기타 비중": 40 },
-    { "date": "2024-11-02", "코인 비중": 60, "기타 비중": 40 },
-    { "date": "2024-11-01", "코인 비중": 60, "기타 비중": 40 },
-    { "date": "2024-10-31", "코인 비중": 70, "기타 비중": 30 },
-    { "date": "2024-10-30", "코인 비중": 60, "기타 비중": 40 },
-    { "date": "2024-10-29", "코인 비중": 60, "기타 비중": 40 },
-    { "date": "2024-10-28", "코인 비중": 60, "기타 비중": 40 },
-    { "date": "2024-10-27", "코인 비중": 70, "기타 비중": 30 },
-    { "date": "2024-10-26", "코인 비중": 60, "기타 비중": 40 },
-    { "date": "2024-10-25", "코인 비중": 60, "기타 비중": 40 },
-    { "date": "2024-10-24", "코인 비중": 60, "기타 비중": 40 }
-];
 
 const InvestmentHistory = () => {
+  const { historyData, assetProportionLoading, assetProportionError} = useAssetProportionHistory();
+
+  if (assetProportionLoading) return <div className="spinner"></div>;
+  if (assetProportionError) return <div className="spinner"></div>;
+  if (historyData)
   return (
     <HistoryContainer>
       <Header>

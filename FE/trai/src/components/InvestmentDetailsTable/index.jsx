@@ -1,30 +1,19 @@
 import React, { useState } from 'react';
+import useInvestmentsData from '../../pages/InvestmentStatusPage/apis/useInvestmentsData';
 
 const InvestmentDetailsTable = () => {
-  // 샘플 데이터
-  const data = Array.from({ length: 50 }, (_, i) => ({
-    date: `10.${21 - (i % 21)}`,
-    dailyProfit: 0,
-    dailyProfitRate: '0.00%',
-    cumulativeProfit: 0,
-    cumulativeProfitRate: '0.00%',
-    initialAssets: 0,
-    finalAssets: 0,
-  }));
-
-  const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 12;
-  const totalPages = Math.ceil(data.length / itemsPerPage);
-
-  // 현재 페이지에 맞는 데이터를 가져오기
-  const paginatedData = data.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  const [currentPage, setCurrentPage] = useState(0);
+  
+  // useInvestmentsData 훅을 사용하여 데이터 가져오기
+  const { data, totalPages, loading, error } = useInvestmentsData(currentPage, itemsPerPage);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
   };
+
+  if (loading) return <div className='spinner'></div>;
+  if (error) return <div className='spinner'></div>;
 
   return (
     <div className="investment-details-table">
@@ -41,15 +30,15 @@ const InvestmentDetailsTable = () => {
           </tr>
         </thead>
         <tbody>
-          {paginatedData.map((item, index) => (
+          {data.map((item, index) => (
             <tr key={index}>
-              <td>{item.date}</td>
-              <td>{item.dailyProfit}</td>
-              <td>{item.dailyProfitRate}</td>
-              <td>{item.cumulativeProfit}</td>
-              <td>{item.cumulativeProfitRate}</td>
-              <td>{item.initialAssets}</td>
-              <td>{item.finalAssets}</td>
+              <td>{item.settlementDate}</td>
+              <td>{item.dailyProfitAndLoss}</td>
+              <td>{item.dailyProfitRatio}</td>
+              <td>{item.accumulationProfitAndLoss}</td>
+              <td>{item.accumulationProfitRatio}</td>
+              <td>{item.startingAssets}</td>
+              <td>{item.endingAssets}</td>
             </tr>
           ))}
         </tbody>
@@ -59,22 +48,22 @@ const InvestmentDetailsTable = () => {
       <div className="pagination">
         <button
           onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
+          disabled={currentPage === 0}
         >
           &lt;
         </button>
         {Array.from({ length: totalPages }, (_, i) => (
           <button
             key={i}
-            onClick={() => handlePageChange(i + 1)}
-            className={currentPage === i + 1 ? 'active' : ''}
+            onClick={() => handlePageChange(i)}
+            className={currentPage === i ? 'active' : ''}
           >
             {i + 1}
           </button>
         ))}
         <button
           onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          disabled={currentPage === totalPages - 1}
         >
           &gt;
         </button>
