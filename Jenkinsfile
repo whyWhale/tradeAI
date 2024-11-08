@@ -40,7 +40,7 @@ pipeline {
                     script {
                         echo 'Building Frontend Image...'
                         withCredentials([file(credentialsId: 'front-env', variable: 'FRONT_ENV_FILE')]) {
-                            sh 'docker build --env-file ${FRONT_ENV_FILE} -t kimjaehyun158/trai-frontend:latest .'
+                            sh 'docker build --build-arg VITE_ENV="$(cat $FRONT_ENV_FILE)" -t kimjaehyun158/trai-frontend:latest .'
                         }
                         echo 'Frontend Image Build Success!'
                     }

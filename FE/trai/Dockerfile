@@ -13,6 +13,9 @@ COPY package*.json ./
 
 RUN npm install
 
+ARG VITE_ENV
+ENV VITE_ENV=$VITE_ENV
+
 COPY . .
 
 RUN npm run build
