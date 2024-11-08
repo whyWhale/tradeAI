@@ -265,13 +265,19 @@ public class AgentService {
     public TransactionHistory searchInvestmentHistory(String accessKey, String secretKey) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         HashMap<String, String> params = new HashMap<>();
         params.put("market", "KRW-BTC");
-        params.put("state", "done");
         params.put("limit", "1");
         params.put("order_by", "desc");
+        String[] states = {
+                "done",
+                "cancel"
+        };
 
         ArrayList<String> queryElements = new ArrayList<>();
         for(Map.Entry<String, String> entity : params.entrySet()) {
             queryElements.add(entity.getKey() + "=" + entity.getValue());
+        }
+        for(String state : states) {
+            queryElements.add("states[]=" + state);
         }
 
         String queryString = String.join("&", queryElements.toArray(new String[0]));
@@ -310,7 +316,6 @@ public class AgentService {
                         .orderType(jsonObject.get("ord_type").asText())
                         .state(jsonObject.get("state").asText())
                         .market(jsonObject.get("market").asText())
-                        .volume(jsonObject.get("volume").asText())
                         .reservedFee(jsonObject.get("reserved_fee").asText())
                         .executedVolume(jsonObject.get("executed_volume").asText())
                         .executedFunds(new BigDecimal(jsonObject.get("executed_funds").asText()))
