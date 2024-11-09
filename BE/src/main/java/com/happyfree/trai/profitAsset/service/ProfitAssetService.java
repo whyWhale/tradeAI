@@ -15,6 +15,7 @@ import com.happyfree.trai.transactionHistory.repository.TransactionHistoryReposi
 import com.happyfree.trai.user.entity.User;
 import com.happyfree.trai.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
@@ -37,6 +38,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
+@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class ProfitAssetService {
@@ -442,6 +444,10 @@ public class ProfitAssetService {
                     .multiply(BigDecimal.ONE.add(dailyProfitRatio.divide(BigDecimal.valueOf(100), RoundingMode.DOWN)))
                     .subtract(BigDecimal.ONE)
                     .setScale(2, RoundingMode.DOWN);
+
+            log.info("일일 수익률 : {}", dailyProfitRatio);
+            log.info("이전 누적 수익률 : {}", beforeAccumulationProfitRatio);
+            log.info("누적 수익률 : {}", accumulationProfitRatio);
 
             // 자산 비중 추이
             byte coinAssetPercentage = 0;
