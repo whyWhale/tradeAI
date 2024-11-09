@@ -39,8 +39,8 @@ spring:
 logging:
   level:
     root: info
-    org.hibernate.SQL: debug
-    org.springframework.security: debug
+    org.hibernate.SQL: info
+    org.springframework.security: info
     com.zaxxer.hikari: warn      # HikariCP 로깅 추가
     com.zaxxer.hikari.HikariConfig: warn
 
