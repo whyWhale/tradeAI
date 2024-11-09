@@ -119,7 +119,6 @@ public class AgentService {
                                     try {
                                         processAnalysisResult(result, assetData);
                                     } catch (Exception e) {
-                                        log.error("Error processing result: {}", e.getMessage());
                                         throw new CustomException(AI_PROCESS_ERROR);
                                     }
                                 },
@@ -129,7 +128,6 @@ public class AgentService {
                         );
 
             } catch (Exception e) {
-                log.error("Error processing user {}: {}", user.getId(), e.getMessage());
                 throw new CustomException(ASSET_DATA_ERROR);
             }
         });
@@ -149,24 +147,32 @@ public class AgentService {
             String secretKey = user.getSecretKey();
             BigDecimal nowBitcoinPrice = profitAssetService.getBitcoinCurrentPrice();
 
+            log.info("decision : {}", decision);
+            log.info("percentage : {}", percentage);
+
             // 매수, 매도 주문 처리
+            boolean enoughAmount = true;
             if (decision.equals("BUY")) {
                 BigDecimal orderAmount =  BigDecimal.valueOf(assetData.getAvailableAmount())
                         .multiply(BigDecimal.valueOf(percentage))
                         .divide(BigDecimal.valueOf(100), 0, RoundingMode.DOWN);
 
-                checkAmount(orderAmount);
+                enoughAmount =  checkAmount(orderAmount);
 
-                order("bid", orderAmount.toString(), accessKey, secretKey);
+                if (enoughAmount) {
+                    order("bid", orderAmount.toString(), accessKey, secretKey);
+                }
             } else if (decision.equals("SELL")) {
                 BigDecimal totalBTCAmount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
                 BigDecimal orderAmount = totalBTCAmount
                         .multiply(BigDecimal.valueOf(percentage))
                         .divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN);
 
-                checkAmount(orderAmount.multiply(nowBitcoinPrice));
+                enoughAmount = checkAmount(orderAmount.multiply(nowBitcoinPrice));
 
-                order("ask", orderAmount.toString(), accessKey, secretKey);
+                if (enoughAmount) {
+                    order("ask", orderAmount.toString(), accessKey, secretKey);
+                }
             }
 
             // 분석 결과 저장
@@ -176,14 +182,11 @@ public class AgentService {
                     .build();
             agentRepository.save(agent);
 
-            log.info("decision : {}", decision);
-            log.info("percentage : {}", percentage);
-
             BigDecimal nowBitcoinCount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
             BigDecimal averageBitcoinPrice = getBTCAveragePrice(accessKey, secretKey);
 
             // 투자 내역 저장
-            if (decision.equals("SELL") || decision.equals("BUY")) {
+            if (enoughAmount && (decision.equals("SELL") || decision.equals("BUY"))) {
                 TransactionHistory transactionHistory = searchInvestmentHistory(accessKey, secretKey);
                 if (transactionHistory != null) {
                     transactionHistory.updateUser(user);
@@ -320,7 +323,6 @@ public class AgentService {
             request.addHeader("Authorization", authenticationToken);
             HttpResponse response = client.execute(request);
             String jsonResponse = EntityUtils.toString(response.getEntity(), "UTF-8");
-            log.info(jsonResponse);
             JsonNode jsonArray = mapper.readTree(jsonResponse);
 
             if (jsonArray.isArray() && !jsonArray.isEmpty()) {
@@ -387,11 +389,12 @@ public class AgentService {
         return new BigDecimal(0);
     }
 
-    private void checkAmount(BigDecimal orderAmount){
+    private boolean checkAmount(BigDecimal orderAmount){
         if (orderAmount.compareTo(new BigDecimal("6000")) <= 0) {
             log.info("주문 금액이 6000원 이하입니다: {}", orderAmount);
-            throw new CustomException(ORDER_AMOUNT_TOO_SMALL);
+            return false;
         }
+        return true;
     }
 
 }
