@@ -30,6 +30,8 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
+        const token = store.getState().auth.token;
+        const tk = localStorage.getItem('token');
         if (error.response.status === 401) {
             if (token !== null && token) {
                 clearToken();
