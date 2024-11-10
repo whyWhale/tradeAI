@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { instance } from "../../../api/axios";
 
 function formatDate(isoString) {
     if(isoString === '0') reteurn `거래가 아직 시작되지 않았습니다.`
@@ -24,8 +24,8 @@ const useInvestmentSummary = () => {
 
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(`https://www.trai-ai.site/api/investments/summary`, {
+    instance
+      .get(`/api/investments/summary`, {
       })
       .then((res) => res.data)
       .then((data) => {

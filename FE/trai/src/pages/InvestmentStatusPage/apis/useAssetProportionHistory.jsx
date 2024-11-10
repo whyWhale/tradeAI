@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { instance } from "../../../api/axios";
 
 function formatDate(isoString) {
   const date = new Date(isoString);
@@ -17,8 +17,8 @@ const useAssetProportionHistory = () => {
   useEffect(() => {
     setLoading(true);
 
-    axios
-    .get("https://www.trai-ai.site/api/assets/daily")
+    instance
+    .get("/api/assets/daily")
     .then((res) => res.data)
     .then((data) => {
         const formattedData = data.map((item) => {

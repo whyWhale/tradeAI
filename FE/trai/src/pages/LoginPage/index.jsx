@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import {instance} from "@api/axios.js";
 import {useState} from "react";
+import { setToken, clearToken } from "../../store/reducers/authSlice"
 
 const LoginPage = () => {
 
@@ -27,6 +28,7 @@ const LoginPage = () => {
             if (response.status === 200) {
                 const token = response.headers['access'];
                 localStorage.setItem('token', token);
+                setToken(token);
                 navigate("/");
             }
         } catch (error) {
