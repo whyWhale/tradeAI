@@ -32,14 +32,14 @@ axiosInstance.interceptors.response.use(
     (error) => {
         const token = store.getState().auth.token;
         const tk = localStorage.getItem('token');
-        if (error.response.status === 401) {
-            if (token !== null && token) {
-                clearToken();
-            } else if (tk !== null && tk) {
-                localStorage.removeItem('token');
-            }
-            window.location.href = '/login';
-        }
+        // if (error.response.status === 401) {
+        //     if (token !== null && token) {
+        //         clearToken();
+        //     } else if (tk !== null && tk) {
+        //         localStorage.removeItem('token');
+        //     }
+        //     window.location.href = '/login';
+        // }
         return Promise.reject(error);
     }
 );

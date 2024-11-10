@@ -4,11 +4,14 @@ import styled from 'styled-components';
 import PropTypes from "prop-types";
 import {instance} from "@api/axios.js";
 import {useDispatch} from "react-redux";
+import {clearToken} from "../../store/reducers/authSlice"
 
 const MainPage = () => {
-    let navigate = useNavigate();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+
     const handleLogout = async () => {
+   
         try {
             const response = await instance.post('/api/users/logout', null, {
                 headers: {
@@ -16,21 +19,30 @@ const MainPage = () => {
                 },
                 withCredentials: true,
             });
-
+    
             if (response.status === 200) {
+                // 로그아웃 성공 시 토큰 제거 및 리디렉션
+                dispatch(clearToken());
                 localStorage.removeItem('token');
-                navigate("/login");
+                navigate('/login');
             }
-
+    
         } catch (error) {
+            // 401 Unauthorized 에러 시 토큰 제거 및 리디렉션
+            if (error.response && error.response.status === 401) {
+                dispatch(clearToken());
+                localStorage.removeItem('token');
+                navigate('/login');
+            }
             console.error("Logout error:", error);
         }
     };
+    
 
     return (
         <div className="w-full flex flex-col">
             <div className='flex justify-end pr-12 gap-5 bg-trai-navy'>
-                <button onClick={handleLogout}>로그아웃</button>
+                <div onClick={handleLogout}><button>로그아웃</button></div>
                 <StyledLink to={'/trade-settings'}>
                     거래 설정
                 </StyledLink>
