@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-import axios from "axios";
+import { instance } from "../../../api/axios";
 
 const useInvestmentsData = (currentPage = 0, size = 12) => {
   const [data, setData] = useState([]);
@@ -13,8 +13,8 @@ const useInvestmentsData = (currentPage = 0, size = 12) => {
     setLoading(true);
     setError(null); // 새로운 요청 시작 전에 error를 초기화
 
-    axios
-      .get("https://www.trai-ai.site/api/investments", {
+    instance
+      .get("/api/investments", {
         params: {
           page: currentPage,
           size: size,

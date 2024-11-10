@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { instance } from "../../api/axios";
 import { useDispatch } from 'react-redux';
 import { setCounts } from '../../store/reducers/decisionCountSlice';
 
@@ -27,16 +27,10 @@ const useTimelineData = () => {
   const [timelineError, setError] = useState(null);
   const [isEmpty, setEmpty] = useState(true);
 
-  const token ='eyJhbGciOiJIUzI1NiJ9.eyJjYXRlZ29yeSI6ImFjY2VzcyIsInVzZXJuYW1lIjoiYWRtaW5AbmF2ZXIuY29tIiwicm9sZSI6IlJPTEVfQURNSU4iLCJpYXQiOjE3MzA4NzIwODIsImV4cCI6MTAxNzMwODcyMDgyfQ.saDJ6_TfVvQxS32DWE13k1tHt8Ong6uF5fLc3SXqLJ0'
-
   useEffect(() => {
     setLoading(true);
-    axios
-      .get(`https://www.trai-ai.site/api/transaction-histories/latest`, {
-        headers: {
-          access: `${token}`
-        }
-      })
+    instance
+      .get(`/api/transaction-histories/latest`)
       .then((res) => res.data)
       .then((data) => {
         const counts = { hold: 0, buy: 0, sell: 0 };
