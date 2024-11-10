@@ -440,6 +440,7 @@ public class ProfitAssetService {
 
             // 누적 수익률
             BigDecimal accumulationProfitRatio = beforeAccumulationProfitRatio
+                    .divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN)
                     .add(BigDecimal.ONE)
                     .multiply(BigDecimal.ONE.add(dailyProfitRatio.divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN)))
                     .subtract(BigDecimal.ONE)
