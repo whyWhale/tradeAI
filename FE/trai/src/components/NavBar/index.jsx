@@ -2,6 +2,8 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { instance } from '@api/axios';
+import { useDispatch } from "react-redux";
+import { clearToken } from "@store/reducers/authSlice.jsx";
 
 import { IoMdHelpCircleOutline } from 'react-icons/io';
 import { VscSettings } from 'react-icons/vsc';
@@ -10,22 +12,27 @@ import { MdCurrencyBitcoin, MdOutlineLogout } from 'react-icons/md';
 
 const NavBar = ({openModal}) => {
 
-  const navigate = useNavigate();
+  let navigate = useNavigate();
+    const dispatch = useDispatch();
 
-  const handleLogout = async () => {
-    try{
-      const response = await instance.post('/api/users/logout');
+    const handleLogout = async () => {
+        try {
+            const response = await instance.post('/api/users/logout', null, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                withCredentials: true,
+            });
 
-      if(response.status === 200){
-        console.log('로그아웃 성공');
-        navigate('/');
-      }
+            if (response.status === 200) {
+                localStorage.removeItem('token');
+                navigate("/login");
+            }
 
-    } catch (error){
-      console.error("로그아웃 에러: ", error)
-    }
-
-  }
+        } catch (error) {
+            console.error("Logout error:", error);
+        }
+    };
 
 
   return (
@@ -119,6 +126,7 @@ const StyledLogoutButton = styled.div`
   gap: 20px;
   align-items: center;
   margin: 3px;
+  margin-top: 20px;
   padding: 8px 10px;
   border-radius: 15px;
   background-color: transparent;

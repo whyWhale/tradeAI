@@ -47,7 +47,7 @@ const LoginPage = () => {
                         {loginStatus}
                     </div>
                     <InputGroup>
-                        <label className="ml-1">Email</label>
+                        <Label className="ml-1">Email</Label>
                         <Input
                             type="email"
                             {...register(
@@ -59,7 +59,7 @@ const LoginPage = () => {
                     </InputGroup>
 
                     <InputGroup>
-                        <label className="ml-1">Password</label>
+                        <Label className="ml-1">Password</Label>
                         <Input
                             type="password"
                             {...register(
@@ -77,7 +77,7 @@ const LoginPage = () => {
                 </form>
             </button>
             <div className="flex justify-end relative">
-                <LoginImage className="flex flex-end w-[800px] h-[700px]" src="/images/trai_login_background.png"
+                <LoginImage className="flex flex-end w-[850px] h-[680px]" src="/images/trai_login_background.png"
                             alt="image"/>
                 <div className="absolute inset-0 flex justify-center items-center text-[100px] text-trai-white">
                     T R A I
@@ -91,6 +91,12 @@ const InputGroup = styled.div`
     display: flex;
     flex-direction: column;
     gap: 8px;
+`;
+
+const Label = styled.label`
+    align-self: flex-start;
+    margin-left: 10px;
+    font-size: 16px;
 `;
 
 const Input = styled.input`
