@@ -433,7 +433,7 @@ public class ProfitAssetService {
             BigDecimal dailyProfitRatio = BigDecimal.ZERO;
             if (startingAssets.add(totalDepositAmount).compareTo(BigDecimal.ZERO) > 0) {
                 dailyProfitRatio = dailyProfitAndLoss
-                        .divide(startingAssets.add(totalDepositAmount), 4, RoundingMode.DOWN)
+                        .divide(startingAssets.add(totalDepositAmount), 8, RoundingMode.DOWN)
                         .multiply(BigDecimal.valueOf(100))
                         .setScale(2, RoundingMode.DOWN);
             }
@@ -441,7 +441,7 @@ public class ProfitAssetService {
             // 누적 수익률
             BigDecimal accumulationProfitRatio = beforeAccumulationProfitRatio
                     .add(BigDecimal.ONE)
-                    .multiply(BigDecimal.ONE.add(dailyProfitRatio.divide(BigDecimal.valueOf(100), RoundingMode.DOWN)))
+                    .multiply(BigDecimal.ONE.add(dailyProfitRatio.divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN)))
                     .subtract(BigDecimal.ONE)
                     .setScale(2, RoundingMode.DOWN);
 
@@ -453,7 +453,7 @@ public class ProfitAssetService {
             byte coinAssetPercentage = 0;
             if (endingAssets.compareTo(BigDecimal.ZERO) > 0) {
                 coinAssetPercentage = totalCoinEvaluation
-                        .divide(endingAssets, 4, RoundingMode.DOWN)
+                        .divide(endingAssets, 8, RoundingMode.DOWN)
                         .multiply(BigDecimal.valueOf(100))
                         .setScale(2, RoundingMode.DOWN)
                         .byteValue();
