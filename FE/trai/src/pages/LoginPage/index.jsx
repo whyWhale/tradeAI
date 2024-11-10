@@ -3,6 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 import styled from "styled-components";
 import {instance} from "@api/axios.js";
 import {useState} from "react";
+import {useDispatch} from "react-redux";
 import { setToken, clearToken } from "../../store/reducers/authSlice"
 
 const LoginPage = () => {
@@ -10,6 +11,8 @@ const LoginPage = () => {
     const {register, handleSubmit, formState: {errors}} = useForm();
     let navigate = useNavigate();
     const [loginStatus, setLoginStatus] = useState(null);
+    const dispatch = useDispatch();
+
     const login = async (data) => {
         try {
             const response = await instance.post(
@@ -28,7 +31,7 @@ const LoginPage = () => {
             if (response.status === 200) {
                 const token = response.headers['access'];
                 localStorage.setItem('token', token);
-                setToken(token);
+                dispatch(setToken(token));
                 navigate("/");
             }
         } catch (error) {

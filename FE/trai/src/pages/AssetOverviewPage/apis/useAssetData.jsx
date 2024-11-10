@@ -13,7 +13,7 @@ const useAssetData = (BTCPrice) => {
     if (!BTCPrice) return;
     setLoading(true);
     instance
-      .post(`/api/upbits/accounts`, {
+      .get(`/api/upbits/accounts`, {
       })
       .then((res) => res.data)
       .then((data) => {
