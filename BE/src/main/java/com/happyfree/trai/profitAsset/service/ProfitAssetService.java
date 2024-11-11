@@ -67,7 +67,7 @@ public class ProfitAssetService {
         BigDecimal profit = yp.add(BigDecimal.ONE)
                 .multiply(BigDecimal.ONE.add(todayProfitRatio.divide(BigDecimal.valueOf(100))))
                 .subtract(BigDecimal.ONE);
-        List<TransactionHistory> list = transactionHistoryRepository.findByUserOrderByCreatedAt(
+        List<TransactionHistory> list = transactionHistoryRepository.findByUserOrderByCreatedAtDesc(
                 authService.getLoginUser());
         int bid = 0, hold = 0, ask = 0;
         for (int i = 0; i < list.size(); i++) {
