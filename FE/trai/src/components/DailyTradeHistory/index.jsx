@@ -1,14 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import styled from "styled-components";
+import PropTypes from 'prop-types';
 import { instance } from '@api/axios';
 
 import { FaRegCalendarAlt } from "react-icons/fa";
 
-const DailyTradeHistory = () => {
+const DailyTradeHistory = ({ onSelectAgentId, selectedDate, onDateChange }) => {
 
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
   const [tradeData, setTradeData] = useState([]);
   const dateInputRef = useRef(null);
+
+  const handleRowClick = (agentId) => {
+    console.log("Row clicked with agentId:", agentId); 
+    onSelectAgentId(agentId);
+  }
 
   const formatDate = (isoString) => {
     const [date, time] = isoString.split("T");
@@ -18,7 +23,7 @@ const DailyTradeHistory = () => {
 
   const handleDateChange = async(event) => {
     const date = event.target.value;
-    setSelectedDate(date);
+    onDateChange(date);
     console.log(date);
 
     const [year, month, day] = date.split("-");
@@ -42,6 +47,31 @@ const DailyTradeHistory = () => {
       setTradeData([]);
     }
   }
+
+  // 처음 로딩 시       
+  useEffect(() => {
+    const fetchData = async () => {
+      const [year, month, day] = selectedDate.split("-");
+  
+      try {
+        const response = await instance.get('/api/transaction-histories', {
+          params: {
+            year, month, day
+          }
+        });
+        if (response.data) {
+          setTradeData(response.data);
+        } else {
+          setTradeData([]);
+        }
+      } catch (error) {
+        console.error("데이터 요청 오류: ", error);
+        setTradeData([]);
+      }
+    };
+  
+    fetchData();
+  }, [selectedDate]); 
 
 
   const openDatePicker = () => {
@@ -71,14 +101,14 @@ const DailyTradeHistory = () => {
             <th>거래 금액</th>
             <th>총 평가</th>
             <th>총 보유자산</th>
-            <th>선택</th>
+            <th>변동</th>
           </tr>
         </thead>
         
         <tbody>
           {tradeData.length > 0 ? (
             tradeData.map((data, index) => (
-              <tr key={index}>
+              <tr key={index} onClick={() => handleRowClick(data.agentId)}>
                 <td>{formatDate(data.orderCreatedAt)}</td>
                 <td>{data.price}</td>
                 <td>{data.averagePrice}</td>
@@ -86,7 +116,7 @@ const DailyTradeHistory = () => {
                 <td>{data.executedFunds}</td>
                 <td>{data.totalEvaluation}</td>
                 <td>{data.totalAmount}</td>
-                <td>회고</td>
+                <td>{data.profitAndLoss ? data.profitAndLoss : 0}</td>
               </tr>
             ))
           ) : (
@@ -99,6 +129,12 @@ const DailyTradeHistory = () => {
       </Table>
     </Container>
   )
+}
+
+DailyTradeHistory.propTypes = {
+  onSelectAgentId: PropTypes.func.isRequired,
+  selectedDate: PropTypes.string.isRequired,
+  onDateChange: PropTypes.func.isRequired,
 }
 
 const Container = styled.div`
@@ -168,6 +204,10 @@ const Table = styled.table`
     display: table;
     width: 100%;
     table-layout: fixed;
+  }
+
+  tbody tr {
+    cursor: pointer;  
   }
 
 `;

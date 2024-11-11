@@ -8,17 +8,29 @@ import BitBot from '@components/BitBot';
 const TradeDetails = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split("T")[0]);
+  const [agentId, setAgentId] = useState(null);
+
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  const handleDateChange = (date) => {
+    setSelectedDate(date);
+  };
+
+  const handleSelectAgentId = (id) => {
+    console.log("Selected agentId:", id);
+    setAgentId(id);
+  };
+
   return (
     <div className='flex bg-trai-background min-h-screen' style={{ width: '1400px' }}>
-      <aside className='w-72'>
+      <aside className='w-72' style={{ position: 'fixed', top: '0', left: '0', height: '100vh', overflowY: 'auto' }}>
         <NavBar openModal={openModal} />
       </aside>
-      <section className='flex-1'>
-        <div><DailyTradeHistory /></div>
-        <div><AgentAI/></div>
+      <section className='flex-1 ml-[300px]'>
+        <div><DailyTradeHistory onSelectAgentId={handleSelectAgentId} selectedDate={selectedDate} onDateChange={handleDateChange} /></div>
+        <div><AgentAI agentId={agentId} selectedDate={selectedDate} /></div>
         {isModalOpen && <BitBot onClose={closeModal} />}
       </section>
     </div>
