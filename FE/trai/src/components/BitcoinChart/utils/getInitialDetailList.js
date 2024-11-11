@@ -21,7 +21,7 @@ const getInitialDetailList = (unit) => {
         return {
             low: low_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
             high: high_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-            price: trade_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            price: parseFloat(rade_price),
             tradeVolume: acc_trade_volume_24h.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
             tradePrice: acc_trade_price_24h.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
             change: change,
