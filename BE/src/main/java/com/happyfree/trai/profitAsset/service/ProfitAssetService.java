@@ -444,6 +444,7 @@ public class ProfitAssetService {
                     .add(BigDecimal.ONE)
                     .multiply(BigDecimal.ONE.add(dailyProfitRatio.divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN)))
                     .subtract(BigDecimal.ONE)
+                    .multiply(BigDecimal.valueOf(100))
                     .setScale(2, RoundingMode.DOWN);
 
             log.info("일일 수익률 : {}", dailyProfitRatio);
