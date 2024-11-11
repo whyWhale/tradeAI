@@ -65,9 +65,13 @@ public class ProfitAssetService {
             ia = pah.get().getStartingAssets();
         }
         BigDecimal todayProfitRatio = getTodayProfit(loginUser.getAccessKey(), loginUser.getSecretKey(), ia);
-        BigDecimal profit = yp.add(BigDecimal.ONE)
-                .multiply(BigDecimal.ONE.add(todayProfitRatio.divide(BigDecimal.valueOf(100))))
-                .subtract(BigDecimal.ONE);
+        BigDecimal profit = yp
+                .divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN)
+                .add(BigDecimal.ONE)
+                .multiply(BigDecimal.ONE.add(todayProfitRatio.divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN)))
+                .subtract(BigDecimal.ONE)
+                .multiply(BigDecimal.valueOf(100))
+                .setScale(2, RoundingMode.DOWN);
         List<TransactionHistory> list = transactionHistoryRepository.findByUserOrderByCreatedAtDesc(
                 authService.getLoginUser());
         int bid = 0, hold = 0, ask = 0;
@@ -85,8 +89,8 @@ public class ProfitAssetService {
 
         return TransactionSummary.builder()
                 .totalTransactionCount(list.size())
-                .firstTransactionTime(list.get(0).getOrderCreatedAt())
-                .lastTransactionTime(list.get(list.size() - 1).getOrderCreatedAt())
+                .firstTransactionTime(list.get(list.size() - 1).getOrderCreatedAt())
+                .lastTransactionTime(list.get(0).getOrderCreatedAt())
                 .bid(bid)
                 .ask(ask)
                 .hold(hold)
@@ -103,14 +107,14 @@ public class ProfitAssetService {
         BigDecimal bcv = getBitcoinAmount(accessKey, secretKey);
         BigDecimal m = getTotalMoney(accessKey, secretKey);
         BigDecimal cBp = getBitcoinCurrentPrice();
-        BigDecimal tbv = bcv.multiply(cBp);
         return bcv.multiply(cBp)
                 .add(m)
                 .subtract(initialAsset)
                 .add(with)
                 .subtract(de)
-                .divide(initialAsset.add(de), 2, RoundingMode.DOWN)
-                .multiply(new BigDecimal("100"));
+                .divide(initialAsset.add(de), 8, RoundingMode.DOWN)
+                .multiply(new BigDecimal("100"))
+                .setScale(2, RoundingMode.DOWN);
     }
 
     // 해당 날짜의 전체 출금액
