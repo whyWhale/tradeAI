@@ -2,6 +2,8 @@ import React from 'react';
 import { ResponsivePie } from '@nivo/pie';
 
 const CurrentAssetAllocationChart = () => {
+    
+
   return (
       <div className='piechart' style={{ width: '100%', height: '90%', margin: '0 auto' }}>
           <ResponsivePie

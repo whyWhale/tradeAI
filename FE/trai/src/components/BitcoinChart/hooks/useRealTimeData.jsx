@@ -3,23 +3,10 @@ const UPBIT_URL = "wss://api.upbit.com/websocket/v1";
 
 const useRealTimeData = (initialized) => {
   const [result, setResult] = useState();
-  //const [timer, setTimer] = useState(false);
   const ws = useRef(null);
-
-  // useEffect(() => {
-  //   // timer 종료 시 트리거
-  //   if (timer) {
-  //     alert("만료되었습니다.");
-  //     ws.current.close();
-  //   }
-  // }, [timer]);
 
   useEffect(() => {
     if (!initialized) return; // 초기화가 완료되지 않았으면 연결하지 않음
-    // // 10분 지나면 종료 처리
-    // setTimeout(() => {
-    //   setTimer(true);
-    // }, 10 * 60 * 1000);
 
     ws.current = new WebSocket(UPBIT_URL);
 
@@ -51,11 +38,11 @@ const useRealTimeData = (initialized) => {
         change_rate,            
       } = message;
       setResult({
-        low: low_price,
-        high: high_price,
-        price: trade_price,
-        tradeVolume: acc_trade_volume_24h,
-        tradePrice: acc_trade_price_24h,
+        low: low_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        high: high_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        price: trade_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        tradeVolume: acc_trade_volume_24h.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+        tradePrice: acc_trade_price_24h.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
         change: change,
         changeRate: change_rate,
         changePrice: signed_change_price,
@@ -69,6 +56,7 @@ const useRealTimeData = (initialized) => {
     };
 
     return () => {
+      console.log("웹소켓");
       ws.current.close();
     };
   }, []);
