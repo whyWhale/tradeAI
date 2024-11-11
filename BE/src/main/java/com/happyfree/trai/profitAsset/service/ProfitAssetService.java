@@ -25,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -367,7 +366,7 @@ public class ProfitAssetService {
 
     public List<AssetProportion> assetProportion() {
         User loginUser = authService.getLoginUser();
-        List<ProfitAssetHistory> all = profitAssetRepository.findByUser(loginUser);
+        List<ProfitAssetHistory> all = profitAssetRepository.findByUserAndSettlementDateLessThanOrderBySettlementDateAsc(loginUser, LocalDate.now());
         List<AssetProportion> list = new ArrayList<>();
         int count = 30;
         for (ProfitAssetHistory profitAssetHistory : all) {
