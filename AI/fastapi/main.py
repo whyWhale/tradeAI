@@ -9,7 +9,8 @@ from agents.fng import fng_agent
 from agents.news_search import news_search_agent
 from agents.quant import quant_agent
 from agents.chart_pattern import chart_pattern_agent
-from agents.master import master_agent
+# from agents.master import master_agent
+from agents.rag_test import master_agent # 테스트용
 from core.logging import langsmith
 
 
@@ -23,7 +24,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 router = APIRouter(prefix="/ai")
-langsmith(project_name="trai-v1", set_enable=True)
+langsmith(project_name="trai-v1-sj", set_enable=True)
 
 
 # Graph
@@ -59,6 +60,8 @@ class UserInfo(BaseModel):
     user_id: int
     available_amount: float
     btc_balance_krw: float
+    investment_type: str  # 사용자 투자 성향 타입
+    
 
 @router.post("/analysis")
 async def run_analysis(user_info: UserInfo):
@@ -83,7 +86,8 @@ async def run_analysis():
         user_info = UserInfo(
             user_id=12345,
             available_amount=1000000.0,
-            btc_balance_krw=500000.0
+            btc_balance_krw=500000.0,
+            investment_type="공격형"
         )
 
         initial_state = State(
