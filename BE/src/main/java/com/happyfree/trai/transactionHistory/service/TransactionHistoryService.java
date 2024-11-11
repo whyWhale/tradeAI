@@ -4,9 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import com.happyfree.trai.transactionHistory.dto.TodayTransactionHistory;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.happyfree.trai.auth.service.AuthService;
 import com.happyfree.trai.transactionHistory.dto.LatestTransactionHistory;
@@ -55,7 +53,7 @@ public class TransactionHistoryService {
 	public List<LatestTransactionHistory> latest() {
 		User loginUser = authService.getLoginUser();
 
-		List<TransactionHistory> all = transactionHistoryRepository.findByUserOrderByCreatedAt(loginUser);
+		List<TransactionHistory> all = transactionHistoryRepository.findByUserOrderByCreatedAtDesc(loginUser);
 		ArrayList<TransactionHistory> investmentHistories = new ArrayList<>();
 		for (int i = 0; i < 30; i++) {
 			investmentHistories.add(all.get(i));

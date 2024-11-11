@@ -11,7 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface TransactionHistoryRepository extends JpaRepository<TransactionHistory, Long> {
-	List<TransactionHistory> findByUserOrderByCreatedAt(User user);
+	List<TransactionHistory> findByUserOrderByCreatedAtDesc(User user);
 
 	@Query("SELECT t " +
 			"FROM TransactionHistory t " +
