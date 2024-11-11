@@ -56,7 +56,6 @@ const useRealTimeData = (initialized) => {
     };
 
     return () => {
-      console.log("웹소켓");
       ws.current.close();
     };
   }, []);
