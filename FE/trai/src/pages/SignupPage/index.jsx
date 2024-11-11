@@ -69,7 +69,7 @@ const SignupPage = () => {
     return (
         <div className="flex flex-col items-center justify-center">
             <div className="flex flex-col items-center justify-center relative">
-                <img className="flex w-[1350px] h-[300px] mt-3" src="/images/trai_signup_background.png" alt="image"/>
+                <img className="flex w-[1400px] h-[300px] mt-3" src="/images/trai_signup_background.png" alt="image"/>
                 <div className="absolute top-[22%] text-trai-white">
                     <div className="flex justify-center text-2xl">Welcome!</div>
                     <div className="flex justify-center">TRAI의 자동매매 서비스를 이용해보세요.</div>

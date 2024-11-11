@@ -1,48 +1,22 @@
-import {useState} from 'react';
-import {NavLink, useNavigate} from 'react-router-dom';
+import { useState } from 'react';
+import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from "prop-types";
-import {instance} from "@api/axios.js";
-import {useDispatch} from "react-redux";
-import {clearToken} from "../../store/reducers/authSlice"
+import CardThreeJS from '@components/CardThreeJS/CardThreeJS';
+import Logout from '@components/Logout';
 
 const MainPage = () => {
-    const navigate = useNavigate();
-    const dispatch = useDispatch();
 
-    const handleLogout = async () => {
-   
-        try {
-            const response = await instance.post('/api/users/logout', null, {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                withCredentials: true,
-            });
-    
-            if (response.status === 200) {
-                // 로그아웃 성공 시 토큰 제거 및 리디렉션
-                dispatch(clearToken());
-                localStorage.removeItem('token');
-                navigate('/login');
-            }
-    
-        } catch (error) {
-            // 401 Unauthorized 에러 시 토큰 제거 및 리디렉션
-            if (error.response && error.response.status === 401) {
-                dispatch(clearToken());
-                localStorage.removeItem('token');
-                navigate('/login');
-            }
-            console.error("Logout error:", error);
-        }
+    const [selectedAgentIndex, setSelectedAgentIndex] = useState(0);
+
+    const handleAgentSelect = (index) => {
+        setSelectedAgentIndex(index);
     };
     
 
     return (
-        <div className="w-full flex flex-col">
-            <div className='flex justify-end pr-12 gap-5 bg-trai-navy'>
-                <div onClick={handleLogout}><button>로그아웃</button></div>
+        <div className="w-full flex flex-col" style={{ overflowX: 'hidden' }}>
+            <div className='flex justify-end pr-12 bg-trai-navy'>
                 <StyledLink to={'/trade-settings'}>
                     거래 설정
                 </StyledLink>
@@ -55,31 +29,46 @@ const MainPage = () => {
                 <StyledLink to={'/trade-details'}>
                     거래 상세 및 전략
                 </StyledLink>
+                <Logout/>
             </div>
 
-            <FirstContainer className="flex gap-10">
+            <FirstContainer className="flex">
 
-                <div>
-                    <div className='text-trai-white text-[60px] mt-[180px] font-bold'>TRAI</div>
-                    <div className='text-trai-white text-[32px] font-bold'>Trade Smarter, Trade with AI</div>
-                    <div className='flex mt-[100px] gap-10'>
-                    </div>
+                <div className='w-[350px] flex-shrink-0'>
+                    <div className='text-trai-white text-[80px] mt-[150px] font-bold'>T R A I</div>
+                    <div className='text-trai-white text-[40px] mt-[50px] font-bold'>Trade Smarter,</div>
+                    <div className='text-trai-white text-[40px] font-bold'>Trade with AI</div>
                 </div>
-                <LoginImage className="flex flex-end w-[1200px] h-[1000px] relative top-[-20%]"
+                <HomeImage className="flex flex-end w-[1000px] h-[900px] relative top-[-20%]"
                             src="/images/trai_figma.png" alt="image"/>
             </FirstContainer>
 
             <SecondContainer>
                 <h2 className='font-bold text-[32px] mb-8'>AI 에이전트 소개</h2>
-                <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                    {agentsData.map((agent, index) => (
-                        <AgentCard key={index}>
-                            <h3 className='font-bold mb-4 text-center text-[18px]'>{agent.name}</h3>
-                            <div>{agent.description}</div>
+                <div className='flex w-full gap-8'>
+                    <div className='w-1/2'>
+                        <CardThreeJS onSelectAgent={handleAgentSelect} />
+                    </div>
+                    <div className='w-1/2'>
+                        <AgentCard 
+                            className='h-full'
+                            style={{ 
+                                opacity: 1,
+                                transform: 'translateY(0)',
+                                transition: 'all 0.5s ease-in-out'
+                            }}
+                        >
+                            <h3 className='font-bold mb-10 text-center text-[24px]'>
+                                {agentsData[selectedAgentIndex].name}
+                            </h3>
+                            <div className='text-[16px] leading-relaxed'>
+                                {agentsData[selectedAgentIndex].description}
+                            </div>
                         </AgentCard>
-                    ))}
+                    </div>
                 </div>
             </SecondContainer>
+
 
             <ThirdContainer>
                 <h2 className='font-bold text-[40px] mb-8'>FAQ</h2>
@@ -168,27 +157,27 @@ const StyledLink = styled(NavLink)`
     }
 `;
 
-const StyledUserLink = styled(NavLink)`
-    color: white;
-    background-color: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 150px;
-    height: 50px;
-    border-radius: 15px;
-    border: 2px solid white;
-    text-decoration: none;
-    font-weight: bold;
+// const StyledUserLink = styled(NavLink)`
+//     color: white;
+//     background-color: transparent;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     width: 150px;
+//     height: 50px;
+//     border-radius: 15px;
+//     border: 2px solid white;
+//     text-decoration: none;
+//     font-weight: bold;
 
-    &:hover {
-        color: var(--trai-navy);
-        background-color: var(--trai-white);
-        transition: 0.5s ease;
-    }
-`;
+//     &:hover {
+//         color: var(--trai-navy);
+//         background-color: var(--trai-white);
+//         transition: 0.5s ease;
+//     }
+// `;
 
-const LoginImage = styled.img`
+const HomeImage = styled.img`
     display: none;
 
     @media (min-width: 1000px) {
@@ -208,16 +197,23 @@ const SecondContainer = styled.div`
     min-height: 700px;
     padding: 50px 150px;
 `
+
 const AgentCard = styled.div`
     background-color: var(--trai-white);
-    transition: transform 0.3s;
-    border: 2px solid var(--trai-navy);
+    transition: all 0.3s ease-in-out;
+    border: 2px solid white;
     border-radius: 5px;
-    padding: 20px;
+    padding: 30px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 100px;
 
     &:hover {
-        transform: translateY(-10px);
+        transform: translateY(-5px);
     }
 `
 
