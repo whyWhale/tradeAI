@@ -80,7 +80,7 @@ const MyResponsiveBar = ({ data }) => (
           keys={['코인 비중', '기타 비중']}
           indexBy="date"
           margin={{ top: 0, right: 10, bottom: 10, left: 65 }}
-          padding={45}
+          padding={0.55}
           layout="horizontal"
           valueScale={{ type: 'linear' }}
           indexScale={{ type: 'band', round: true }}
