@@ -74,13 +74,13 @@ const Explain = styled.h2`
 
 // Responsive Bar Chart Component with Gradient
 const MyResponsiveBar = ({ data }) => (
-    <div style={{ height: 300 }}>
+    <div style={{ height: 90 }}>
       <ResponsiveBar
           data={data}
           keys={['코인 비중', '기타 비중']}
           indexBy="date"
           margin={{ top: 0, right: 10, bottom: 10, left: 65 }}
-          padding={0.2}
+          padding={45}
           layout="horizontal"
           valueScale={{ type: 'linear' }}
           indexScale={{ type: 'band', round: true }}
