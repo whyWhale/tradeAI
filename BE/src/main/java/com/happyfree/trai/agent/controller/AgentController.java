@@ -24,9 +24,9 @@ public class AgentController {
 	@Operation(summary = "에이전트 판단 조회")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
 	@GetMapping("")
-	public ResponseEntity<?> findAgentHistoryByDate(@RequestParam("agentId") Long agentId) {
+	public ResponseEntity<?> findAgentHistoryById(@RequestParam("agentId") Long agentId) {
 
-		return ResponseEntity.ok(agentService.findAgentHistoryByDate(agentId));
+		return ResponseEntity.ok(agentService.findAgentHistoryById(agentId));
 	}
 
 	@Operation(summary = "에이전트 요청")

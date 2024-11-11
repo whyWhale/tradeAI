@@ -9,7 +9,6 @@ import com.happyfree.trai.agent.dto.AgentDecisionResult;
 import com.happyfree.trai.agent.entity.Agent;
 import com.happyfree.trai.agent.dto.AssetData;
 import com.happyfree.trai.agent.repository.AgentRepository;
-import com.happyfree.trai.auth.service.AuthService;
 import com.happyfree.trai.global.exception.CustomException;
 import com.happyfree.trai.transactionHistory.entity.TransactionHistory;
 import com.happyfree.trai.transactionHistory.repository.TransactionHistoryRepository;
@@ -62,7 +61,7 @@ public class AgentService {
     String serverUrl = "https://api.upbit.com";
 
     @Transactional(readOnly = true)
-    public AgentDecisionResult findAgentHistoryByDate(long agentId) {
+    public AgentDecisionResult findAgentHistoryById(long agentId) {
         Agent agentDecision = agentRepository.findById(agentId)
                 .orElseThrow(() -> new CustomException(AGENT_NOT_FOUND));
 
