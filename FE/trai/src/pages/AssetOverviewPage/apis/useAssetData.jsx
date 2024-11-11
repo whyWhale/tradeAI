@@ -22,6 +22,10 @@ const useAssetData = (BTCPrice) => {
           const KRWData = data.find((item) => item.currency === "KRW");
           const BTCData = data.find((item) => item.currency === "BTC");
 
+          console.log("BTCPrice: "+BTCPrice);
+          console.log("KRWData: "+KRWData);
+          console.log("BTCData: "+BTCData);
+
           // 'KRW'와 'BTC' 데이터가 없을 경우
           const heldKRW = KRWData ? parseFloat(KRWData.balance) : 0;
           const BTCBalance = BTCData ? parseFloat(BTCData.balance) : 0;

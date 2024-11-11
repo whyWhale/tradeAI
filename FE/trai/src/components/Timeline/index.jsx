@@ -10,9 +10,6 @@ const Timeline = () => {
     timelineLoading||timelineError?<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}><span className="spinner"></span></div>
     :isEmpty?<div>투자 내역이 없습니다.</div>:
     <TimelineContainer>
-      <Header >
-        <Title>이번달</Title>
-      </Header>
       <TimelineList>
         {timelineData.map((item, index) => (
           <TimelineItem key={index} item={item} />

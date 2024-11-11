@@ -27,8 +27,8 @@ const useAssetProportionHistory = () => {
           const coinPercentage = parseInt(item.coinPercentage);
           return {
               'date': formatDate(item.createdAt),
-              'coin': coinPercentage,
-              'left': 100 - coinPercentage,
+              '코인 비중': coinPercentage,
+              '기타 비중': 100 - coinPercentage,
           };
         });
         console.log(formattedData);
