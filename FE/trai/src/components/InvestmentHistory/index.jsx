@@ -5,11 +5,11 @@ import useAssetProportionHistory from '../../pages/InvestmentStatusPage/apis/use
 
 
 const InvestmentHistory = () => {
-  const { historyData, assetProportionLoading, assetProportionEmpty, assetProportionError} = useAssetProportionHistory();
+  const { assetProportionData, assetProportionLoading, assetProportionEmpty, assetProportionError} = useAssetProportionHistory();
 
   if (assetProportionLoading) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}><div className="spinner"></div></div>;
   if (assetProportionError) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>Error</div>;;
-  if (historyData) {
+  if (assetProportionData) {
     return (
       <HistoryContainer>
         <Header>
@@ -22,7 +22,7 @@ const InvestmentHistory = () => {
         ) : assetProportionEmpty ? (
             <div>자산 내역이 없습니다.</div>
         ) : (
-            <MyResponsiveBar data={historyData} />
+            <MyResponsiveBar data={assetProportionData} />
         )}
       </HistoryContainer>
     );
