@@ -10,40 +10,11 @@ const DailyTradeHistory = () => {
   const [tradeData, setTradeData] = useState([]);
   const dateInputRef = useRef(null);
 
-  // 실제로는 이거 useEffect 전체 삭제하면 됨(가짜 데이터)
-  useEffect(() => {
-    const fakeData = [
-      {
-        orderCreatedAt: "2024.10.20 00:00:00",
-        price: "91,890,000",
-        averagePrice: "90,000,000",
-        decision: "sell",
-        excutedFunds: "918,900",
-        totalEvaluation: "918,900",
-        totalAmount: "918,000",
-      },
-      {
-        orderCreatedAt: "2024.10.20 04:00:00",
-        price: "91,750,000",
-        averagePrice: "0",
-        decision: "hold",
-        excutedFunds: "0",
-        totalEvaluation: "0",
-        totalAmount: "918,000",
-      },
-      {
-        orderCreatedAt: "2024.10.20 08:00:00",
-        price: "92,000,000",
-        averagePrice: "92,000,000",
-        decision: "buy",
-        excutedFunds: "918,000",
-        totalEvaluation: "918,900",
-        totalAmount: "920,000",
-      },
-    ];
-
-    setTradeData(fakeData);
-  }, []);
+  const formatDate = (isoString) => {
+    const [date, time] = isoString.split("T");
+    const formatTime = time.split(".")[0];
+    return `${date} ${formatTime}`;
+  }
 
   const handleDateChange = async(event) => {
     const date = event.target.value;
@@ -61,6 +32,7 @@ const DailyTradeHistory = () => {
       if (response.data) {
         console.log("데이터 있음");
         setTradeData(response.data);
+        console.log(response.data);
       } else {
         console.log("데이터 없음");
         setTradeData([]);
@@ -107,11 +79,11 @@ const DailyTradeHistory = () => {
           {tradeData.length > 0 ? (
             tradeData.map((data, index) => (
               <tr key={index}>
-                <td>{data.orderCreatedAt}</td>
+                <td>{formatDate(data.orderCreatedAt)}</td>
                 <td>{data.price}</td>
                 <td>{data.averagePrice}</td>
-                <td><ActionLabel type={data.decision}>{data.decision.toUpperCase()}</ActionLabel></td>
-                <td>{data.excutedFunds}</td>
+                <td><ActionLabel type={data.side}>{data.side ? data.side.toUpperCase() : 'N/A'}</ActionLabel></td>
+                <td>{data.executedFunds}</td>
                 <td>{data.totalEvaluation}</td>
                 <td>{data.totalAmount}</td>
                 <td>회고</td>
@@ -167,6 +139,37 @@ const Table = styled.table`
     color: var(--trai-text);
     font-size: 14px;
   }
+
+  tbody {
+    display: block;
+    max-height: 300px;
+    overflow-y: auto;
+    width: 100%;
+
+      &::-webkit-scrollbar {
+        margin-top: 10px;
+        width: 12px;
+      }
+    
+      &::-webkit-scrollbar-thumb {
+        margin-top: 10px;
+        border-radius: 8px;
+        background-color: var(--trai-navy);
+      }
+    
+      &::-webkit-scrollbar-track {
+        margin-top: 10px;
+        border-radius: 8px;
+        background-color: var(--trai-disabled);
+      }
+  }
+
+  thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
 `;
 
 const ActionLabel = styled.span`
@@ -181,17 +184,17 @@ const ActionLabel = styled.span`
   color: white;
 
   ${({ type }) =>
-    type === "sell" && `
+    type === "SELL" && `
       background-color: var(--trai-sell);
     `}
   
   ${({ type }) =>
-    type === "buy" && `
+    type === "BUY" && `
       background-color: var(--trai-buy);
     `}
   
   ${({ type }) =>
-    type === "hold" && `
+    type === "HOLD" && `
       background-color: var(--trai-disabled);
     `}
 `;
