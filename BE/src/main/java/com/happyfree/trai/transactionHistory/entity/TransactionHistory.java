@@ -2,16 +2,10 @@ package com.happyfree.trai.transactionHistory.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
+import com.happyfree.trai.agent.entity.Agent;
 import com.happyfree.trai.global.common.BaseEntity;
 import com.happyfree.trai.user.entity.User;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -26,6 +20,9 @@ public class TransactionHistory extends BaseEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	private User user;
+
+	@OneToOne(fetch = FetchType.LAZY)
+	private Agent agent;
 
 	private String uuid;
 
@@ -69,4 +66,6 @@ public class TransactionHistory extends BaseEntity {
 	public void updateAveragePrice(BigDecimal averagePrice) { this.averagePrice = averagePrice; }
 
 	public void updateProfitAndLoss(BigDecimal profitAndLoss) { this.profitAndLoss = profitAndLoss; }
+
+	public void updateAgent(Agent agent) { this.agent = agent; }
 }

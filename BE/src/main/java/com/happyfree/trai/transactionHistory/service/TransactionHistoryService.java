@@ -35,14 +35,16 @@ public class TransactionHistoryService {
 		for (TransactionHistory transactionHistory : all) {
 			todayTransactionHistories.add(
 				TodayTransactionHistory.builder()
-					.price(transactionHistory.getPrice())
-					.averagePrice(transactionHistory.getAveragePrice())
-					.side(transactionHistory.getSide())
-					.executedFunds(transactionHistory.getExecutedFunds())
-					.totalEvaluation(transactionHistory.getTotalEvaluation())
-					.totalAmount(transactionHistory.getTotalAmount())
-					.orderCreatedAt(transactionHistory.getOrderCreatedAt())
-					.build()
+						.id(transactionHistory.getId())
+						.agentId(transactionHistory.getAgent().getId())
+						.price(transactionHistory.getPrice())
+						.averagePrice(transactionHistory.getAveragePrice())
+						.side(transactionHistory.getSide())
+						.executedFunds(transactionHistory.getExecutedFunds())
+						.totalEvaluation(transactionHistory.getTotalEvaluation())
+						.totalAmount(transactionHistory.getTotalAmount())
+						.orderCreatedAt(transactionHistory.getOrderCreatedAt())
+						.build()
 			);
 		}
 

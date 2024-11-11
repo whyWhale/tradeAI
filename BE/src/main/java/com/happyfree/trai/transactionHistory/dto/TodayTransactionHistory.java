@@ -9,6 +9,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class TodayTransactionHistory {
+    private long id;
+    private long agentId;
     private String price;
     private BigDecimal averagePrice;
     private String side;
