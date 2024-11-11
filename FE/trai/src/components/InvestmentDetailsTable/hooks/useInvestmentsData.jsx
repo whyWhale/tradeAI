@@ -14,11 +14,10 @@ const useInvestmentsData = (currentPage = 0, size = 12) => {
     setError(null); // 새로운 요청 시작 전에 error를 초기화
 
     instance
-      .get("/api/investments", {
-        params: {
+      .get("/api/investments", {},{
+        pageable: {
           page: currentPage,
-          size: size,
-          sort: "property,asc"
+          size: size
         }
       })
       .then((res) => {
