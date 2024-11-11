@@ -14,8 +14,7 @@ const useAssetData = (BTCPrice) => {
     if (!BTCPrice) return;
     setLoading(true);
     instance
-      .post(`/api/upbits/accounts`, {
-      })
+      .post(`/api/upbits/accounts`, {})
       .then((res) => res.data)
       .then((data) => {
         if(data!==null){
@@ -28,12 +27,12 @@ const useAssetData = (BTCPrice) => {
           const avgBuyPrice = BTCData ? parseFloat(BTCData.avg_buy_price) : 0;
 
           // 계산
-          const totalPurchase = BTCBalance * avgBuyPrice;
-          const totalValuation = BTCPrice * BTCBalance;
-          const valuationProfit = totalValuation - totalPurchase;
-          const valuationProfitRatio = totalPurchase ? (valuationProfit / totalPurchase) * 100 : 0;
-          const totalAssets = totalValuation + heldKRW;
-          const returnRate = (totalPurchase + heldKRW) ? (totalAssets / (totalPurchase + heldKRW)) * 100 : 0;
+          const totalPurchase = (BTCBalance * avgBuyPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const totalValuation = (BTCPrice * BTCBalance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const valuationProfit = (totalValuation - totalPurchase).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const valuationProfitRatio = totalPurchase ? ((valuationProfit / totalPurchase) * 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0;
+          const totalAssets = (totalValuation + heldKRW).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const returnRate = (totalPurchase + heldKRW) ? ((totalAssets / (totalPurchase + heldKRW)) * 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0;
 
           // formattedData 구성
           const formattedData = {
