@@ -17,7 +17,7 @@ const NewsAgent = ({ className, newsData }) => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-[16px] font-bold ">최신 뉴스 반영</h1>
           {/* 더보기 버튼 */}
-          {newsData?.sources.length > 5 && (
+          {newsData?.sources.length > 0 && (
             <MoreButton onClick={handleMoreClick}>더보기</MoreButton>
           )} 
       </div>

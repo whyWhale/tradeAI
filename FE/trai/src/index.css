@@ -10,13 +10,13 @@
 
 @font-face {
   font-family: 'HelveticaLight';
-  src: url('./assets/fonts/helvetica/HELVETICA LIGHT.ttf') format('truetype');
+  src: url('./assets/fonts/helvetica/HELVETICA-LIGHT.ttf') format('truetype');
   font-weight: normal;
 }
 
 @font-face {
   font-family: 'HelveticaBold';
-  src: url('./assets/fonts/helvetica/HELVETICA BOLD.ttf') format('truetype');
+  src: url('./assets/fonts/helvetica/HELVETICA-BOLD.ttf') format('truetype');
   font-weight: normal;
 }
 
