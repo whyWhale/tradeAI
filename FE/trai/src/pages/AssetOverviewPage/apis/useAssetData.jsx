@@ -21,7 +21,8 @@ const useAssetData = (BTCPrice) => {
         if(data!==null){
           const KRWData = data.find((item) => item.currency === "KRW");
           const BTCData = data.find((item) => item.currency === "BTC");
-          const price = parseFloat(BTCPrice);
+          
+          price = parseFloat(BTCPrice.replace(/,/g, ""));
 
 
           // 'KRW'와 'BTC' 데이터가 없을 경우
