@@ -5,19 +5,28 @@ import useAssetProportionHistory from '../../pages/InvestmentStatusPage/apis/use
 
 
 const InvestmentHistory = () => {
-  const { historyData, assetProportionLoading, assetProportionError} = useAssetProportionHistory();
+  const { assetProportionData, assetProportionLoading, assetProportionEmpty, assetProportionError} = useAssetProportionHistory();
 
-  if (assetProportionLoading) return <div className="spinner"></div>;
-  if (assetProportionError) return <div className="spinner"></div>;
-  if (historyData)
-  return (
-    <HistoryContainer>
-      <Header>
-        <Explain>전체 자산 대비 코인성 자산의 비중을 표시합니다.</Explain>
-      </Header>
-      <MyResponsiveBar data={historyData} />
-    </HistoryContainer>
-  );
+  if (assetProportionLoading) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}><div className="spinner"></div></div>;
+  if (assetProportionError) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>Error</div>;;
+  if (assetProportionData) {
+    return (
+      <HistoryContainer>
+        <Header>
+          <Explain>전체 자산 대비 코인성 자산의 비중을 표시합니다.</Explain>
+        </Header>
+        {assetProportionLoading ? (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><span className="spinner"></span></div>
+        ) : assetProportionError ? (
+            <div>에러가 발생했습니다.</div>
+        ) : assetProportionEmpty ? (
+            <div>자산 내역이 없습니다.</div>
+        ) : (
+            <MyResponsiveBar data={assetProportionData} />
+        )}
+      </HistoryContainer>
+    );
+  }
 };
 
 // 스타일 정의
@@ -65,7 +74,7 @@ const Explain = styled.h2`
 
 // Responsive Bar Chart Component with Gradient
 const MyResponsiveBar = ({ data }) => (
-    <div style={{ height: 550 }}>
+    <div style={{ height: 90 }}>
       <ResponsiveBar
           data={data}
           keys={['코인 비중', '기타 비중']}

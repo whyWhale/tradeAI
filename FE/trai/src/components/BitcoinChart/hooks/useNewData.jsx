@@ -51,7 +51,7 @@ const useNewData = (unit, initialized) => {
 
     // interval을 설정하여 주기적으로 fetchData 호출
     const interval = setInterval(fetchData, 10000);
-
+    console.log("웹소켓 ㄱㄱ");
     // cleanup function
     return () => clearInterval(interval); // 컴포넌트가 언마운트될 때 interval 정리
   }, [lastFetchTime, unit]); // lastFetchTime과 unit을 의존성 배열에 추가

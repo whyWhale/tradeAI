@@ -9,7 +9,6 @@ import com.happyfree.trai.agent.dto.AgentDecisionResult;
 import com.happyfree.trai.agent.entity.Agent;
 import com.happyfree.trai.agent.dto.AssetData;
 import com.happyfree.trai.agent.repository.AgentRepository;
-import com.happyfree.trai.auth.service.AuthService;
 import com.happyfree.trai.global.exception.CustomException;
 import com.happyfree.trai.transactionHistory.entity.TransactionHistory;
 import com.happyfree.trai.transactionHistory.repository.TransactionHistoryRepository;
@@ -37,10 +36,8 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 import static com.happyfree.trai.global.exception.ErrorCode.*;
 
 @Service
@@ -50,8 +47,6 @@ import static com.happyfree.trai.global.exception.ErrorCode.*;
 public class AgentService {
 
     private final ProfitAssetService profitAssetService;
-
-    private final AuthService authService;
 
     private final UserRepository userRepository;
 
@@ -66,24 +61,14 @@ public class AgentService {
     String serverUrl = "https://api.upbit.com";
 
     @Transactional(readOnly = true)
-    public List<AgentDecisionResult> findAgentHistoryByDate(String year, String month, String day) {
-        User loginUser = authService.getLoginUser();
+    public AgentDecisionResult findAgentHistoryById(long agentId) {
+        Agent agentDecision = agentRepository.findById(agentId)
+                .orElseThrow(() -> new CustomException(AGENT_NOT_FOUND));
 
-        LocalDate date = LocalDate.of(
-                Integer.parseInt(year),
-                Integer.parseInt(month),
-                Integer.parseInt(day)
-        );
-
-        List<Agent> agentDecision = agentRepository.findByUserAndCreatedAt(loginUser, date);
-
-        return agentDecision.stream()
-                .map(agent -> AgentDecisionResult.builder()
-                        .jsonData(agent.getJsonData())
-                        .createdAt(agent.getCreatedAt())
-                        .build()
-                )
-                .collect(Collectors.toList());
+        return AgentDecisionResult.builder()
+                .jsonData(agentDecision.getJsonData())
+                .createdAt(agentDecision.getCreatedAt())
+                .build();
     }
 
     @Transactional
@@ -178,7 +163,6 @@ public class AgentService {
             // 분석 결과 저장
             Agent agent = Agent.builder()
                     .jsonData(mapper.writeValueAsString(result))
-                    .user(user)
                     .build();
             agentRepository.save(agent);
 
@@ -195,6 +179,7 @@ public class AgentService {
                     transactionHistory.updateTotalAmount(profitAssetService.getTotalMoney(accessKey, secretKey)
                             .add(nowBitcoinPrice.multiply(nowBitcoinCount)));
                     transactionHistory.updateAveragePrice(averageBitcoinPrice);
+                    transactionHistory.updateAgent(agent);
 
                     if (decision.equals("SELL")) {
                         BigDecimal profitAndLoss = new BigDecimal(transactionHistory.getPrice())
@@ -214,6 +199,7 @@ public class AgentService {
 
                 TransactionHistory transactionHistory = TransactionHistory.builder()
                         .user(user)
+                        .agent(agent)
                         .side(decision)
                         .totalEvaluation(nowBitcoinPrice.multiply(nowBitcoinCount))
                         .totalAmount(profitAssetService.getTotalMoney(accessKey, secretKey)

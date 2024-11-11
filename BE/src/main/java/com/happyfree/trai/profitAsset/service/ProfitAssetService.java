@@ -25,7 +25,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -34,6 +33,7 @@ import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -55,19 +55,27 @@ public class ProfitAssetService {
 
     public TransactionSummary getTotalProfit() throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException {
         User loginUser = authService.getLoginUser();
-        Optional<ProfitAssetHistory> pah = profitAssetRepository.findByUserAndSettlementDate(loginUser,
+        Optional<ProfitAssetHistory> yesterdayProfitAsset = profitAssetRepository.findByUserAndSettlementDate(loginUser,
                 LocalDate.now().minusDays(1));
-        BigDecimal ia = BigDecimal.ZERO;
-        BigDecimal yp = BigDecimal.ZERO;
-        if (pah.isPresent()) {
-            yp = pah.get().getAccumulationProfitRatio();
-            ia = pah.get().getStartingAssets();
+        Optional<ProfitAssetHistory> todayProfitAsset = profitAssetRepository.findByUserAndSettlementDate(loginUser,
+                LocalDate.now());
+        BigDecimal yesterdayAccumulationProfit = BigDecimal.ZERO;
+        if (yesterdayProfitAsset.isPresent()) {
+            yesterdayAccumulationProfit = yesterdayProfitAsset.get().getAccumulationProfitRatio();
         }
-        BigDecimal todayProfitRatio = getTodayProfit(loginUser.getAccessKey(), loginUser.getSecretKey(), ia);
-        BigDecimal profit = yp.add(BigDecimal.ONE)
-                .multiply(BigDecimal.ONE.add(todayProfitRatio.divide(BigDecimal.valueOf(100))))
-                .subtract(BigDecimal.ONE);
-        List<TransactionHistory> list = transactionHistoryRepository.findByUserOrderByCreatedAt(
+        BigDecimal todayStartingAssets = BigDecimal.ZERO;
+        if (todayProfitAsset.isPresent()) {
+            todayStartingAssets = todayProfitAsset.get().getStartingAssets();
+        }
+        BigDecimal todayProfitRatio = getTodayProfit(loginUser.getAccessKey(), loginUser.getSecretKey(), todayStartingAssets);
+        BigDecimal profit = yesterdayAccumulationProfit
+                .divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN)
+                .add(BigDecimal.ONE)
+                .multiply(BigDecimal.ONE.add(todayProfitRatio.divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN)))
+                .subtract(BigDecimal.ONE)
+                .multiply(BigDecimal.valueOf(100))
+                .setScale(2, RoundingMode.DOWN);
+        List<TransactionHistory> list = transactionHistoryRepository.findByUserOrderByCreatedAtDesc(
                 authService.getLoginUser());
         int bid = 0, hold = 0, ask = 0;
         for (int i = 0; i < list.size(); i++) {
@@ -84,8 +92,8 @@ public class ProfitAssetService {
 
         return TransactionSummary.builder()
                 .totalTransactionCount(list.size())
-                .firstTransactionTime(list.get(0).getOrderCreatedAt())
-                .lastTransactionTime(list.get(list.size() - 1).getOrderCreatedAt())
+                .firstTransactionTime(list.get(list.size() - 1).getOrderCreatedAt())
+                .lastTransactionTime(list.get(0).getOrderCreatedAt())
                 .bid(bid)
                 .ask(ask)
                 .hold(hold)
@@ -102,14 +110,14 @@ public class ProfitAssetService {
         BigDecimal bcv = getBitcoinAmount(accessKey, secretKey);
         BigDecimal m = getTotalMoney(accessKey, secretKey);
         BigDecimal cBp = getBitcoinCurrentPrice();
-        BigDecimal tbv = bcv.multiply(cBp);
         return bcv.multiply(cBp)
                 .add(m)
                 .subtract(initialAsset)
                 .add(with)
                 .subtract(de)
-                .divide(initialAsset.add(de), 2, RoundingMode.DOWN)
-                .multiply(new BigDecimal("100"));
+                .divide(initialAsset.add(de), 8, RoundingMode.DOWN)
+                .multiply(new BigDecimal("100"))
+                .setScale(2, RoundingMode.DOWN);
     }
 
     // 해당 날짜의 전체 출금액
@@ -356,12 +364,13 @@ public class ProfitAssetService {
 
     public Page<ProfitAssetHistory> detail(Pageable page) {
         User loginUser = authService.getLoginUser();
-        return profitAssetRepository.findByUser(loginUser, page);
+        LocalDateTime today =  LocalDate.now().atStartOfDay();
+        return profitAssetRepository.findByUserAndCreatedAtBeforeOrderByCreatedAtDesc(loginUser, page, today);
     }
 
     public List<AssetProportion> assetProportion() {
         User loginUser = authService.getLoginUser();
-        List<ProfitAssetHistory> all = profitAssetRepository.findByUser(loginUser);
+        List<ProfitAssetHistory> all = profitAssetRepository.findByUserAndSettlementDateLessThanOrderBySettlementDateAsc(loginUser, LocalDate.now());
         List<AssetProportion> list = new ArrayList<>();
         int count = 30;
         for (ProfitAssetHistory profitAssetHistory : all) {

@@ -1,6 +1,7 @@
 package com.happyfree.trai.profitAsset.repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,9 +14,9 @@ import com.happyfree.trai.profitAsset.entity.ProfitAssetHistory;
 import com.happyfree.trai.user.entity.User;
 
 public interface ProfitAssetRepository extends JpaRepository<ProfitAssetHistory, Long> {
-	Page<ProfitAssetHistory> findByUser(User user, Pageable pageable);
+	Page<ProfitAssetHistory> findByUserAndCreatedAtBeforeOrderByCreatedAtDesc(User user, Pageable pageable, LocalDateTime date);
 
-	List<ProfitAssetHistory> findByUser(User user);
+	List<ProfitAssetHistory> findByUserAndSettlementDateLessThanOrderBySettlementDateAsc(User user, LocalDate today);
 
 	Optional<ProfitAssetHistory> findByUserAndSettlementDate(@Param("user") User user,
 		@Param("yesterday") LocalDate yesterday);

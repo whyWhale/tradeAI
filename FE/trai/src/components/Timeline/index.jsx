@@ -10,9 +10,6 @@ const Timeline = () => {
     timelineLoading||timelineError?<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}><span className="spinner"></span></div>
     :isEmpty?<div>투자 내역이 없습니다.</div>:
     <TimelineContainer>
-      <Header >
-        <Title>이번달</Title>
-      </Header>
       <TimelineList>
         {timelineData.map((item, index) => (
           <TimelineItem key={index} item={item} />
@@ -28,7 +25,7 @@ const TimelineItem = ({ item }) => {
     <Item>
       <Icon type={item.kind} />
       <Content>
-        {item.volume && <Amount>{item.volume} BTC, {item.money} KRW</Amount>}
+        {item.volume && <Amount>{item.volume} BTC,<br/>{item.money} KRW</Amount>}
         {item.kind==="HOLD"?'HOLD':''}
         <Date>{item.date}</Date>
       </Content>
@@ -95,9 +92,12 @@ const Item = styled.div`
 const Icon = styled.div`
   width: 14px;
   height: 14px;
+  min-width: 14px;
+  min-height: 14px; 
   border-radius: 50%;
   background-color: ${({ type }) => (type === "BUY" ? "#EB5757" : type === "SELL" ? "#2D9CDB" : "#CBD5E0")};
   margin-right: 10px;
+  flex-shrink: 0;  // 부모 요소 크기에 따라 찌그러지지 않도록 설정
 `;
 
 const Content = styled.div`

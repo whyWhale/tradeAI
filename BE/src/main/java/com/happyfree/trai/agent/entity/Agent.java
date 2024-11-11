@@ -20,8 +20,4 @@ public class Agent extends BaseEntity {
     @Lob
     @Column(columnDefinition = "LONGTEXT")
     private String jsonData;
-
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User user;
 }

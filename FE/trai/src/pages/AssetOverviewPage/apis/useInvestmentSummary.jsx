@@ -39,7 +39,7 @@ const useInvestmentSummary = () => {
         const lastTransactionTime = formatDate(data ? String(data.lastTransactionTime) : '0');
         const bid = data ? parseFloat(data.bid) : 0;
         const ask = data ? parseFloat(data.ask) : 0;
-        const profit = data ? parseFloat(data.profit) : 0;
+        const profit = data ? parseFloat(data.profit) : 0; //누적 수익률
         const totalValuation = ask + profit;
         const returnRate = ((totalValuation / bid) * 100).toFixed(2);   //bid를 기준으로 현재 자산의 평가액(ask + profit)이 얼마나 증가했는지
        
@@ -48,7 +48,7 @@ const useInvestmentSummary = () => {
             totalTransactionCount,
             firstTransactionTime,
             lastTransactionTime,
-            returnRate
+            returnRate: profit
         };
 
         setData(formattedData);
