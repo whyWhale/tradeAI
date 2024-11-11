@@ -34,9 +34,9 @@ const useAssetData = (BTCPrice) => {
           const totalPurchase = BTCBalance * avgBuyPrice;
           const totalValuation = price * BTCBalance;
           const valuationProfit = totalValuation - totalPurchase;
-          const valuationProfitRatio = totalPurchase ? (valuationProfit / totalPurchase) * 100 : 0;
+          const valuationProfitRatio = totalPurchase ? ((valuationProfit / totalPurchase) * 100).toFixed(2) : 0;
           const totalAssets = totalValuation + heldKRW;
-          const returnRate = (totalPurchase + heldKRW) ? (totalAssets / (totalPurchase + heldKRW)) * 100 : 0;
+          const returnRate = (totalPurchase + heldKRW) ? ((totalAssets / (totalPurchase + heldKRW)) * 100).toFixed(2) : 0;
 
           const heldKRWValue = heldKRW.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
           const totalPurchaseValue = totalPurchase.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
