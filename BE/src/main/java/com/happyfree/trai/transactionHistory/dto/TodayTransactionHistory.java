@@ -17,5 +17,6 @@ public class TodayTransactionHistory {
     private BigDecimal executedFunds;
     private BigDecimal totalEvaluation;
     private BigDecimal totalAmount;
+    private BigDecimal profitAndLoss;
     private LocalDateTime orderCreatedAt;
 }

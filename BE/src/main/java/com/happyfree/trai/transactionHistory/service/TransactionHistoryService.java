@@ -41,6 +41,7 @@ public class TransactionHistoryService {
 						.executedFunds(transactionHistory.getExecutedFunds())
 						.totalEvaluation(transactionHistory.getTotalEvaluation())
 						.totalAmount(transactionHistory.getTotalAmount())
+						.profitAndLoss(transactionHistory.getProfitAndLoss())
 						.orderCreatedAt(transactionHistory.getOrderCreatedAt())
 						.build()
 			);
