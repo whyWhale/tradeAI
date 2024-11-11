@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import useInvestmentsData from '../../pages/InvestmentStatusPage/apis/useInvestmentsData';
+import useInvestmentsData from './hooks/useInvestmentsData';
 
 const InvestmentDetailsTable = () => {
   const itemsPerPage = 12;
   const [currentPage, setCurrentPage] = useState(0);
-  
+
   // useInvestmentsData 훅을 사용하여 데이터 가져오기
   const { data, totalPages, loading, error } = useInvestmentsData(currentPage, itemsPerPage);
 
@@ -13,7 +13,7 @@ const InvestmentDetailsTable = () => {
   };
 
   if (loading) return <div className='spinner'></div>;
-  if (error) return <div className='spinner'></div>;
+  if (error) return <div>오류가 발생했습니다. 데이터를 다시 불러와 주세요.</div>;
 
   return (
     <div className="investment-details-table">
