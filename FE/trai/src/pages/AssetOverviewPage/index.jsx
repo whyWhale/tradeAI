@@ -15,7 +15,7 @@ import '../../components/Loaders/index.scss'
 
 const AssetOverview = () => {
   const BTCData = useSelector((state) => state.BTCData);
-  const { assetData, assetLoading, assetError } = useAssetData(BTCData);
+  const { assetData, assetLoading, assetEmpty, assetError } = useAssetData(BTCData);
   const { investmentData, tradeInitialized, investmentLoading, investmentError } = useInvestmentSummary();
 
   const decisionCount = useSelector((state) => state.decisionCount.totalCount);
@@ -34,30 +34,30 @@ const AssetOverview = () => {
             <div className="info-card-small card1">
               <div className="card-title">총 보유 자산</div>
               <div style={{ fontSize: "18px" }}>
-                <span>{assetLoading||assetError ? " ? " : `${assetData.totalAssets}`} KRW </span>
-                <span style={{ float: "right", color: "#48BB78" }}>{assetLoading ||assetError? " ? " : `${assetData.returnRate}`} %</span>
+                <span>{assetLoading || assetError ? "?" : (assetEmpty ? "자산 정보가 없습니다." : `${assetData.totalAssets} KRW`)}</span>
+                <span style={{ float: "right", color: "#48BB78" }}>{assetLoading ||assetError? " ? " :(assetEmpty ? "자산 정보가 없습니다." : `${assetData.returnRate}`)} %</span>
               </div>
             </div>
 
             <div className="info-card-small card2">
               <div className="card-title">총 매수</div>
-              <div style={{ fontSize: "12px" }}>{assetLoading ||assetError ? " ? " : `${assetData.totalPurchase}`} KRW</div>
+              <div style={{ fontSize: "12px" }}>{assetLoading ||assetError ? " ? " :(assetEmpty ? "자산 정보가 없습니다." : `${assetData.totalPurchase}`)} KRW</div>
               <div className="card-title">총 평가</div>
-              <div style={{ fontSize: "12px" }}>{assetLoading ||assetError ? " ? " : `${assetData.totalValuation}`} KRW</div>
+              <div style={{ fontSize: "12px" }}>{assetLoading ||assetError ? " ? " : (assetEmpty ? "자산 정보가 없습니다." :`${assetData.totalValuation}`)} KRW</div>
             </div>
 
             <div className="info-card-small card3">
               <div className="card-title">보유 KRW</div>
-              <div style={{ fontSize: "12px" }}>{assetLoading||assetError ? " ? " : `${assetData.heldKRW}`}</div>
+              <div style={{ fontSize: "12px" }}>{assetLoading||assetError ? " ? " : (assetEmpty ? "자산 정보가 없습니다." :`${assetData.heldKRW}`)}</div>
               <div className="card-title">주문가능금액</div>
-              <div style={{ fontSize: "12px" }}>{assetLoading||assetError ? " ? " : `${assetData.heldKRW}`} KRW</div>
+              <div style={{ fontSize: "12px" }}>{assetLoading||assetError ? " ? " : (assetEmpty ? "자산 정보가 없습니다." :`${assetData.heldKRW}`)} KRW</div>
             </div>
 
             <div className="info-card-small card4">
               <div className="card-title">평가 손익</div>
               <div style={{ fontSize: "18px" }}>
-                <span>{assetLoading||assetError ? " ? " : `${assetData.valuationProfit}`} KRW</span>
-                <span style={{ float: "right", color: "#48BB78" }}>{assetLoading||assetError ? " ? " : `${assetData.valuationProfitRatio}`} %</span>
+                <span>{assetLoading||assetError ? " ? " : (assetEmpty ? "자산 정보가 없습니다." :`${assetData.valuationProfit}`)} KRW</span>
+                <span style={{ float: "right", color: "#48BB78" }}>{assetLoading||assetError ? " ? " :(assetEmpty ? "자산 정보가 없습니다." : `${assetData.valuationProfitRatio}`)} %</span>
               </div>
             </div>
         </>
@@ -76,7 +76,7 @@ const AssetOverview = () => {
             </div>
           : 
             <div className='card-content'>
-              {tradeInitialized ? <div> &nbsp;&nbsp;&nbsp;투자가 아직 시작되지 않았습니다. </div> :
+              {tradeInitialized === false ? <div> &nbsp;&nbsp;&nbsp;투자가 아직 시작되지 않았습니다. </div> :
                 <>
                   <div>누적 수익률</div>
                   <div style={{ fontSize: "17px" }}>{`${investmentData.returnRate}`} %</div>

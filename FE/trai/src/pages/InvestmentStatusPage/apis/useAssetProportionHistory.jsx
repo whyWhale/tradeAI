@@ -18,7 +18,7 @@ const useAssetProportionHistory = () => {
     setLoading(true);
 
     instance
-    .get("/api/assets/daily")
+    .get('/api/assets/daily')
     .then((res) => res.data)
     .then((data) => {
         const formattedData = data.map((item) => {
@@ -29,7 +29,6 @@ const useAssetProportionHistory = () => {
             '기타 비중': 100 - coinPercentage,
         };
         });
-        
         setData(formattedData);
     })
     .catch((err) => {
