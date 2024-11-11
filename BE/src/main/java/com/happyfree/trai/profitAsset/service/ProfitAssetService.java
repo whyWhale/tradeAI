@@ -55,16 +55,20 @@ public class ProfitAssetService {
 
     public TransactionSummary getTotalProfit() throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException {
         User loginUser = authService.getLoginUser();
-        Optional<ProfitAssetHistory> pah = profitAssetRepository.findByUserAndSettlementDate(loginUser,
+        Optional<ProfitAssetHistory> yesterdayProfitAsset = profitAssetRepository.findByUserAndSettlementDate(loginUser,
                 LocalDate.now().minusDays(1));
-        BigDecimal ia = BigDecimal.ZERO;
-        BigDecimal yp = BigDecimal.ZERO;
-        if (pah.isPresent()) {
-            yp = pah.get().getAccumulationProfitRatio();
-            ia = pah.get().getStartingAssets();
+        Optional<ProfitAssetHistory> todayProfitAsset = profitAssetRepository.findByUserAndSettlementDate(loginUser,
+                LocalDate.now());
+        BigDecimal yesterdayAccumulationProfit = BigDecimal.ZERO;
+        if (yesterdayProfitAsset.isPresent()) {
+            yesterdayAccumulationProfit = yesterdayProfitAsset.get().getAccumulationProfitRatio();
         }
-        BigDecimal todayProfitRatio = getTodayProfit(loginUser.getAccessKey(), loginUser.getSecretKey(), ia);
-        BigDecimal profit = yp
+        BigDecimal todayStartingAssets = BigDecimal.ZERO;
+        if (todayProfitAsset.isPresent()) {
+            todayStartingAssets = todayProfitAsset.get().getStartingAssets();
+        }
+        BigDecimal todayProfitRatio = getTodayProfit(loginUser.getAccessKey(), loginUser.getSecretKey(), todayStartingAssets);
+        BigDecimal profit = yesterdayAccumulationProfit
                 .divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN)
                 .add(BigDecimal.ONE)
                 .multiply(BigDecimal.ONE.add(todayProfitRatio.divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN)))
