@@ -22,9 +22,7 @@ const useAssetData = (BTCPrice) => {
           const KRWData = data.find((item) => item.currency === "KRW");
           const BTCData = data.find((item) => item.currency === "BTC");
 
-          console.log("BTCPrice: "+BTCPrice);
-          console.log("KRWData: "+KRWData);
-          console.log("BTCData: "+BTCData);
+
 
           // 'KRW'와 'BTC' 데이터가 없을 경우
           const heldKRW = KRWData ? parseFloat(KRWData.balance) : 0;
@@ -44,6 +42,12 @@ const useAssetData = (BTCPrice) => {
           const totalValuationValue = totalValuation.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
           const valuationProfitValue = totalValuation.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
           const totalAssetsValue = totalAssets.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+          console.log("totalPurchase: "+totalPurchase);
+          console.log("totalValuation: "+totalValuation);
+          console.log("avgBuyPrice: "+avgBuyPrice);
+          console.log("BTCBalance: "+BTCBalance);
+          console.log("heldKRW: "+heldKRW);
 
           // formattedData 구성
           const formattedData = {
