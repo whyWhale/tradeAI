@@ -1,6 +1,8 @@
 import axios from 'axios';
-import {configureStore} from "@reduxjs/toolkit";
-import authSlice from "@store/reducers/authSlice.jsx";
+import { clearToken } from '../store/reducers/authSlice';
+import store from '../store/index';
+
+
 
 let axiosInstance = axios.create({
     baseURL: import.meta.env.VITE_BASE_URL,
@@ -13,9 +15,11 @@ let axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     (config) => {
-        let store = configureStore({reducer: authSlice});
+        const token = store.getState().auth.token;
         const tk = localStorage.getItem('token');
-        if (tk !== null && tk) {
+        if (token !== null && token) {
+            config.headers['access'] = token;
+        } else if (tk !== null && tk) {
             config.headers['access'] = tk;
         }
         return config;
@@ -26,10 +30,16 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response.status === 401) {
-            localStorage.removeItem('token');
-            window.location.href = '/login';
-        }
+        const token = store.getState().auth.token;
+        const tk = localStorage.getItem('token');
+        // if (error.response.status === 401) {
+        //     if (token !== null && token) {
+        //         clearToken();
+        //     } else if (tk !== null && tk) {
+        //         localStorage.removeItem('token');
+        //     }
+        //     window.location.href = '/login';
+        // }
         return Promise.reject(error);
     }
 );

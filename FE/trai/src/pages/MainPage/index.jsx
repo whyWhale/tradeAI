@@ -12,6 +12,7 @@ const MainPage = () => {
     const handleAgentSelect = (index) => {
         setSelectedAgentIndex(index);
     };
+    
 
     return (
         <div className="w-full flex flex-col" style={{ overflowX: 'hidden' }}>

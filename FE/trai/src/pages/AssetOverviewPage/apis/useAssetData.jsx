@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { instance } from "../../../api/axios";
 
 const useAssetData = (BTCPrice) => {
   // BTCData가 존재하지 않으면 실행하지 않음
@@ -12,8 +12,8 @@ const useAssetData = (BTCPrice) => {
   useEffect(() => {
     if (!BTCPrice) return;
     setLoading(true);
-    axios
-      .post(`https://www.trai-ai.site/api/upbits/accounts`, {
+    instance
+      .get(`/api/upbits/accounts`, {
       })
       .then((res) => res.data)
       .then((data) => {
