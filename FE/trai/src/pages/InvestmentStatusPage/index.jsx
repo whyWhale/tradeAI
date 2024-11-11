@@ -19,11 +19,11 @@ const InvestmentStatus = () => {
         <div className="card-detailedInvestmentReport">
         <div className="card-title" style={{
             position: 'absolute',
-            alignItems: 'flex-start',
+            alignContent:'space-between',
             top: '2.5%',
             width: '95%',
-            paddingBottom: "5%"}} >투자 손익 상세
-          <InvestmentDetailsTable/></div>
+            paddingBottom: "5%"}} >투자 손익 상세 </div>
+          <InvestmentDetailsTable/>
         </div>
         {/* 자산 비중 추이 */}
         <div className="card-investmentHistory">
