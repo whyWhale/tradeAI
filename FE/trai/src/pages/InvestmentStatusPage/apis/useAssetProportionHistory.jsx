@@ -22,6 +22,8 @@ const useAssetProportionHistory = () => {
     .get('/api/assets/daily')
     .then((res) => res.data)
     .then((data) => {
+      console.log("자산비중 추이")
+      console.log(data)
       if (Array.isArray(data) && data.length > 0) {
         const formattedData = data.map((item) => {
           const coinPercentage = parseInt(item.coinPercentage);

@@ -21,29 +21,38 @@ const useAssetData = (BTCPrice) => {
           const KRWData = data.find((item) => item.currency === "KRW");
           const BTCData = data.find((item) => item.currency === "BTC");
 
-          // 'KRW'와 'BTC' 데이터가 없을 경우
-          const heldKRW = KRWData ? parseFloat(KRWData.balance) : 0;
-          const BTCBalance = BTCData ? parseFloat(BTCData.balance) : 0;
-          const avgBuyPrice = BTCData ? parseFloat(BTCData.avg_buy_price) : 0;
+          // 'KRW'와 'BTC' 데이터가 없을 경우 기본값 설정
+          const heldKRW = KRWData && KRWData.balance ? parseFloat(KRWData.balance) : 0;
+          const BTCBalance = BTCData && BTCData.balance ? parseFloat(BTCData.balance) : 0;
+          const avgBuyPrice = BTCData && BTCData.avg_buy_price ? parseFloat(BTCData.avg_buy_price) : 0;
+          const BTCPrice = BTCPrice || 0; // BTCPrice도 명확히 값이 설정되었는지 확인
 
           // 계산
-          const totalPurchase = (BTCBalance * avgBuyPrice).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          const totalValuation = (BTCPrice * BTCBalance).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          const valuationProfit = (totalValuation - totalPurchase).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          const valuationProfitRatio = totalPurchase ? ((valuationProfit / totalPurchase) * 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0;
-          const totalAssets = (totalValuation + heldKRW).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          const returnRate = (totalPurchase + heldKRW) ? ((totalAssets / (totalPurchase + heldKRW)) * 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : 0;
+          const totalPurchase = (BTCBalance * avgBuyPrice) || 0;
+          const totalValuation = (BTCPrice * BTCBalance) || 0;
+          const valuationProfit = totalValuation - totalPurchase;
+          const valuationProfitRatio = totalPurchase ? ((valuationProfit / totalPurchase) * 100) : 0;
+          const totalAssets = totalValuation + heldKRW;
+          const returnRate = (totalPurchase + heldKRW) ? ((totalAssets / (totalPurchase + heldKRW)) * 100) : 0;
+
+          // 숫자 포맷 적용
+          const formattedTotalPurchase = totalPurchase.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const formattedTotalValuation = totalValuation.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const formattedValuationProfit = valuationProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const formattedValuationProfitRatio = valuationProfitRatio.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const formattedTotalAssets = totalAssets.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          const formattedReturnRate = returnRate.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
           // formattedData 구성
           const formattedData = {
-            totalPurchase,
-            totalValuation,
+            totalPurchase: formattedTotalPurchase,
+            totalValuation: formattedTotalValuation,
             heldKRW: parseInt(heldKRW),
             availableBalance: heldKRW,
-            valuationProfit,
-            valuationProfitRatio,
-            totalAssets,
-            returnRate
+            valuationProfit: formattedValuationProfit,
+            valuationProfitRatio: formattedValuationProfitRatio,
+            totalAssets: formattedTotalAssets,
+            returnRate: formattedReturnRate
           };
 
           setData(formattedData);
