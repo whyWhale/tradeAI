@@ -22,17 +22,16 @@ const useAssetProportionHistory = () => {
     .get('/api/assets/daily')
     .then((res) => res.data)
     .then((data) => {
-      console.log("자산비중 추이")
-      console.log(data)
       if (Array.isArray(data) && data.length > 0) {
         const formattedData = data.map((item) => {
           const coinPercentage = parseInt(item.coinPercentage);
           return {
               'date': formatDate(item.createdAt),
-              '코인 비중': coinPercentage,
-              '기타 비중': 100 - coinPercentage,
+              'coin': coinPercentage,
+              'left': 100 - coinPercentage,
           };
         });
+        console.log(formattedData);
         setData(formattedData);
         setEmpty(false);
       } else {
