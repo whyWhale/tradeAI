@@ -46,15 +46,19 @@ body, html {
 }
 
 .investment-details-table {
-  width: 97%;
   margin: 5px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height:90%;
   color: #2D3748;
 
 
   table {
-    width: 100%;
+    align-self: flex-start;
     border-collapse: collapse;
+    width: 100%;
     margin-bottom: 5px;
     border: none; /* 테이블 자체의 테두리 제거 */
 
@@ -93,6 +97,7 @@ body, html {
   }
 
   .pagination {
+    align-self: center;
     display: flex;
     justify-content: center;
     color: var(--trai-disabled);
