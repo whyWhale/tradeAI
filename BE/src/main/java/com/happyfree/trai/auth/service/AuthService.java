@@ -22,12 +22,20 @@ public class AuthService implements UserDetailsService {
 
 	public User getLoginUser() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof CustomUserDetails) {
-			CustomUserDetails detail = (CustomUserDetails)principal;
-			return userRepository.findByEmail(detail.getUsername()).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+		if (!(principal instanceof CustomUserDetails)) {
+			throw new CustomException(USER_NOT_FOUND);
 		}
 
-		throw new CustomException(USER_NOT_FOUND);
+		CustomUserDetails detail = (CustomUserDetails)principal;
+		User user = userRepository.findByEmail(detail.getUsername())
+				.orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+
+		if ("ROLE_USER".equals(user.getRole())) {
+			return userRepository.findFirstByRole("ROLE_ADMIN")
+					.orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+		}
+
+		return user;
 	}
 
 	@Override
@@ -35,4 +43,5 @@ public class AuthService implements UserDetailsService {
 		User user = userRepository.findByEmail(username).orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 		return new CustomUserDetails(user);
 	}
+
 }
