@@ -34,6 +34,7 @@ import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -356,7 +357,8 @@ public class ProfitAssetService {
 
     public Page<ProfitAssetHistory> detail(Pageable page) {
         User loginUser = authService.getLoginUser();
-        return profitAssetRepository.findByUserOrderByCreatedAtDesc(loginUser, page);
+        LocalDateTime today =  LocalDate.now().atStartOfDay();
+        return profitAssetRepository.findByUserAndCreatedAtBeforeOrderByCreatedAtDesc(loginUser, page, today);
     }
 
     public List<AssetProportion> assetProportion() {
