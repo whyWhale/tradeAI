@@ -41,7 +41,7 @@ const Card = ({ color }) => {
       <meshStandardMaterial
         color={color}
         side={THREE.DoubleSide}
-        roughness={0.5}
+        roughness={0.3}
         metalness={0.5}
       />
     </mesh>
