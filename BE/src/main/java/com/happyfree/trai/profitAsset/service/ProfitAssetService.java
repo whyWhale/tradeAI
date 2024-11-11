@@ -356,7 +356,7 @@ public class ProfitAssetService {
 
     public Page<ProfitAssetHistory> detail(Pageable page) {
         User loginUser = authService.getLoginUser();
-        return profitAssetRepository.findByUser(loginUser, page);
+        return profitAssetRepository.findByUserOrderByCreatedAtDesc(loginUser, page);
     }
 
     public List<AssetProportion> assetProportion() {

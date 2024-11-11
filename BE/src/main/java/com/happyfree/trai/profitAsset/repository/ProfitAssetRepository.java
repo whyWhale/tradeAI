@@ -13,7 +13,7 @@ import com.happyfree.trai.profitAsset.entity.ProfitAssetHistory;
 import com.happyfree.trai.user.entity.User;
 
 public interface ProfitAssetRepository extends JpaRepository<ProfitAssetHistory, Long> {
-	Page<ProfitAssetHistory> findByUser(User user, Pageable pageable);
+	Page<ProfitAssetHistory> findByUserOrderByCreatedAtDesc(User user, Pageable pageable);
 
 	List<ProfitAssetHistory> findByUser(User user);
 
