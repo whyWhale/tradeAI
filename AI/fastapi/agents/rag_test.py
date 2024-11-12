@@ -31,18 +31,20 @@ def investment_preference_search(query: str) -> str:
     return relevant_docs[0].page_content if relevant_docs else "예외: 유사한 투자 성향을 찾을 수 없습니다."
 
 master_template = """
-    당신은 비트코인 시장의 투자 분석 전문가입니다.
-    현재 당신 회사에 속한 투자 전문가들은 비트코인 투자 결정을 다음과 같이 했습니다:
+    당신은 비트코인 투자 분석 전문가입니다.
+    4시간마다 시장 분석을 통해서 비트코인 투자 결정을 하고 있는 상황입니다.
+
+    현재 투자 전문가들은 비트코인 투자 결정을 다음과 같이 했습니다:
     {master_decision}
 
+    fng는 공포 탐욕 지수를 분석하는 전문가, 
+    quant는 퀀트로 투자하는 전문가, 
+    news_search는 뉴스 검색으로 분석하는 전문가,
+    chart_pattern은 차트 패턴으로 분석하는 전문가입니다.
     해당 결정을 뒷받침하는 투자 전문가들의 의견을 종합해주세요:
     {agents_analysis}
 
     만약, 투자 전문가들의 의견이 "DRAW"라면, 전반적인 내용을 종합하여 "BUY", "SELL", "HOLD" 중 하나를 골라주세요.
-    그리고 선택한 결정에 따라 투자 자본을 몇 퍼센트의 비중으로 진행할지 0부터 50까지 10 단위로 결정해주세요.
-
-    현재 당신의 주문 가능 금액은 다음과 같습니다: {available_amount}원
-    현재 당신의 보유 비트코인 원화 금액은 다음과 같습니다: {btc_balance_krw}원
 
     이후 사용자의 투자 성향 정보를 바탕으로 수익을 위한 최종 투자 결정을 내리세요:
     {investment_preference}
@@ -52,7 +54,6 @@ master_template = """
     - 출력 예시:
     {{
         "decision": "BUY 또는 SELL 또는 HOLD 중 하나로만 작성",
-        "percentage": "결정한 퍼센트를 10단위로 작성. HOLD면 0으로 설정",
         "summary": "투자 결정에 대한 이유를 자세히 서술"
     }}
 
@@ -64,22 +65,6 @@ class MasterAnalysis(BaseModel):
     summary: str
     percentage: int
     decision: Literal["BUY", "SELL", "HOLD"]
-
-
-# 주문 금액 결정 함수
-def order_amount_calculator(decision, percent, available_order_amount, btc_holdings_in_krw):
-    if decision == 'HOLD':
-        return 0
-
-    order_amount = (percent / 100) * (available_order_amount if decision == 'BUY' else btc_holdings_in_krw)
-
-    if decision == 'BUY':
-        return max(6000, order_amount)
-    elif decision == 'SELL':
-        return max(6000, order_amount)
-
-    # 예외적으로 다른 값이 들어왔을 경우 0 반환
-    return 0
 
 master_prompt_template = PromptTemplate.from_template(master_template)
 master_output_parser = JsonOutputParser(pydantic_object=MasterAnalysis)
@@ -153,19 +138,10 @@ def master_agent(state: State) -> dict:
         print("Error during chain invocation:", e)
         raise
 
-    # 주문 결정
-    order_amount = order_amount_calculator(
-        result["decision"],
-        result["percentage"],
-        state.user_info["available_amount"],
-        state.user_info["btc_balance_krw"]
-    )
-
     return {
         "master": {
             "decision": result["decision"],
-            "percentage": result["percentage"],
-            "order_amount": order_amount,
-            "summary": result["summary"]
+            "summary": result["summary"],
+            "investment_preference": investment_preference
         }
     }

@@ -3,14 +3,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime, timedelta
+from decimal import Decimal
 from langgraph.graph import StateGraph, START, END
 from core.state import State
 from agents.fng import fng_agent
 from agents.news_search import news_search_agent
 from agents.quant import quant_agent
 from agents.chart_pattern import chart_pattern_agent
-# from agents.master import master_agent
-from agents.rag_test import master_agent # 테스트용
+from agents.rag_test import master_agent
+from agents.portfolio import portfolio_agent
 from core.logging import langsmith
 
 
@@ -29,17 +30,25 @@ langsmith(project_name="trai-v1", set_enable=True)
 
 # Graph
 graph_builder = StateGraph(State)
+# Lv.1
 graph_builder.add_node("fng_agent", fng_agent)
 graph_builder.add_node("news_search_agent", news_search_agent)
 graph_builder.add_node("quant_agent", quant_agent)
 graph_builder.add_node("chart_pattern_agent", chart_pattern_agent)
+# Lv.2
 graph_builder.add_node("master_agent", master_agent)
+# Lv.3
+graph_builder.add_node("portfolio_agent", portfolio_agent)
 
 # 직렬
 # graph_builder.add_edge(START, "fng_agent")
 # graph_builder.add_edge("fng_agent", "news_search_agent")
 # graph_builder.add_edge("news_search_agent", "quant_agent")
 # graph_builder.add_edge("quant_agent", "chart_pattern_agent")
+# graph_builder.add_edge("chart_pattern_agent", "master_agent")
+# graph_builder.add_edge("master_agent", "portfolio_agent")
+# graph_builder.add_edge("portfolio_agent", END)
+# graph = graph_builder.compile()
 
 # 병렬
 graph_builder.add_edge(START, "fng_agent")
@@ -52,16 +61,39 @@ graph_builder.add_edge("news_search_agent", "master_agent")
 graph_builder.add_edge("quant_agent", "master_agent")
 graph_builder.add_edge("chart_pattern_agent", "master_agent")
 
-graph_builder.add_edge("master_agent", END)
+graph_builder.add_edge("master_agent", "portfolio_agent")
+
+graph_builder.add_edge("portfolio_agent", END)
 graph = graph_builder.compile()
 
 # Controller
+class InvestmentPerformance(BaseModel):
+    settlement_date: str 
+    starting_assets: Decimal
+    ending_assets: Decimal
+    daily_profit_and_loss: Decimal
+    daily_profit_ratio: Decimal
+    accumulation_profit_and_loss: Decimal
+    accumulation_profit_ratio: Decimal
+    coin_asset_percentage: float
+
+class BitcoinPosition(BaseModel):
+    order_created_at: str
+    agent_id: int
+    price: str
+    average_price: Decimal
+    side: str
+    executed_funds: Decimal
+    total_evaluation: Decimal
+    total_amount: Decimal
+    profit_and_loss: Decimal
+
 class UserInfo(BaseModel):
     user_id: int
     available_amount: float
     btc_balance_krw: float
-    investment_type: str  # 사용자 투자 성향 타입
-    
+    investment_performance_summary: List[InvestmentPerformance]
+    bitcoin_position_history: List[BitcoinPosition]
 
 @router.post("/analysis")
 async def run_analysis(user_info: UserInfo):
@@ -72,9 +104,6 @@ async def run_analysis(user_info: UserInfo):
             metadata={"date": (datetime.utcnow() + timedelta(hours=9)).isoformat()}
         )
         result_state = graph.invoke(initial_state)
-        # messages를 제외하고 반환
-        # result_dict = dict(result_state)
-        # result_dict.pop('messages', None)
         return result_state
     except Exception as e:
         print("API 처리 중 오류 발생:", str(e))
