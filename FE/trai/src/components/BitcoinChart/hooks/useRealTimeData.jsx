@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 const UPBIT_URL = "wss://api.upbit.com/websocket/v1";
 
 function connect(ws, c, setResult) {
+  console.log("소켓 start");
   ws.current = new WebSocket(UPBIT_URL);
 
   ws.current.onopen = () => {
@@ -58,6 +59,8 @@ function connect(ws, c, setResult) {
     if (ws.current.readyState === WebSocket.OPEN) {
       ws.current.close();
     }
+
+    setTimeout(connect, 1000 * c.current);
   };
 }
 
