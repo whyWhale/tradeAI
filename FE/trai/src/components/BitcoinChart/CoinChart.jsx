@@ -22,12 +22,13 @@ const types = [
 
 const CoinChart = () => {
   const chartRef = useRef(null);
-  const [initialized, setInitialized] = useState(false);
+  const [chartInitialized, setChartInitialized] = useState(false);
+  const [priceInitialized, setPriceInitialized] = useState(false);
   const [activeType, setActiveType] = useState("candle_solid");
   const [chartDetail, setChartDetail] = useState(null); 
 
-  const realTimeData = useRealTimeData(initialized); // 초기화가 완료된 후에만 실행
-  const newData = useNewData(1, initialized); // 초기화가 완료된 후에만 실행
+  const realTimeData = useRealTimeData(chartInitialized); // 초기화가 완료된 후에만 실행
+  const newData = useNewData(1, priceInitialized); // 초기화가 완료된 후에만 실행
   const dispatch = useDispatch(); // Redux dispatch 함수 정의
 
   const formatValue = (value) => (value !== null && value !== undefined ? value.toLocaleString() : "0");
@@ -55,34 +56,41 @@ const CoinChart = () => {
     });
 
     const fetchData = async () => {
-      try {
-        // 차트 데이터 요청
-        const chartDataList = await getInitialDataList(1);
-        if (chartRef.current) {
-          chartRef.current.applyNewData(chartDataList);
 
-        }
-  
-        // 10초 지연 후 시세 정보 데이터 요청
-        setTimeout(async () => {
+      try {
+        while (!chartInitialized || !priceInitialized) {
           try {
-            const detailDataList = await getInitialDetailList();
-            if (detailDataList && detailDataList[0]) {
-              updateChartDetail(detailDataList[0]);
-              dispatch(updateBTCData(detailDataList[0].price)); // Redux 스토어에 데이터 업데이트
-              console.log(detailDataList[0].price);
-              setInitialized(true); // 초기화 완료
+            if (!chartInitialized) {  // 차트 데이터 초기화 전이라면 차트 데이터 요청
+              const chartDataList = await getInitialDataList(1);
+              if (chartRef.current) { // 제대로 받아왔다면
+                chartRef.current.applyNewData(chartDataList);
+                setChartInitialized(true);
+              }
+            }
+      
+            if (!priceInitialized) {  // 시세 정보 데이터 요청
+              const detailDataList = await getInitialDetailList();
+              if (detailDataList && detailDataList[0]) {  // 제대로 받아왔다면
+                updateChartDetail(detailDataList[0]);
+                dispatch(updateBTCData(detailDataList[0].price)); // Redux 스토어에 비트코인 가격 업데이트
+                priceInitialized = true;
+                setPriceInitialized(true); 
+              }
             }
           } catch (error) {
-            console.error("Failed to fetch detail data. Retrying in 10 seconds...", error);
-            setTimeout(fetchData, 10000); // 10초 후에 다시 fetchData 호출
+            console.error("Failed to fetch data. Retrying in 1 second...", error);
           }
-        }, 10000);
-      } catch (error) {
-        console.error("Failed to fetch initial chart data. Retrying in 10 seconds...", error);
-        setTimeout(fetchData, 10000); // 10초 후에 다시 fetchData 호출
+          // 아직 초기화가 완료되지 않았으면 1초 대기 후 재시도
+          if (!chartInitialized || !priceInitialized) {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+        }
       }
-    };
+      catch (error) {
+        console.error("Failed to fetch initial chart data. Retrying in 10 seconds...", error);
+        setTimeout(fetchData, 1000); // 1초 후에 다시 fetchData 호출
+      }
+    }
 
     fetchData();
 
