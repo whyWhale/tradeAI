@@ -41,8 +41,11 @@ const Card = ({ color }) => {
       <meshStandardMaterial
         color={color}
         side={THREE.DoubleSide}
-        roughness={0.3}
-        metalness={0.5}
+        roughness={0.6} //표면 거칠기. 높을수록 덜 반짝임
+        metalness={0.3} //금속성. 높을수록 더 금속처럼 보임
+        clearcoat={0.1} //투명 코팅층의 강도
+        clearcoatRoughness={0.8} //코팅층의 거칠기, 낮을수록 매끄러움
+        envMapIntensity={0.5} //환경 반사 강도, 1이 기본
       />
     </mesh>
   );

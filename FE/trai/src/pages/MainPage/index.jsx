@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import PropTypes from "prop-types";
 import CardThreeJS from '@components/CardThreeJS/CardThreeJS';
 import Logout from '@components/Logout';
+import FireworkButton from '@components/FireworkButton';
 
 const MainPage = () => {
 
@@ -17,14 +18,15 @@ const MainPage = () => {
     return (
         <div className="w-full flex flex-col" style={{ overflowX: 'hidden' }}>
             <div className='flex justify-end pr-12 bg-trai-navy'>
+                
                 <StyledLink to={'/trade-settings'}>
                     거래 설정
                 </StyledLink>
-                <StyledLink to={'/investment-status'}>
-                    투자 현황
-                </StyledLink>
                 <StyledLink to={'/asset-overview'}>
                     자산 현황
+                </StyledLink>
+                <StyledLink to={'/investment-status'}>
+                    투자 현황
                 </StyledLink>
                 <StyledLink to={'/trade-details'}>
                     거래 상세 및 전략
@@ -37,19 +39,24 @@ const MainPage = () => {
                 <div className='w-[350px] flex-shrink-0'>
                     <div className='text-trai-white text-[80px] mt-[150px] font-bold'>T R A I</div>
                     <div className='text-trai-white text-[40px] mt-[50px] font-bold'>Trade Smarter,</div>
-                    <div className='text-trai-white text-[40px] font-bold'>Trade with AI</div>
+                    <div className='flex'>
+                        <div className='text-trai-white text-[40px] mr-2 font-bold'>Trade with AI</div>
+                        <div className='relative z-10'>
+                            <FireworkButton/>
+                        </div>
+                    </div>
                 </div>
-                <HomeImage className="flex flex-end w-[1000px] h-[900px] relative top-[-20%]"
-                            src="/images/trai_figma.png" alt="image"/>
+                <HomeImage className="flex flex-end h-[700px] relative top-[-15%] right-[8%]"
+                            src="/images/figmaimage2.png" alt="image"/>
             </FirstContainer>
 
             <SecondContainer>
                 <h2 className='font-bold text-[32px] mb-8'>AI 에이전트 소개</h2>
-                <div className='flex w-full gap-8'>
-                    <div className='w-1/2'>
+                <div className='flex flex-col w-full md:gap-8 md:flex-row'>
+                    <div className='md:w-1/2'>
                         <CardThreeJS onSelectAgent={handleAgentSelect} />
                     </div>
-                    <div className='w-1/2'>
+                    <div className='md:w-1/2'>
                         <AgentCard 
                             className='h-full'
                             style={{ 
@@ -126,7 +133,9 @@ const FAQItem = ({question, answer}) => {
                 <div>{question}</div>
                 <div className='text-[30px]'>{isOpen ? '-' : '+'}</div>
             </Question>
-            {isOpen && <Answer>{answer}</Answer>}
+            <AnswerWrapper isOpen={isOpen}>
+                <Answer>{answer}</Answer>
+            </AnswerWrapper>
         </FAQContainer>
     )
 }
@@ -157,25 +166,6 @@ const StyledLink = styled(NavLink)`
     }
 `;
 
-// const StyledUserLink = styled(NavLink)`
-//     color: white;
-//     background-color: transparent;
-//     display: flex;
-//     justify-content: center;
-//     align-items: center;
-//     width: 150px;
-//     height: 50px;
-//     border-radius: 15px;
-//     border: 2px solid white;
-//     text-decoration: none;
-//     font-weight: bold;
-
-//     &:hover {
-//         color: var(--trai-navy);
-//         background-color: var(--trai-white);
-//         transition: 0.5s ease;
-//     }
-// `;
 
 const HomeImage = styled.img`
     display: none;
@@ -187,7 +177,7 @@ const HomeImage = styled.img`
 
 
 const FirstContainer = styled.div`
-    background-color: var(--trai-navy);
+    background: linear-gradient(180deg, var(--trai-navy), var(--trai-mint));
     height: 700px;
     padding: 50px 150px;
 `
@@ -210,7 +200,10 @@ const AgentCard = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 100px;
+
+    @media (min-width: 768px) {
+        margin-top: 100px;
+    }
 
     &:hover {
         transform: translateY(-5px);
@@ -238,6 +231,12 @@ const Question = styled.div`
     cursor: pointer;
     font-weight: bold;
     font-size: 20px;
+`
+
+const AnswerWrapper = styled.div`
+    max-height: ${props => props.isOpen ? '500px' : '0'};
+    overflow: hidden;
+    transition: max-height 0.7s ease-in-out;
 `
 
 const Answer = styled.div`
