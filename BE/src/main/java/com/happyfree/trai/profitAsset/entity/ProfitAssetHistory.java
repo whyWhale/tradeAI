@@ -2,13 +2,9 @@ package com.happyfree.trai.profitAsset.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.happyfree.trai.global.common.BaseEntity;
 import com.happyfree.trai.user.entity.User;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -25,7 +21,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Entity
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProfitAssetHistory extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

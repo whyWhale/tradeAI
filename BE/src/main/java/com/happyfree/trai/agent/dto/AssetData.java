@@ -2,8 +2,8 @@ package com.happyfree.trai.agent.dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.happyfree.trai.profitAsset.entity.ProfitAssetHistory;
-import com.happyfree.trai.transactionHistory.dto.TodayTransactionHistory;
+import com.happyfree.trai.profitAsset.dto.RecentInvestmentSummary;
+import com.happyfree.trai.transactionHistory.dto.RecentTransactionHistory;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,6 +20,6 @@ public class AssetData {
     private Long userId;
     private float availableAmount;
     private float btcBalanceKrw;
-    private List<ProfitAssetHistory> investmentPerformanceSummary;
-    private List<TodayTransactionHistory> bitcoinPositionHistory;
+    private List<RecentInvestmentSummary> investmentPerformanceSummary;
+    private List<RecentTransactionHistory> bitcoinPositionHistory;
 }
