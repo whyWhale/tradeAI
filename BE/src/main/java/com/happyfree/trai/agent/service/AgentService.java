@@ -37,8 +37,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
-import org.springframework.web.reactive.function.client.WebClientResponseException;
-
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -123,9 +121,6 @@ public class AgentService {
                         .bitcoinPositionHistory(bitcoinPositionHistory)
                         .build();
 
-                String requestJson = mapper.writeValueAsString(assetData);
-                log.info("AI 서버 요청 데이터: {}", requestJson);
-
                 // AI 서버로 단일 요청 전송
                 webClient
                         .post()
@@ -134,17 +129,6 @@ public class AgentService {
                         .bodyValue(assetData)
                         .retrieve()
                         .bodyToMono(JsonNode.class)
-                        .doOnError(error -> {
-                            if (error instanceof WebClientResponseException) {
-                                WebClientResponseException ex = (WebClientResponseException) error;
-                                log.error("Status code: {}", ex.getStatusCode());
-                                log.error("Response headers: {}", ex.getHeaders());
-                                log.error("Response body: {}", ex.getResponseBodyAsString());
-                            }
-                            log.error("Error class: {}", error.getClass().getName());
-                            log.error("Error message: {}", error.getMessage());
-                            error.printStackTrace();  // 전체 스택 트레이스 출력
-                        })
                         .subscribe(
                                 result -> {
                                     try {

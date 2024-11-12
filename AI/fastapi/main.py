@@ -95,14 +95,6 @@ class UserInfo(BaseModel):
     investment_performance_summary: List[InvestmentPerformance]
     bitcoin_position_history: List[BitcoinPosition]
 
-@app.exception_handler(ValidationError)
-async def validation_exception_handler(request, exc):
-    print(f"Validation error: {exc.errors()}")  # 서버 콘솔에 로그
-    return JSONResponse(
-        status_code=422,
-        content={"detail": exc.errors()}  # 클라이언트에 자세한 에러 정보 전송
-    )
-
 @router.post("/analysis")
 async def run_analysis(user_info: UserInfo):
     try:
