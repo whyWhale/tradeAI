@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.happyfree.trai.agent.dto.AgentDecisionResult;
 import com.happyfree.trai.agent.entity.Agent;
@@ -62,7 +63,8 @@ public class AgentService {
 
     private final WebClient webClient;
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
     private final ProfitAssetRepository profitAssetRepository;
 
     String serverUrl = "https://api.upbit.com";
