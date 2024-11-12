@@ -109,7 +109,7 @@ const CoinChart = () => {
         {chartDetail ? (
           <>
             <div className="chart-price-container" style={ chartDetail.priceStyle }>
-              <div className="chart-price">{`${formatValue(chartDetail.price)}`}<span style={{ fontSize: '16px' }}>KRW</span></div>
+              <div className="chart-price">{`${formatValue(chartDetail.price)}`}<span  style={{  position: 'relative', top: '16px', fontSize: '16px' }}>KRW</span></div>
               <div className="change-text">
                 <span className="signed-price-rate">{`${formatValue(chartDetail.changeRate)}`}</span>
                 <span className="change-price">{`${formatValue(chartDetail.changePrice)}`}</span>
