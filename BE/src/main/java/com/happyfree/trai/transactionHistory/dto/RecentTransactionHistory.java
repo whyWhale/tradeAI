@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.happyfree.trai.transactionHistory.entity.TransactionHistory;
 import lombok.*;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -13,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RecentTransactionHistory {
-    private LocalDateTime orderCreatedAt;
+    private String orderCreatedAt;
     private long agentId;
     private String price;
     private BigDecimal averagePrice;
@@ -25,7 +24,7 @@ public class RecentTransactionHistory {
 
     public static RecentTransactionHistory from(TransactionHistory transactionHistory) {
         return RecentTransactionHistory.builder()
-                .orderCreatedAt(transactionHistory.getOrderCreatedAt())
+                .orderCreatedAt(transactionHistory.getOrderCreatedAt().toString())
                 .agentId(transactionHistory.getAgent().getId())
                 .price(transactionHistory.getPrice())
                 .averagePrice(transactionHistory.getAveragePrice())
