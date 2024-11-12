@@ -72,7 +72,6 @@ const CoinChart = () => {
               if (detailDataList && detailDataList[0]) {
                 updateChartDetail(detailDataList[0]);
                 dispatch(updateBTCData(detailDataList[0].price));
-                priceInitialized = true;
                 setPriceInitialized(true); 
               }
             }
@@ -93,7 +92,7 @@ const CoinChart = () => {
     fetchData();
   
     return () => {
-      dispose("coin-chart");
+      dispose("coin-chart"); // 정리 함수로써 컴포넌트 언마운트 시 호출
     };
   }, []);
   
