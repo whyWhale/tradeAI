@@ -98,6 +98,7 @@ class UserInfo(BaseModel):
 @router.post("/analysis")
 async def run_analysis(user_info: UserInfo):
     try:
+        print(user_info)
         initial_state = State(
             messages=["Analysis Started"],
             user_info=user_info.dict(),

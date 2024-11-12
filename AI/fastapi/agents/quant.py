@@ -156,9 +156,6 @@ def quant_agent(state: State) -> State:
         analysis_text, raw_data = analyze_market("KRW-BTC", unit=240)
         result = quant_chain.invoke({"analysis": analysis_text})
 
-        # 새로운 메시지 추가
-        # new_message = (f"Quant Analysis Decision: {result['decision']}, Quant Analysis Summary: {result['summary']}")
-
         return {
             "quant": {
                 "decision": result["decision"],
