@@ -123,12 +123,12 @@ export const chartStyle = {
         // value or value.text supports string templates
         // For example: want to display time, opening and closing, configure [{ title: 'time', value: '{time}' }, { title: 'open', value: '{open}' }, { title: ' close', value: '{close}' }]
         custom: [
-          { title: 'time', value: '{time}' },
-          { title: 'open', value: '{open}' },
-          { title: 'high', value: '{high}' },
-          { title: 'low', value: '{low}' },
-          { title: 'close', value: '{close}' },
-          { title: 'volume', value: '{volume}' }
+          { title: 'time', value: 'time' },
+          { title: 'open', value: 'open' },
+          { title: 'high', value: 'high' },
+          { title: 'low', value: 'low' },
+          { title: 'close', value: 'close' },
+          { title: 'volume', value: 'volume' }
         ],
         defaultValue: 'n/a',
         rect: {
