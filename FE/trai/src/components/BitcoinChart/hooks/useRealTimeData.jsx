@@ -7,7 +7,7 @@ function connect(ws, c, setResult) {
 
   ws.current.onopen = () => {
     console.log("WebSocket connected");
-    c.current = 0;
+    c.current = 10;
     const message = [
       {ticket: "nexoneunji"},
       {type: "ticker", codes: ["KRW-BTC"], isOnlyRealtime: true},
@@ -20,7 +20,8 @@ function connect(ws, c, setResult) {
     console.log("WebSocket closed, attempting to reconnect...");
     if (c.current < 10) {
       c.current += 1;
-      setTimeout(connect, 1000 * c.current);
+      console.log('다시시도합니다');
+      setTimeout(() => connect(ws, c, setResult), 1000 * c.current);
     } else {
       console.error("Max reconnection attempts reached");
     }
@@ -55,12 +56,13 @@ function connect(ws, c, setResult) {
   };
 
   ws.current.onerror = (event) => {
-    console.log("WebSocket error:", event);
+    console.error("WebSocket error:", event);
     if (ws.current.readyState === WebSocket.OPEN) {
       ws.current.close();
     }
 
-    setTimeout(connect, 1000 * c.current);
+    console.log('다시시도합니다');
+    setTimeout(() => connect(ws, c, setResult), 1000 * c.current);
   };
 }
 
