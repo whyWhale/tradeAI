@@ -16,6 +16,10 @@ RUN npm install
 ARG VITE_ENV_FILE
 ENV VITE_ENV_FILE=$VITE_ENV_FILE
 
+RUN echo "**********************"
+RUN echo "$VITE_ENV_FILE"
+RUN echo "**********************"
+
 COPY . .
 
 RUN npm run build
