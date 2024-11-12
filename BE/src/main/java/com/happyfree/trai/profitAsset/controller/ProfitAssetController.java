@@ -3,6 +3,7 @@ package com.happyfree.trai.profitAsset.controller;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
+import com.happyfree.trai.profitAsset.dto.AssetsDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -61,7 +62,7 @@ public class ProfitAssetController {
 			@ApiResponse(
 					responseCode = "200",
 					description = "자산 현황 가져오기",
-					content = @Content(schema = @Schema(type = "string", example = "success", implementation = TransactionSummary.class))
+					content = @Content(schema = @Schema(type = "string", example = "success", implementation = AssetsDetail.class))
 			)
 	})
 	@GetMapping("/assets")
