@@ -32,13 +32,13 @@ const InvestmentDetailsTable = () => {
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td>{item.settlementDate}</td>
-              <td>{item.dailyProfitAndLoss}</td>
-              <td>{item.dailyProfitRatio}</td>
-              <td>{item.accumulationProfitAndLoss}</td>
-              <td>{item.accumulationProfitRatio}</td>
-              <td>{item.startingAssets}</td>
-              <td>{item.endingAssets}</td>
+              <td>{item.settlementDate.toLocaleString(undefined, { style: 'currency', currency: 'KRW' })}</td>
+              <td>{item.dailyProfitAndLoss.toLocaleString(undefined, { style: 'currency', currency: 'KRW' })}</td>
+              <td>{item.dailyProfitRatio}%</td>
+              <td>{item.accumulationProfitAndLoss.toLocaleString(undefined, { style: 'currency', currency: 'KRW' })}</td>
+              <td>{item.accumulationProfitRatio}%</td>
+              <td>{item.startingAssets.toLocaleString(undefined, { style: 'currency', currency: 'KRW' })}</td>
+              <td>{item.endingAssets.toLocaleString(undefined, { style: 'currency', currency: 'KRW' })}</td>
             </tr>
           ))}
         </tbody>
