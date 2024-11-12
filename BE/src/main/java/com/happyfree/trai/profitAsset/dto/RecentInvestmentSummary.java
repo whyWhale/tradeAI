@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.happyfree.trai.profitAsset.entity.ProfitAssetHistory;
 import lombok.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RecentInvestmentSummary {
-    private LocalDate settlementDate;
+    private String settlementDate;
     private BigDecimal startingAssets;
     private BigDecimal endingAssets;
     private BigDecimal dailyProfitAndLoss;
@@ -24,7 +23,7 @@ public class RecentInvestmentSummary {
 
     public static RecentInvestmentSummary from(ProfitAssetHistory profitAssetHistory) {
         return RecentInvestmentSummary.builder()
-                .settlementDate(profitAssetHistory.getSettlementDate())
+                .settlementDate(profitAssetHistory.getSettlementDate().toString())
                 .startingAssets(profitAssetHistory.getStartingAssets())
                 .endingAssets(profitAssetHistory.getEndingAssets())
                 .dailyProfitAndLoss(profitAssetHistory.getDailyProfitAndLoss())
