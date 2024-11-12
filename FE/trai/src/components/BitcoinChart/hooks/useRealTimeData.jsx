@@ -58,7 +58,7 @@ const useRealTimeData = (initialized) => {
     return () => {
       ws.current.close();
     };
-  }, []);
+  }, [initialized]);
   return result;
 };
 
