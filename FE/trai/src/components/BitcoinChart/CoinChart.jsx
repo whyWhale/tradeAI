@@ -49,14 +49,15 @@ const CoinChart = () => {
   };
 
   useEffect(() => {
-    chartRef.current = init("coin-chart"); 
-    chartRef.current.setStyleOptions({
-      ...getLanguageOption(),
-      ...chartStyle
-    });
-  
-    const fetchData = async () => {
+    const initChart = async () => {
       try {
+        chartRef.current = init("coin-chart");
+        chartRef.current.setStyleOptions({
+          ...getLanguageOption(),
+          ...chartStyle,
+        });
+  
+        // 차트 데이터와 시세 정보 초기화 루프
         while (!chartInitialized || !priceInitialized) {
           try {
             if (!chartInitialized) {
@@ -66,36 +67,35 @@ const CoinChart = () => {
                 setChartInitialized(true);
               }
             }
-    
+  
             if (!priceInitialized) {
               const detailDataList = await getInitialDetailList();
               if (detailDataList && detailDataList[0]) {
                 updateChartDetail(detailDataList[0]);
                 dispatch(updateBTCData(detailDataList[0].price));
-                priceInitialized = true;
-                setPriceInitialized(true); 
+                setPriceInitialized(true);
               }
             }
           } catch (error) {
-            console.error("Failed to fetch data. Retrying in 1 second...", error);
+            console.error("Failed to fetch data. Retrying in 10 seconds...", error);
           }
-          
+  
           if (!chartInitialized || !priceInitialized) {
             await new Promise((resolve) => setTimeout(resolve, 10000));
           }
         }
       } catch (error) {
-        console.error("Failed to fetch initial chart data. Retrying in 10 seconds...", error);
-        setTimeout(fetchData, 1000);
+        console.error("Failed to initialize chart data.", error);
       }
     };
   
-    fetchData();
+    initChart();
   
     return () => {
-      dispose("coin-chart");
+      dispose("coin-chart"); // 컴포넌트가 언마운트될 때 차트를 해제
     };
   }, []);
+  
   
 
   useEffect(() => {
