@@ -16,8 +16,12 @@ import com.happyfree.trai.user.entity.User;
 public interface ProfitAssetRepository extends JpaRepository<ProfitAssetHistory, Long> {
 	Page<ProfitAssetHistory> findByUserAndCreatedAtBeforeOrderByCreatedAtDesc(User user, Pageable pageable, LocalDateTime date);
 
-	List<ProfitAssetHistory> findByUserAndSettlementDateLessThanOrderBySettlementDateAsc(User user, LocalDate today);
+	List<ProfitAssetHistory> findByUserAndSettlementDateLessThanOrderBySettlementDateDesc(User user, LocalDate today);
+
+	List<ProfitAssetHistory> findTop5ByUserAndSettlementDateLessThanOrderBySettlementDateDesc(User user, LocalDate today);
 
 	Optional<ProfitAssetHistory> findByUserAndSettlementDate(@Param("user") User user,
 		@Param("yesterday") LocalDate yesterday);
+
+
 }
