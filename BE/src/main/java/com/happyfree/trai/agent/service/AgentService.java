@@ -12,9 +12,10 @@ import com.happyfree.trai.agent.entity.Agent;
 import com.happyfree.trai.agent.dto.AssetData;
 import com.happyfree.trai.agent.repository.AgentRepository;
 import com.happyfree.trai.global.exception.CustomException;
+import com.happyfree.trai.profitAsset.dto.RecentInvestmentSummary;
 import com.happyfree.trai.profitAsset.entity.ProfitAssetHistory;
 import com.happyfree.trai.profitAsset.repository.ProfitAssetRepository;
-import com.happyfree.trai.transactionHistory.dto.TodayTransactionHistory;
+import com.happyfree.trai.transactionHistory.dto.RecentTransactionHistory;
 import com.happyfree.trai.transactionHistory.entity.TransactionHistory;
 import com.happyfree.trai.transactionHistory.repository.TransactionHistoryRepository;
 import com.happyfree.trai.profitAsset.service.ProfitAssetService;
@@ -96,12 +97,17 @@ public class AgentService {
                 BigDecimal tradePrice = profitAssetService.getBitcoinCurrentPrice();
                 BigDecimal totalKRWAssets = profitAssetService.getTotalKRW(accessKey, secretKey);
 
-                List<ProfitAssetHistory> investmentPerformanceSummary = profitAssetRepository.findTop5ByUserAndSettlementDateLessThanOrderBySettlementDateDesc(user, LocalDate.now());
-                List<TransactionHistory> todayTransactionHistories = transactionHistoryRepository.findTop10ByUserOrderByCreatedAtDesc(user);
-                List<TodayTransactionHistory> bitcoinPositionHistory = todayTransactionHistories.stream()
-                        .map(TodayTransactionHistory::from)
+                List<ProfitAssetHistory> profitAssetHistories = profitAssetRepository
+                        .findTop5ByUserAndSettlementDateLessThanOrderBySettlementDateDesc(user, LocalDate.now());
+                List<RecentInvestmentSummary> investmentPerformanceSummary = profitAssetHistories.stream()
+                        .map(RecentInvestmentSummary::from)
                         .collect(Collectors.toList());
 
+                List<TransactionHistory> transactionHistories = transactionHistoryRepository
+                        .findTop10ByUserOrderByCreatedAtDesc(user);
+                List<RecentTransactionHistory> bitcoinPositionHistory = transactionHistories.stream()
+                        .map(RecentTransactionHistory::from)
+                        .collect(Collectors.toList());
 
                 // 단일 AssetData 객체 생성
                 AssetData assetData = AssetData.builder()

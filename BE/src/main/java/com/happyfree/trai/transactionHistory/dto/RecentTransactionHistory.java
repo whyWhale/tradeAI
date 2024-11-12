@@ -1,5 +1,7 @@
 package com.happyfree.trai.transactionHistory.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.happyfree.trai.transactionHistory.entity.TransactionHistory;
 import lombok.*;
 import java.math.BigDecimal;
@@ -9,8 +11,9 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class TodayTransactionHistory {
-    private long id;
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class RecentTransactionHistory {
+    private LocalDateTime orderCreatedAt;
     private long agentId;
     private String price;
     private BigDecimal averagePrice;
@@ -19,11 +22,10 @@ public class TodayTransactionHistory {
     private BigDecimal totalEvaluation;
     private BigDecimal totalAmount;
     private BigDecimal profitAndLoss;
-    private LocalDateTime orderCreatedAt;
 
-    public static TodayTransactionHistory from(TransactionHistory transactionHistory) {
-        return TodayTransactionHistory.builder()
-                .id(transactionHistory.getId())
+    public static RecentTransactionHistory from(TransactionHistory transactionHistory) {
+        return RecentTransactionHistory.builder()
+                .orderCreatedAt(transactionHistory.getOrderCreatedAt())
                 .agentId(transactionHistory.getAgent().getId())
                 .price(transactionHistory.getPrice())
                 .averagePrice(transactionHistory.getAveragePrice())
@@ -32,7 +34,6 @@ public class TodayTransactionHistory {
                 .totalEvaluation(transactionHistory.getTotalEvaluation())
                 .totalAmount(transactionHistory.getTotalAmount())
                 .profitAndLoss(transactionHistory.getProfitAndLoss())
-                .orderCreatedAt(transactionHistory.getOrderCreatedAt())
                 .build();
     }
 }
