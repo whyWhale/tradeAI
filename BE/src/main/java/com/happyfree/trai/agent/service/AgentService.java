@@ -29,7 +29,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -82,7 +81,7 @@ public class AgentService {
                 // 데이터 수집
                 BigDecimal totalBTCAmount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
                 BigDecimal tradePrice = profitAssetService.getBitcoinCurrentPrice();
-                BigDecimal totalKRWAssets = profitAssetService.getTotalMoney(accessKey, secretKey);
+                BigDecimal totalKRWAssets = profitAssetService.getTotalKRW(accessKey, secretKey);
 
                 // 단일 AssetData 객체 생성
                 AssetData assetData = AssetData.builder()
@@ -167,7 +166,7 @@ public class AgentService {
             agentRepository.save(agent);
 
             BigDecimal nowBitcoinCount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
-            BigDecimal averageBitcoinPrice = getBTCAveragePrice(accessKey, secretKey);
+            BigDecimal averageBitcoinPrice = profitAssetService.getBTCAveragePrice(accessKey, secretKey);
 
             // 투자 내역 저장
             if (enoughAmount && (decision.equals("SELL") || decision.equals("BUY"))) {
@@ -176,7 +175,7 @@ public class AgentService {
                     transactionHistory.updateUser(user);
                     transactionHistory.updateSide(decision);
                     transactionHistory.updateTotalEvaluation(BigDecimal.valueOf(Long.parseLong(transactionHistory.getPrice())).multiply(nowBitcoinCount));
-                    transactionHistory.updateTotalAmount(profitAssetService.getTotalMoney(accessKey, secretKey)
+                    transactionHistory.updateTotalAmount(profitAssetService.getTotalKRW(accessKey, secretKey)
                             .add(nowBitcoinPrice.multiply(nowBitcoinCount)));
                     transactionHistory.updateAveragePrice(averageBitcoinPrice);
                     transactionHistory.updateAgent(agent);
@@ -202,7 +201,7 @@ public class AgentService {
                         .agent(agent)
                         .side(decision)
                         .totalEvaluation(nowBitcoinPrice.multiply(nowBitcoinCount))
-                        .totalAmount(profitAssetService.getTotalMoney(accessKey, secretKey)
+                        .totalAmount(profitAssetService.getTotalKRW(accessKey, secretKey)
                                 .add(nowBitcoinPrice.multiply(nowBitcoinCount)))
                         .executedFunds(BigDecimal.ZERO)
                         .orderCreatedAt(LocalDateTime.now())
@@ -341,42 +340,6 @@ public class AgentService {
         }
 
         return null;
-    }
-
-    // 업비트 매수평균가
-    public BigDecimal getBTCAveragePrice(String accessKey, String secretKey) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        String jwtToken = JWT.create()
-                .withClaim("access_key", accessKey)
-                .withClaim("nonce", UUID.randomUUID().toString())
-                .sign(algorithm);
-
-        String authenticationToken = "Bearer " + jwtToken;
-
-        try {
-            HttpClient client = HttpClientBuilder.create().build();
-            HttpGet request = new HttpGet(serverUrl + "/v1/accounts");
-            request.setHeader("Content-Type", "application/json");
-            request.addHeader("Authorization", authenticationToken);
-
-            HttpResponse response = client.execute(request);
-            HttpEntity entity = response.getEntity();
-
-            String jsonResponse = EntityUtils.toString(entity, "UTF-8");
-
-            JsonNode rootNode = mapper.readTree(jsonResponse);
-
-            // BTC 자산을 찾고, avg_buy_price 필드 값을 가져옴
-            for (JsonNode node : rootNode) {
-                if ("BTC".equals(node.path("currency").asText())) {
-                    return new BigDecimal(node.path("avg_buy_price").asText());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return new BigDecimal(0);
     }
 
     private boolean checkAmount(BigDecimal orderAmount){
