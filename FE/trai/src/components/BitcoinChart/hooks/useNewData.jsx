@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const useNewData = (unit, initialized) => {
+const useNewData = (unit, priceInitialized) => {
   const [newData, setNewData] = useState(null); // newData 상태
   const [lastFetchTime, setLastFetchTime] = useState(0); // lastFetchTime 상태 추가
 
   useEffect(() => {
-    if (!initialized) return; // 초기화가 완료되지 않았으면 연결하지 않음
+    if (!priceInitialized) return; // 초기화가 완료되지 않았으면 연결하지 않음
 
     const fetchData = async () => {
       const currentTime = Date.now();
@@ -53,7 +53,7 @@ const useNewData = (unit, initialized) => {
     const interval = setInterval(fetchData, 10000);
     // cleanup function
     return () => clearInterval(interval); // 컴포넌트가 언마운트될 때 interval 정리
-  }, [initialized]);
+  }, [priceInitialized]);
 
   return newData; // 단일 캔들 데이터 반환
 };

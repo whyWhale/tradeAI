@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 const UPBIT_URL = "wss://api.upbit.com/websocket/v1";
 
-const useRealTimeData = (initialized) => {
+const useRealTimeData = (chartInitialized) => {
   const [result, setResult] = useState();
   const ws = useRef(null);
 
   useEffect(() => {
-    if (!initialized) return; // 초기화가 완료되지 않았으면 연결하지 않음
+    if (!chartInitialized) return; // 초기화가 완료되지 않았으면 연결하지 않음
 
     ws.current = new WebSocket(UPBIT_URL);
 
@@ -58,7 +58,7 @@ const useRealTimeData = (initialized) => {
     return () => {
       ws.current.close();
     };
-  }, [initialized]);
+  }, [chartInitialized]);
   return result;
 };
 
