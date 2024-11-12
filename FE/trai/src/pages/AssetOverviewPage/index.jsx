@@ -103,7 +103,7 @@ const AssetOverview = () => {
           <div className="ticker">
             <img src={bitcoinIcon} alt="Bitcoin Icon" style={{ width: '24px', height: '24px', marginRight: '8px', marginTop: '10px' }} />
             <span>비트코인 </span>
-            <span style={{ fontSize: '16px' }}>&nbsp;BTC/KRW</span>
+            <span style={{  position: 'relative', top: '10px', fontSize: '16px' }}>&nbsp;BTC/KRW</span>
           </div>
           <CoinChart/>
         </div>

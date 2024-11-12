@@ -194,3 +194,7 @@ body, html {
   left: 80.4%; /* 좌측에서 80.4% 떨어진 위치 */
   top: 32.8%; /* 상단에서 32.8% 떨어진 위치 */
 }
+
+.currency {
+  vertical-align: baseline; /* KRW, BTC 단위 살짝 아래에 정렬 */
+}

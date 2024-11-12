@@ -26,7 +26,7 @@ const getInitialDetailList = (unit) => {
             tradePrice: acc_trade_price_24h.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
             change: change,
             changeRate: change_rate.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-            changePrice: signed_change_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            changePrice: signed_change_price.toLocaleString(),
             timestamp:timestamp,
         };
       });
