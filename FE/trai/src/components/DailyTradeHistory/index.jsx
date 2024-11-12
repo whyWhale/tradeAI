@@ -101,7 +101,7 @@ const DailyTradeHistory = ({ onSelectAgentId, selectedDate, onDateChange }) => {
             <th>거래 금액</th>
             <th>총 평가</th>
             <th>총 보유자산</th>
-            <th>변동</th>
+            <th>수익</th>
           </tr>
         </thead>
         

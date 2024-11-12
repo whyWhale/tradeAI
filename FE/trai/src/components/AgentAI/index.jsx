@@ -26,12 +26,14 @@ const AgentAI = ({ agentId, selectedDate }) => {
         });
 
         const parsedData = JSON.parse(response.data.jsonData);
+        const quantData = parsedData.quant;
+        const patternData = parsedData.chart_pattern;
         const masterData = parsedData.master;
         const newsData = parsedData.news_search;
         const fngData = parsedData.fng;
 
         setData(response.data);
-        setParsedData({ masterData, newsData, fngData });
+        setParsedData({ quantData, patternData, masterData, newsData, fngData });
         console.log("Received agentId:", agentId);
         console.log("parsedData", parsedData);
       } catch(error){
@@ -46,17 +48,17 @@ const AgentAI = ({ agentId, selectedDate }) => {
   if(!parsedData){
     return (
       <div className='flex justify-center items-center text-center'>
-        <div>AI 에이전트의 판단을 보고 싶은 날짜 - 시간대를 선택해주세요.</div>
+        <div>AI 에이전트의 판단을 보고 싶은 거래건을 선택해주세요.</div>
       </div>
   )}
 
   return(
     <Container>
-      <QuantAgent className="item"/>
-      <PatternAgent className="item"/>
+      <QuantAgent className="item" quantData={parsedData?.quantData}/>
+      <PatternAgent className="item" patternData={parsedData?.patternData}/>
       <FngAgent className="item" fngData={parsedData?.fngData} selectedDate={selectedDate}/>
-      {parsedData?.masterData && <MasterAgent className="item" masterData={parsedData.masterData}/>}
-      {parsedData?.newsData && <NewsAgent className="item" newsData={parsedData.newsData} />}
+      <MasterAgent className="item" masterData={parsedData?.masterData}/>
+      <NewsAgent className="item" newsData={parsedData?.newsData} />
     </Container>
   )
 }

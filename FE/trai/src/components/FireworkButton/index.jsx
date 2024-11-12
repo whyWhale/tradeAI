@@ -140,7 +140,8 @@ const FireworkButton = () => {
 
   return (
     <>
-      <button onClick={startFirework} className='bg-trai-navy text-trai-white'>여기를 눌러보세요</button>
+    {/* 🎆 */}
+      <button onClick={startFirework}>🎇</button>
       {showFirework && (
         <canvas
           ref={canvasRef}

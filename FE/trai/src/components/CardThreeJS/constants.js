@@ -1,4 +1,3 @@
-// src/components/CardThreeJS/constants.js
 export const COLORS = [
   '#4FD1C5',
   '#2C3357',

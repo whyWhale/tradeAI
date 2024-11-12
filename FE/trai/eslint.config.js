@@ -49,6 +49,10 @@ export default [
             'geometry',
             'visible',
             'ref',
+            'clearcoat',
+            'clearcoatRoughness',
+            'envMapIntensity',
+            'castShadow'
           ],
         },
       ],
