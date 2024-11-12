@@ -32,13 +32,13 @@ const InvestmentDetailsTable = () => {
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td>{item.settlementDate.toLocaleString(undefined, { style: 'currency', currency: 'KRW' })}</td>
-              <td>{item.dailyProfitAndLoss.toLocaleString(undefined, { style: 'currency', currency: 'KRW' })}</td>
-              <td>{item.dailyProfitRatio}%</td>
-              <td>{item.accumulationProfitAndLoss.toLocaleString(undefined, { style: 'currency', currency: 'KRW' })}</td>
-              <td>{item.accumulationProfitRatio}%</td>
-              <td>{item.startingAssets.toLocaleString(undefined, { style: 'currency', currency: 'KRW' })}</td>
-              <td>{item.endingAssets.toLocaleString(undefined, { style: 'currency', currency: 'KRW' })}</td>
+              <td>{item.settlementDate ? item.settlementDate.toLocaleString(undefined, { style: 'currency', currency: 'KRW' }) : ""}</td>
+              <td>{item.dailyProfitAndLoss ? item.dailyProfitAndLoss.toLocaleString(undefined, { style: 'currency', currency: 'KRW' }) : ""}</td>
+              <td>{item.dailyProfitRatio || 0}%</td>
+              <td>{item.accumulationProfitAndLoss ? item.accumulationProfitAndLoss.toLocaleString(undefined, { style: 'currency', currency: 'KRW' }) : ""}</td>
+              <td>{item.accumulationProfitRatio || 0}%</td>
+              <td>{item.startingAssets ? item.startingAssets.toLocaleString(undefined, { style: 'currency', currency: 'KRW' }) : ""}</td>
+              <td>{item.endingAssets ? item.endingAssets.toLocaleString(undefined, { style: 'currency', currency: 'KRW' }) : ""}</td>
             </tr>
           ))}
         </tbody>
