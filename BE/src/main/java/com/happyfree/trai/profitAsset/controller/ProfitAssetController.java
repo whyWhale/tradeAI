@@ -55,4 +55,17 @@ public class ProfitAssetController {
 		NoSuchAlgorithmException {
 		return ResponseEntity.ok(profitAssetService.getTotalProfit());
 	}
+
+	@Operation(summary = "자산 현황 조회")
+	@ApiResponses(value = {
+			@ApiResponse(
+					responseCode = "200",
+					description = "자산 현황 가져오기",
+					content = @Content(schema = @Schema(type = "string", example = "success", implementation = TransactionSummary.class))
+			)
+	})
+	@GetMapping("/assets")
+	public ResponseEntity<?> getAssetsDetail() throws UnsupportedEncodingException, NoSuchAlgorithmException, JsonProcessingException {
+		return ResponseEntity.ok(profitAssetService.getAssetsDetail());
+	}
 }
