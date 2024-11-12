@@ -10,6 +10,9 @@ import com.happyfree.trai.agent.entity.Agent;
 import com.happyfree.trai.agent.dto.AssetData;
 import com.happyfree.trai.agent.repository.AgentRepository;
 import com.happyfree.trai.global.exception.CustomException;
+import com.happyfree.trai.profitAsset.entity.ProfitAssetHistory;
+import com.happyfree.trai.profitAsset.repository.ProfitAssetRepository;
+import com.happyfree.trai.transactionHistory.dto.TodayTransactionHistory;
 import com.happyfree.trai.transactionHistory.entity.TransactionHistory;
 import com.happyfree.trai.transactionHistory.repository.TransactionHistoryRepository;
 import com.happyfree.trai.profitAsset.service.ProfitAssetService;
@@ -35,9 +38,13 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import static com.happyfree.trai.global.exception.ErrorCode.*;
+
 
 @Service
 @Transactional
@@ -56,6 +63,7 @@ public class AgentService {
     private final WebClient webClient;
 
     private final ObjectMapper mapper = new ObjectMapper();
+    private final ProfitAssetRepository profitAssetRepository;
 
     String serverUrl = "https://api.upbit.com";
 
@@ -83,11 +91,20 @@ public class AgentService {
                 BigDecimal tradePrice = profitAssetService.getBitcoinCurrentPrice();
                 BigDecimal totalKRWAssets = profitAssetService.getTotalKRW(accessKey, secretKey);
 
+                List<ProfitAssetHistory> investmentPerformanceSummary = profitAssetRepository.findTop5ByUserAndSettlementDateLessThanOrderBySettlementDateDesc(user, LocalDate.now());
+                List<TransactionHistory> todayTransactionHistories = transactionHistoryRepository.findTop10ByUserOrderByCreatedAtDesc(user);
+                List<TodayTransactionHistory> bitcoinPositionHistory = todayTransactionHistories.stream()
+                        .map(TodayTransactionHistory::from)
+                        .collect(Collectors.toList());
+
+
                 // 단일 AssetData 객체 생성
                 AssetData assetData = AssetData.builder()
                         .userId(user.getId())
                         .btcBalanceKrw(totalBTCAmount.multiply(tradePrice).floatValue())
                         .availableAmount(totalKRWAssets.floatValue())
+                        .investmentPerformanceSummary(investmentPerformanceSummary)
+                        .bitcoinPositionHistory(bitcoinPositionHistory)
                         .build();
 
                 // AI 서버로 단일 요청 전송

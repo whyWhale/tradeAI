@@ -3,6 +3,8 @@ package com.happyfree.trai.transactionHistory.service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import com.happyfree.trai.transactionHistory.dto.TodayTransactionHistory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,25 +31,9 @@ public class TransactionHistoryService {
 		LocalDate date = LocalDate.of(Integer.parseInt(year), Integer.parseInt(month), Integer.parseInt(day));
 		List<TransactionHistory> all = transactionHistoryRepository.findByUserAndDate(loginUser, date);
 
-		List<TodayTransactionHistory> todayTransactionHistories = new ArrayList<>();
-		for (TransactionHistory transactionHistory : all) {
-			todayTransactionHistories.add(
-				TodayTransactionHistory.builder()
-						.id(transactionHistory.getId())
-						.agentId(transactionHistory.getAgent().getId())
-						.price(transactionHistory.getPrice())
-						.averagePrice(transactionHistory.getAveragePrice())
-						.side(transactionHistory.getSide())
-						.executedFunds(transactionHistory.getExecutedFunds())
-						.totalEvaluation(transactionHistory.getTotalEvaluation())
-						.totalAmount(transactionHistory.getTotalAmount())
-						.profitAndLoss(transactionHistory.getProfitAndLoss())
-						.orderCreatedAt(transactionHistory.getOrderCreatedAt())
-						.build()
-			);
-		}
-
-		return todayTransactionHistories;
+        return all.stream()
+                .map(TodayTransactionHistory::from)
+                .collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
