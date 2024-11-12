@@ -54,25 +54,24 @@ const CoinChart = () => {
       ...getLanguageOption(),
       ...chartStyle
     });
-
+  
     const fetchData = async () => {
-
       try {
         while (!chartInitialized || !priceInitialized) {
           try {
-            if (!chartInitialized) {  // 차트 데이터 초기화 전이라면 차트 데이터 요청
+            if (!chartInitialized) {
               const chartDataList = await getInitialDataList(1);
-              if (chartRef.current) { // 제대로 받아왔다면
+              if (chartRef.current) {
                 chartRef.current.applyNewData(chartDataList);
                 setChartInitialized(true);
               }
             }
-      
-            if (!priceInitialized) {  // 시세 정보 데이터 요청
+    
+            if (!priceInitialized) {
               const detailDataList = await getInitialDetailList();
-              if (detailDataList && detailDataList[0]) {  // 제대로 받아왔다면
+              if (detailDataList && detailDataList[0]) {
                 updateChartDetail(detailDataList[0]);
-                dispatch(updateBTCData(detailDataList[0].price)); // Redux 스토어에 비트코인 가격 업데이트
+                dispatch(updateBTCData(detailDataList[0].price));
                 priceInitialized = true;
                 setPriceInitialized(true); 
               }
@@ -80,24 +79,24 @@ const CoinChart = () => {
           } catch (error) {
             console.error("Failed to fetch data. Retrying in 1 second...", error);
           }
-          // 아직 초기화가 완료되지 않았으면 1초 대기 후 재시도
+          
           if (!chartInitialized || !priceInitialized) {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 10000));
           }
         }
-      }
-      catch (error) {
+      } catch (error) {
         console.error("Failed to fetch initial chart data. Retrying in 10 seconds...", error);
-        setTimeout(fetchData, 1000); // 1초 후에 다시 fetchData 호출
+        setTimeout(fetchData, 1000);
       }
-    }
-
+    };
+  
     fetchData();
-
+  
     return () => {
       dispose("coin-chart");
     };
   }, []);
+  
 
   useEffect(() => {
     if (newData) {      
