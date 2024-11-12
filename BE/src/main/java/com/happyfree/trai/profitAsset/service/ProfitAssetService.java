@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.happyfree.trai.auth.service.AuthService;
 import com.happyfree.trai.profitAsset.dto.AssetProportion;
+import com.happyfree.trai.profitAsset.dto.AssetsDetail;
 import com.happyfree.trai.profitAsset.dto.TransactionSummary;
 import com.happyfree.trai.profitAsset.entity.ProfitAssetHistory;
 import com.happyfree.trai.profitAsset.repository.ProfitAssetRepository;
@@ -16,6 +17,11 @@ import com.happyfree.trai.user.entity.User;
 import com.happyfree.trai.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
@@ -108,7 +114,7 @@ public class ProfitAssetService {
         BigDecimal with = getTotalWithdraws(accessKey, secretKey, LocalDate.now());
         BigDecimal de = getTotalDeposit(accessKey, secretKey, LocalDate.now());
         BigDecimal bcv = getBitcoinAmount(accessKey, secretKey);
-        BigDecimal m = getTotalMoney(accessKey, secretKey);
+        BigDecimal m = getTotalKRW(accessKey, secretKey);
         BigDecimal cBp = getBitcoinCurrentPrice();
         return bcv.multiply(cBp)
                 .add(m)
@@ -329,7 +335,7 @@ public class ProfitAssetService {
     }
 
     // 총 보유액(현금 balance + lock)
-    public BigDecimal getTotalMoney(String accessKey, String secretKey) throws JsonProcessingException {
+    public BigDecimal getTotalKRW(String accessKey, String secretKey, String type) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
@@ -354,12 +360,103 @@ public class ProfitAssetService {
         for (JsonNode node : jsonArray) {
             String currency = node.get("currency").asText();
             if ("KRW".equals(currency)) {
-                Double amount = node.get("balance").asDouble() + node.get("locked").asDouble();
+                Double amount = 0.0;
+                if(type.equals("all")){
+                    amount = node.get("balance").asDouble() + node.get("locked").asDouble();
+                } else if(type.equals("balance")) {
+                    amount = node.get("balance").asDouble();
+                }
                 return new BigDecimal(amount);
             }
         }
 
         return BigDecimal.ZERO;
+    }
+
+    // 총 보유액(balance + lock)
+    public BigDecimal getTotalKRW(String accessKey, String secretKey) throws JsonProcessingException {
+        JsonNode jsonArray = getAccountsInfo(accessKey, secretKey);
+        return getKRWAmount(jsonArray, true);
+    }
+
+    // 총 보유액(balance)
+    public BigDecimal getAvailableKRW(String accessKey, String secretKey) throws JsonProcessingException {
+        JsonNode jsonArray = getAccountsInfo(accessKey, secretKey);
+        return getKRWAmount(jsonArray, false);
+    }
+
+    private JsonNode getAccountsInfo(String accessKey, String secretKey) throws JsonProcessingException {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        String jwtToken = JWT.create()
+                .withClaim("access_key", accessKey)
+                .withClaim("nonce", UUID.randomUUID().toString())
+                .sign(algorithm);
+        String authenticationToken = "Bearer " + jwtToken;
+        headers.set("Authorization", authenticationToken);
+        headers.set("Content-Type", "application/json");
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+        ResponseEntity<String> response = restTemplate.exchange(
+                serverUrl + "/v1/accounts",
+                HttpMethod.GET,
+                entity,
+                String.class
+        );
+
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.readTree(response.getBody());
+    }
+
+    private BigDecimal getKRWAmount(JsonNode jsonArray, boolean includeLocked) {
+        for (JsonNode node : jsonArray) {
+            String currency = node.get("currency").asText();
+            if ("KRW".equals(currency)) {
+                double amount = node.get("balance").asDouble();
+                if(includeLocked) {
+                    amount += node.get("locked").asDouble();
+                }
+                return new BigDecimal(amount);
+            }
+        }
+        return BigDecimal.ZERO;
+    }
+
+    // 업비트 매수평균가
+    public BigDecimal getBTCAveragePrice(String accessKey, String secretKey) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
+        String jwtToken = JWT.create()
+                .withClaim("access_key", accessKey)
+                .withClaim("nonce", UUID.randomUUID().toString())
+                .sign(algorithm);
+
+        String authenticationToken = "Bearer " + jwtToken;
+
+        try {
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpGet request = new HttpGet(serverUrl + "/v1/accounts");
+            request.setHeader("Content-Type", "application/json");
+            request.addHeader("Authorization", authenticationToken);
+
+            HttpResponse response = client.execute(request);
+            org.apache.http.HttpEntity entity = response.getEntity();
+
+            String jsonResponse = EntityUtils.toString(entity, "UTF-8");
+
+            JsonNode rootNode = objectMapper.readTree(jsonResponse);
+
+            // BTC 자산을 찾고, avg_buy_price 필드 값을 가져옴
+            for (JsonNode node : rootNode) {
+                if ("BTC".equals(node.path("currency").asText())) {
+                    return new BigDecimal(node.path("avg_buy_price").asText());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return new BigDecimal(0);
     }
 
     public Page<ProfitAssetHistory> detail(Pageable page) {
@@ -370,7 +467,7 @@ public class ProfitAssetService {
 
     public List<AssetProportion> assetProportion() {
         User loginUser = authService.getLoginUser();
-        List<ProfitAssetHistory> all = profitAssetRepository.findByUserAndSettlementDateLessThanOrderBySettlementDateAsc(loginUser, LocalDate.now());
+        List<ProfitAssetHistory> all = profitAssetRepository.findByUserAndSettlementDateLessThanOrderBySettlementDateDesc(loginUser, LocalDate.now());
         List<AssetProportion> list = new ArrayList<>();
         int count = 30;
         for (ProfitAssetHistory profitAssetHistory : all) {
@@ -416,7 +513,7 @@ public class ProfitAssetService {
             BigDecimal totalCoinEvaluation = getBitcoinCurrentPrice().multiply(getBitcoinAmount(accessKey, secretKey));
 
             // 현재 총 원화 자산
-            BigDecimal totalKRWAssets = getTotalMoney(accessKey, secretKey);
+            BigDecimal totalKRWAssets = getTotalKRW(accessKey, secretKey);
 
             // 기말자산
             BigDecimal endingAssets = totalCoinEvaluation
@@ -496,5 +593,61 @@ public class ProfitAssetService {
             profitAssetRepository.save(newProfitAssetHistory);
         }
     }
+
+    public AssetsDetail getAssetsDetail() throws JsonProcessingException, UnsupportedEncodingException, NoSuchAlgorithmException {
+        User loginUser = authService.getLoginUser();
+        String accessKey = loginUser.getAccessKey();
+        String secretKey = loginUser.getSecretKey();
+        LocalDate today = LocalDate.now();
+
+        BigDecimal bitcoinAmount = getBitcoinAmount(accessKey, secretKey);
+        BigDecimal totalEvaluation = getBitcoinCurrentPrice().multiply(bitcoinAmount);
+        BigDecimal totalInvestment = getBTCAveragePrice(accessKey, secretKey).multiply(bitcoinAmount);
+        BigDecimal profitAndLoss = totalEvaluation.subtract(totalInvestment);
+
+        BigDecimal totalAmount = totalEvaluation.add(getTotalKRW(accessKey, secretKey));
+
+        BigDecimal startingAssets = BigDecimal.ZERO;
+        Optional<ProfitAssetHistory> todayProfitAssetHistory = profitAssetRepository.findByUserAndSettlementDate(loginUser, today);
+        if (todayProfitAssetHistory.isPresent()) {
+            startingAssets = todayProfitAssetHistory.get().getStartingAssets();
+        }
+
+        BigDecimal totalDepositAmount = getTotalDeposit(accessKey, secretKey, today);
+        BigDecimal totalWithdrawAmount = getTotalWithdraws(accessKey, secretKey, today);
+        BigDecimal totalProfitAndLoss = totalAmount
+                .subtract(startingAssets)
+                .add(totalWithdrawAmount)
+                .subtract(totalDepositAmount);
+
+        BigDecimal totalProfitAndLossRatio = BigDecimal.ZERO;
+        if (startingAssets.add(totalDepositAmount).compareTo(BigDecimal.ZERO) > 0) {
+            totalProfitAndLossRatio = totalProfitAndLoss
+                    .divide(startingAssets.add(totalDepositAmount), 8, RoundingMode.DOWN)
+                    .multiply(BigDecimal.valueOf(100))
+                    .setScale(2, RoundingMode.DOWN);
+        }
+
+        BigDecimal profitAndLossRatio = BigDecimal.ZERO;
+        if (totalInvestment.compareTo(BigDecimal.ZERO) > 0) {
+            profitAndLossRatio = profitAndLoss
+                    .divide(totalInvestment, 8, RoundingMode.DOWN)
+                    .multiply(BigDecimal.valueOf(100))
+                    .setScale(2, RoundingMode.DOWN);
+        }
+
+        return AssetsDetail.builder()
+                .totalAmount(totalAmount)
+                .totalProfitAndLossRatio(totalProfitAndLossRatio)
+                .totalInvestment(totalInvestment)
+                .totalEvaluation(totalEvaluation)
+                .totalKRWAssets(getTotalKRW(accessKey, secretKey))
+                .availableAmount(getAvailableKRW(accessKey, secretKey))
+                .profitAndLoss(profitAndLoss)
+                .profitAndLossRatio(profitAndLossRatio)
+                .build();
+    }
+
+
 }
 

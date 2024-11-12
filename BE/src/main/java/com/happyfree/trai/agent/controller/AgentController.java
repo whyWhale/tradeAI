@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import java.util.concurrent.CompletableFuture;
+
 @Tag(name = "에이전트")
 @RequestMapping("/api/agent-history")
 @RestController
@@ -33,7 +35,7 @@ public class AgentController {
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
 	@GetMapping("/ai")
 	public ResponseEntity<?> requestAgent() {
-		agentService.sendAssetsDataToAgent();
+		CompletableFuture.runAsync(agentService::sendAssetsDataToAgent);
 
 		return ResponseEntity.ok().build();
 	}

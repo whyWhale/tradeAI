@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const getInitialDetailList = (unit) => {
-  return axios.get(`https://api.upbit.com/v1/ticker`, { 
+  return axios.get(`${import.meta.env.VITE_BASE_URL}/api/upbit/ticker`, {
     params: {
         markets: "KRW-BTC",
     }
@@ -21,12 +21,12 @@ const getInitialDetailList = (unit) => {
         return {
             low: low_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
             high: high_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-            price: parseFloat(rade_price),
+            price: parseFloat(trade_price),
             tradeVolume: acc_trade_volume_24h.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
             tradePrice: acc_trade_price_24h.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
             change: change,
             changeRate: change_rate.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-            changePrice: signed_change_price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+            changePrice: signed_change_price.toLocaleString(),
             timestamp:timestamp,
         };
       });

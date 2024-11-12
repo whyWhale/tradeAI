@@ -116,6 +116,7 @@ export const chartStyle = {
         showRule: 'always',
         // 'standard' | 'rect'
         showType: 'standard',
+        labels: ['시간', '시가', '종가', '고가', '저가', '거래량'],
         // Custom display, it can be a callback method or an array, when it is a method, it needs to return an array
         // The child item type of the array is { title, value }
         // title and value can be strings or objects, and the object type is { text, color }
@@ -123,12 +124,12 @@ export const chartStyle = {
         // value or value.text supports string templates
         // For example: want to display time, opening and closing, configure [{ title: 'time', value: '{time}' }, { title: 'open', value: '{open}' }, { title: ' close', value: '{close}' }]
         custom: [
-          { title: 'time', value: '{time}' },
+          { title: 'time', value: '{timestamp}' },
           { title: 'open', value: '{open}' },
           { title: 'high', value: '{high}' },
           { title: 'low', value: '{low}' },
-          { title: 'close', value: '{close}' },
-          { title: 'volume', value: '{volume}' }
+          { title: 'close', value: '{price}' },
+          { title: 'volume', value: '{tradeVolume}' }
         ],
         defaultValue: 'n/a',
         rect: {

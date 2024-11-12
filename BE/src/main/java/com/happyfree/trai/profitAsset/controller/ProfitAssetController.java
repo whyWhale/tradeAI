@@ -3,6 +3,7 @@ package com.happyfree.trai.profitAsset.controller;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 
+import com.happyfree.trai.profitAsset.dto.AssetsDetail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -54,5 +55,18 @@ public class ProfitAssetController {
 		UnsupportedEncodingException,
 		NoSuchAlgorithmException {
 		return ResponseEntity.ok(profitAssetService.getTotalProfit());
+	}
+
+	@Operation(summary = "자산 현황 조회")
+	@ApiResponses(value = {
+			@ApiResponse(
+					responseCode = "200",
+					description = "자산 현황 가져오기",
+					content = @Content(schema = @Schema(type = "string", example = "success", implementation = AssetsDetail.class))
+			)
+	})
+	@GetMapping("/assets")
+	public ResponseEntity<?> getAssetsDetail() throws UnsupportedEncodingException, NoSuchAlgorithmException, JsonProcessingException {
+		return ResponseEntity.ok(profitAssetService.getAssetsDetail());
 	}
 }

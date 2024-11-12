@@ -22,12 +22,13 @@ const types = [
 
 const CoinChart = () => {
   const chartRef = useRef(null);
-  const [initialized, setInitialized] = useState(false);
+  const [chartInitialized, setChartInitialized] = useState(false);
+  const [priceInitialized, setPriceInitialized] = useState(false);
   const [activeType, setActiveType] = useState("candle_solid");
   const [chartDetail, setChartDetail] = useState(null); 
 
-  const realTimeData = useRealTimeData(initialized); // 초기화가 완료된 후에만 실행
-  const newData = useNewData(1, initialized); // 초기화가 완료된 후에만 실행
+  const realTimeData = useRealTimeData(chartInitialized); // 초기화가 완료된 후에만 실행
+  const newData = useNewData(1, priceInitialized); // 초기화가 완료된 후에만 실행
   const dispatch = useDispatch(); // Redux dispatch 함수 정의
 
   const formatValue = (value) => (value !== null && value !== undefined ? value.toLocaleString() : "0");
@@ -48,48 +49,54 @@ const CoinChart = () => {
   };
 
   useEffect(() => {
-    chartRef.current = init("coin-chart"); 
-    chartRef.current.setStyleOptions({
-      ...getLanguageOption(),
-      ...chartStyle
-    });
-
-    const fetchData = async () => {
+    const initChart = async () => {
       try {
-        // 차트 데이터 요청
-        const chartDataList = await getInitialDataList(1);
-        if (chartRef.current) {
-          chartRef.current.applyNewData(chartDataList);
-
-        }
+        chartRef.current = init("coin-chart");
+        chartRef.current.setStyleOptions({
+          ...getLanguageOption(),
+          ...chartStyle,
+        });
   
-        // 10초 지연 후 시세 정보 데이터 요청
-        setTimeout(async () => {
+        // 차트 데이터와 시세 정보 초기화 루프
+        while (!chartInitialized || !priceInitialized) {
           try {
-            const detailDataList = await getInitialDetailList();
-            if (detailDataList && detailDataList[0]) {
-              updateChartDetail(detailDataList[0]);
-              dispatch(updateBTCData(detailDataList[0].price)); // Redux 스토어에 데이터 업데이트
-              console.log(detailDataList[0].price);
-              setInitialized(true); // 초기화 완료
+            if (!chartInitialized) {
+              const chartDataList = await getInitialDataList(1);
+              if (chartRef.current) {
+                chartRef.current.applyNewData(chartDataList);
+                setChartInitialized(true);
+              }
+            }
+  
+            if (!priceInitialized) {
+              const detailDataList = await getInitialDetailList();
+              if (detailDataList && detailDataList[0]) {
+                updateChartDetail(detailDataList[0]);
+                dispatch(updateBTCData(detailDataList[0].price));
+                setPriceInitialized(true);
+              }
             }
           } catch (error) {
-            console.error("Failed to fetch detail data. Retrying in 10 seconds...", error);
-            setTimeout(fetchData, 10000); // 10초 후에 다시 fetchData 호출
+            console.error("Failed to fetch data. Retrying in 10 seconds...", error);
           }
-        }, 10000);
+  
+          if (!chartInitialized || !priceInitialized) {
+            await new Promise((resolve) => setTimeout(resolve, 10000));
+          }
+        }
       } catch (error) {
-        console.error("Failed to fetch initial chart data. Retrying in 10 seconds...", error);
-        setTimeout(fetchData, 10000); // 10초 후에 다시 fetchData 호출
+        console.error("Failed to initialize chart data.", error);
       }
     };
-
-    fetchData();
-
+  
+    initChart();
+  
     return () => {
-      dispose("coin-chart");
+      dispose("coin-chart"); // 컴포넌트가 언마운트될 때 차트를 해제
     };
   }, []);
+  
+  
 
   useEffect(() => {
     if (newData) {      
@@ -109,7 +116,7 @@ const CoinChart = () => {
         {chartDetail ? (
           <>
             <div className="chart-price-container" style={ chartDetail.priceStyle }>
-              <div className="chart-price">{`${formatValue(chartDetail.price)}`}<span style={{ fontSize: '16px' }}>KRW</span></div>
+              <div className="chart-price">{`${formatValue(chartDetail.price)}`}<span  style={{  position: 'relative', top: '16px', fontSize: '16px' }}>KRW</span></div>
               <div className="change-text">
                 <span className="signed-price-rate">{`${formatValue(chartDetail.changeRate)}`}</span>
                 <span className="change-price">{`${formatValue(chartDetail.changePrice)}`}</span>

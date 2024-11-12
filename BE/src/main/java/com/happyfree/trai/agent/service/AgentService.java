@@ -4,12 +4,17 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.gson.Gson;
 import com.happyfree.trai.agent.dto.AgentDecisionResult;
 import com.happyfree.trai.agent.entity.Agent;
 import com.happyfree.trai.agent.dto.AssetData;
 import com.happyfree.trai.agent.repository.AgentRepository;
 import com.happyfree.trai.global.exception.CustomException;
+import com.happyfree.trai.profitAsset.entity.ProfitAssetHistory;
+import com.happyfree.trai.profitAsset.repository.ProfitAssetRepository;
+import com.happyfree.trai.transactionHistory.dto.TodayTransactionHistory;
 import com.happyfree.trai.transactionHistory.entity.TransactionHistory;
 import com.happyfree.trai.transactionHistory.repository.TransactionHistoryRepository;
 import com.happyfree.trai.profitAsset.service.ProfitAssetService;
@@ -29,16 +34,19 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import static com.happyfree.trai.global.exception.ErrorCode.*;
+
 
 @Service
 @Transactional
@@ -56,7 +64,11 @@ public class AgentService {
 
     private final WebClient webClient;
 
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+
+    private final ProfitAssetRepository profitAssetRepository;
 
     String serverUrl = "https://api.upbit.com";
 
@@ -82,13 +94,22 @@ public class AgentService {
                 // 데이터 수집
                 BigDecimal totalBTCAmount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
                 BigDecimal tradePrice = profitAssetService.getBitcoinCurrentPrice();
-                BigDecimal totalKRWAssets = profitAssetService.getTotalMoney(accessKey, secretKey);
+                BigDecimal totalKRWAssets = profitAssetService.getTotalKRW(accessKey, secretKey);
+
+                List<ProfitAssetHistory> investmentPerformanceSummary = profitAssetRepository.findTop5ByUserAndSettlementDateLessThanOrderBySettlementDateDesc(user, LocalDate.now());
+                List<TransactionHistory> todayTransactionHistories = transactionHistoryRepository.findTop10ByUserOrderByCreatedAtDesc(user);
+                List<TodayTransactionHistory> bitcoinPositionHistory = todayTransactionHistories.stream()
+                        .map(TodayTransactionHistory::from)
+                        .collect(Collectors.toList());
+
 
                 // 단일 AssetData 객체 생성
                 AssetData assetData = AssetData.builder()
                         .userId(user.getId())
                         .btcBalanceKrw(totalBTCAmount.multiply(tradePrice).floatValue())
                         .availableAmount(totalKRWAssets.floatValue())
+                        .investmentPerformanceSummary(investmentPerformanceSummary)
+                        .bitcoinPositionHistory(bitcoinPositionHistory)
                         .build();
 
                 // AI 서버로 단일 요청 전송
@@ -167,7 +188,7 @@ public class AgentService {
             agentRepository.save(agent);
 
             BigDecimal nowBitcoinCount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
-            BigDecimal averageBitcoinPrice = getBTCAveragePrice(accessKey, secretKey);
+            BigDecimal averageBitcoinPrice = profitAssetService.getBTCAveragePrice(accessKey, secretKey);
 
             // 투자 내역 저장
             if (enoughAmount && (decision.equals("SELL") || decision.equals("BUY"))) {
@@ -176,7 +197,7 @@ public class AgentService {
                     transactionHistory.updateUser(user);
                     transactionHistory.updateSide(decision);
                     transactionHistory.updateTotalEvaluation(BigDecimal.valueOf(Long.parseLong(transactionHistory.getPrice())).multiply(nowBitcoinCount));
-                    transactionHistory.updateTotalAmount(profitAssetService.getTotalMoney(accessKey, secretKey)
+                    transactionHistory.updateTotalAmount(profitAssetService.getTotalKRW(accessKey, secretKey)
                             .add(nowBitcoinPrice.multiply(nowBitcoinCount)));
                     transactionHistory.updateAveragePrice(averageBitcoinPrice);
                     transactionHistory.updateAgent(agent);
@@ -202,12 +223,13 @@ public class AgentService {
                         .agent(agent)
                         .side(decision)
                         .totalEvaluation(nowBitcoinPrice.multiply(nowBitcoinCount))
-                        .totalAmount(profitAssetService.getTotalMoney(accessKey, secretKey)
+                        .totalAmount(profitAssetService.getTotalKRW(accessKey, secretKey)
                                 .add(nowBitcoinPrice.multiply(nowBitcoinCount)))
                         .executedFunds(BigDecimal.ZERO)
                         .orderCreatedAt(LocalDateTime.now())
                         .averagePrice(averageBitcoinPrice)
                         .price(nowBitcoinPrice.toString())
+                        .profitAndLoss(BigDecimal.ZERO)
                         .build();
 
                 transactionHistoryRepository.save(transactionHistory);
@@ -341,42 +363,6 @@ public class AgentService {
         }
 
         return null;
-    }
-
-    // 업비트 매수평균가
-    public BigDecimal getBTCAveragePrice(String accessKey, String secretKey) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey);
-        String jwtToken = JWT.create()
-                .withClaim("access_key", accessKey)
-                .withClaim("nonce", UUID.randomUUID().toString())
-                .sign(algorithm);
-
-        String authenticationToken = "Bearer " + jwtToken;
-
-        try {
-            HttpClient client = HttpClientBuilder.create().build();
-            HttpGet request = new HttpGet(serverUrl + "/v1/accounts");
-            request.setHeader("Content-Type", "application/json");
-            request.addHeader("Authorization", authenticationToken);
-
-            HttpResponse response = client.execute(request);
-            HttpEntity entity = response.getEntity();
-
-            String jsonResponse = EntityUtils.toString(entity, "UTF-8");
-
-            JsonNode rootNode = mapper.readTree(jsonResponse);
-
-            // BTC 자산을 찾고, avg_buy_price 필드 값을 가져옴
-            for (JsonNode node : rootNode) {
-                if ("BTC".equals(node.path("currency").asText())) {
-                    return new BigDecimal(node.path("avg_buy_price").asText());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return new BigDecimal(0);
     }
 
     private boolean checkAmount(BigDecimal orderAmount){

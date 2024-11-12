@@ -18,45 +18,23 @@ const useAssetData = (BTCPrice) => {
       })
       .then((res) => res.data)
       .then((data) => {
+        console.log(data);
         if(data!==null){
-          const KRWData = data.find((item) => item.currency === "KRW");
-          const BTCData = data.find((item) => item.currency === "BTC");
-          
-          price = parseFloat(BTCPrice);
-
-
-          // 'KRW'와 'BTC' 데이터가 없을 경우
-          const heldKRW = KRWData ? parseFloat(KRWData.balance) : 0;
-          const BTCBalance = BTCData ? parseFloat(BTCData.balance) : 0;
-          const avgBuyPrice = BTCData ? parseFloat(BTCData.avg_buy_price) : 0;
-
-          // 계산
-          const totalPurchase = BTCBalance * avgBuyPrice;
-          const totalValuation = price * BTCBalance;
-          const valuationProfit = totalValuation - totalPurchase;
-          const valuationProfitRatio = totalPurchase ? ((valuationProfit / totalPurchase) * 100).toFixed(2) : 0;
-          const totalAssets = totalValuation + heldKRW;
-          const returnRate = (totalPurchase + heldKRW) ? ((totalAssets / (totalPurchase + heldKRW)) * 100).toFixed(2) : 0;
-
-          const heldKRWValue = heldKRW.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          const totalPurchaseValue = totalPurchase.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          const totalValuationValue = totalValuation.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          const valuationProfitValue = totalValuation.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-          const totalAssetsValue = totalAssets.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-          console.log("totalPurchase: "+totalPurchase);
-          console.log("totalValuation: "+totalValuation);
-          console.log("avgBuyPrice: "+avgBuyPrice);
-          console.log("BTCBalance: "+BTCBalance);
-          console.log("heldKRW: "+heldKRW);
-
+          const totalPurchase=data.totalInvestment;
+          const totalValuation=data.totalEvaluation;
+          const heldKRW=data.totalKRWAssets;
+          const availableBalance=data.availableAmount;
+          const valuationProfit=data.profitAndLoss;
+          const valuationProfitRatio=data.totalProfitAndLossRatio;
+          const totalAssets=data.totalAmount;
+          const returnRate=data.profitAndLossRatio;
           // formattedData 구성
           const formattedData = {
-            totalPurchase:totalPurchaseValue,
-            totalValuation:totalValuationValue,
-            heldKRW: heldKRWValue,
-            availableBalance: heldKRWValue,
-            valuationProfit: valuationProfitValue,
+            totalPurchase,
+            totalValuation,
+            heldKRW,
+            availableBalance,
+            valuationProfit,
             valuationProfitRatio,
             totalAssets:totalAssetsValue,
             returnRate
