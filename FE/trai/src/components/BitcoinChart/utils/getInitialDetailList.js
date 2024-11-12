@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const getInitialDetailList = (unit) => {
-  return axios.get(`${import.meta.env.VITE_BASE_URL}/api/upbit/ticker`, {
+  return axios.get(`https://www.trai-ai.site/api/upbit/ticker`, {
     params: {
         markets: "KRW-BTC",
     }

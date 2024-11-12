@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const getInitialDataList = (unit) => {
-  return axios.get(`${import.meta.env.VITE_BASE_URL}/api/upbit/candles/minutes/${unit}`, {
+  return axios.get(`https://www.trai-ai.site/api/upbit/candles/minutes/${unit}`, {
       params: {
       market: 'KRW-BTC',
       to: new Date(+new Date() + 3240 * 10000).toISOString().replace("T", " ").replace(/\..*/, ''),
