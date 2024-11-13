@@ -15,7 +15,6 @@ const useAssetData = () => {
       })
       .then((res) => res.data)
       .then((data) => {
-        console.log(data);
         if(data!==null){
           const totalPurchase=parseFloat(data.totalInvestment).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,});
           const totalValuation=parseFloat(data.totalEvaluation).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,});
