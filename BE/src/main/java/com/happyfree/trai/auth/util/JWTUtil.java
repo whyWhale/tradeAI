@@ -16,7 +16,7 @@ import java.util.Date;
 @Component
 public class JWTUtil {
 
-    private Long accessExpired=99999999999999L;
+    private Long accessExpired=Long.MAX_VALUE;
 
 
     private final SecretKey secretKey;

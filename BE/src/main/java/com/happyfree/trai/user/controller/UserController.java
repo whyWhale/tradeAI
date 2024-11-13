@@ -23,19 +23,6 @@ public class UserController {
 
 	private final UserService userService;
 
-	@Operation(summary = "jwt")
-	@ApiResponses(value = {
-		@ApiResponse(
-			responseCode = "200",
-			description = "토큰 가져오기 성공",
-			content = @Content(schema = @Schema(type = "string", example = "토큰 값"))
-		)
-	})
-	@PostMapping("/token")
-	public ResponseEntity<?> makeToken() {
-		return ResponseEntity.ok(userService.createToken());
-	}
-
 	@Operation(summary = "회원가입")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
 	@PostMapping("/join")

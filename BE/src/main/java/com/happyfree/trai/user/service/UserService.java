@@ -30,14 +30,6 @@ public class UserService {
 
 	private final UserRepository userRepository;
 
-	public String createToken() {
-		User loginUser = authService.getLoginUser();
-		return "Bearer " + JWT.create()
-				.withClaim("access_key", loginUser.getAccessKey())
-				.withClaim("nonce", UUID.randomUUID().toString())
-				.sign(Algorithm.HMAC256(loginUser.getSecretKey()));
-	}
-
 	public void save(SignUp signUp) {
 		userRepository.save(User.builder()
 				.email(signUp.getUsername())
