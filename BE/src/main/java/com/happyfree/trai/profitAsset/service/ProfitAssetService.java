@@ -635,6 +635,7 @@ public class ProfitAssetService {
                     .multiply(BigDecimal.valueOf(100))
                     .setScale(2, RoundingMode.DOWN);
         }
+        log.info("profitAndLossRatio : {}", profitAndLossRatio);
 
         return AssetsDetail.builder()
                 .totalAmount(totalAmount)
