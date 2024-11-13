@@ -28,8 +28,8 @@ const TimelineItem = ({ item }) => {
     <Item>
       <Icon type={item.kind} />
       <Content>
-        {item.volume && <Amount>{item.volume} BTC,<br />{item.money} KRW</Amount>}
-        {item.kind === "HOLD" ? 'HOLD' : ''}
+        {item.volume && <Amount>{item.money} KRW</Amount>}
+        {item.kind === "HOLD" ? '홀드' : (item.kind ==="SELL"?"매도":"매수")}
         <Date>{item.date}</Date>
       </Content>
     </Item>
@@ -39,14 +39,14 @@ const TimelineItem = ({ item }) => {
 // 스타일 정의
 const TimelineContainer = styled.div`
   width: 100%;
-  padding: 5vw;
+  padding: 0.2vw;
   overflow-y: auto;
-  max-height: 90vh; // 스크롤 가능하도록 최대 높이 설정
+  max-height: auto; // 스크롤 가능하도록 최대 높이 설정
   border-right: 0.1vw solid #e0e0e0;
 
   /* 스크롤바 스타일 */
   &::-webkit-scrollbar {
-    width: 0.5vw;
+    width: auto;
   }
 
   &::-webkit-scrollbar-track {
@@ -73,7 +73,7 @@ const Header = styled.div`
 `;
 
 const Title = styled.h2`
-  font-size: 1.2vw;
+  font-size: 0.9vw;
   color: #333;
 `;
 

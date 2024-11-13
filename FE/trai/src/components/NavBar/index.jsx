@@ -54,7 +54,7 @@ const NavBar = ({openModal}) => {
           </StyledNavLink>
           <StyledNavLink to="/investment-status">
             <div className="PageIcon"><MdCurrencyBitcoin /></div>
-            <div className="PageName">투자 현황</div>
+            <div className="PageName">투자 내역</div>
           </StyledNavLink>
           <StyledNavLink to="/trade-details">
             <div className="PageIcon"><PiHeadCircuit /></div>
