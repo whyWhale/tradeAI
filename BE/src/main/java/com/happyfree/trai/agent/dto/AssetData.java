@@ -20,6 +20,7 @@ public class AssetData {
     private Long userId;
     private float availableAmount;
     private float btcBalanceKrw;
+    private String investmentType;
     private List<RecentInvestmentSummary> investmentPerformanceSummary;
     private List<RecentTransactionHistory> bitcoinPositionHistory;
 }

@@ -110,6 +110,7 @@ public class AgentService {
                         .userId(user.getId())
                         .btcBalanceKrw(totalBTCAmount.multiply(tradePrice).floatValue())
                         .availableAmount(totalKRWAssets.floatValue())
+                        .investmentType(user.getInvestmentType())
                         .investmentPerformanceSummary(investmentPerformanceSummary)
                         .bitcoinPositionHistory(bitcoinPositionHistory)
                         .build();
