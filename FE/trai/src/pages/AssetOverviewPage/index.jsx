@@ -11,11 +11,9 @@ import { useSelector } from 'react-redux';
 import useInvestmentSummary from './apis/useInvestmentSummary.jsx';
 import '../../components/Loaders/index.scss'
 
-
-
 const AssetOverview = () => {
   const BTCData = useSelector((state) => state.BTCData);
-  const { assetData, assetLoading, assetEmpty, assetError } = useAssetData(BTCData);
+  const { assetData, assetLoading, assetEmpty, assetError } = useAssetData();
   const { investmentData, tradeInitialized, investmentLoading, investmentError } = useInvestmentSummary();
 
   const decisionCount = useSelector((state) => state.decisionCount.totalCount);
@@ -60,7 +58,7 @@ const AssetOverview = () => {
                 <span style={{ float: "right", color: "#48BB78" }}>{assetLoading||assetError ? " ? " :(assetEmpty ? "자산 정보가 없습니다." : `${assetData.valuationProfitRatio}`)} %</span>
               </div>
             </div>
-        </>
+          </>
         {/* Right Side Info Cards */}
         <div className="info-card-medium">
           <div className="card-title" style={{

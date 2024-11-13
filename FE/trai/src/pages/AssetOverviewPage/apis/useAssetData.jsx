@@ -1,20 +1,17 @@
 import { useState, useEffect } from "react";
 import { instance } from "../../../api/axios";
 
-const useAssetData = (BTCPrice) => {
+const useAssetData = () => {
   // BTCData가 존재하지 않으면 실행하지 않음
-
   const [assetData, setData] = useState({});
   const [assetEmpty, setEmpty] = useState(false);
   const [assetLoading, setLoading] = useState(true);
   const [assetError, setError] = useState(null);
 
-
   useEffect(() => {
-    if (!BTCPrice) return;
     setLoading(true);
     instance
-      .post(`/api/upbits/accounts`, {
+      .post(`/api/investments/assets`, {
       })
       .then((res) => res.data)
       .then((data) => {
@@ -36,15 +33,13 @@ const useAssetData = (BTCPrice) => {
             availableBalance,
             valuationProfit,
             valuationProfitRatio,
-            totalAssets:totalAssetsValue,
+            totalAssets,
             returnRate
           };
-
           setData(formattedData);
         } else{
           setEmpty(true);
         }
-        
       })
       .catch((err) => {
         console.error(err);
@@ -53,7 +48,7 @@ const useAssetData = (BTCPrice) => {
       .finally(() => {
         setLoading(false);
       });
-  }, [BTCPrice]);
+  }, []);
 
   return { assetData, assetLoading, assetEmpty, assetError };
 };

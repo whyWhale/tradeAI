@@ -9,7 +9,7 @@ import getInitialDetailList from "./utils/getInitialDetailList";
 import getLanguageOption from "./utils/getLanguageOption";
 import { chartStyle } from './chartStyle';
 import useRealTimeData from "./hooks/useRealTimeData";
-import useNewData from "./hooks/useNewData";
+// import useNewData from "./hooks/useNewData";
 import ChartButton from './ChartButton';
 import { updateBTCData } from "../../store/reducers/BTCDataSlice"
 
@@ -28,7 +28,7 @@ const CoinChart = () => {
   const [chartDetail, setChartDetail] = useState(null); 
 
   const realTimeData = useRealTimeData(chartInitialized); // 초기화가 완료된 후에만 실행
-  const newData = useNewData(1, priceInitialized); // 초기화가 완료된 후에만 실행
+  // const newData = useNewData(1, priceInitialized); // 초기화가 완료된 후에만 실행
   const dispatch = useDispatch(); // Redux dispatch 함수 정의
 
   const formatValue = (value) => (value !== null && value !== undefined ? value.toLocaleString() : "0");
@@ -98,11 +98,11 @@ const CoinChart = () => {
   
   
 
-  useEffect(() => {
-    if (newData) {      
-      chartRef.current.updateData(newData); 
-    }
-  }, [newData]); 
+  // useEffect(() => {
+  //   if (newData) {      
+  //     chartRef.current.updateData(newData); 
+  //   }
+  // }, [newData]); 
 
   useEffect(() => {
     if (realTimeData) {

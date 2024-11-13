@@ -27,4 +27,9 @@ public class User extends BaseEntity {
 
 	@Column(columnDefinition = "TEXT")
 	private String investmentType;
+
+	public void updateInvestmentType(String investmentType) {
+		this.investmentType = investmentType;
+	}
+
 }
