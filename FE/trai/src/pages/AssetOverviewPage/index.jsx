@@ -17,8 +17,6 @@ const AssetOverview = () => {
   const { investmentData, tradeInitialized, investmentLoading, investmentError } = useInvestmentSummary();
 
   const decisionCount = useSelector((state) => state.decisionCount.totalCount);
-  if (assetData) console.log(assetData);
-
   return (
     <div className="asset-overview">
       {/* Left Sidebar */}
