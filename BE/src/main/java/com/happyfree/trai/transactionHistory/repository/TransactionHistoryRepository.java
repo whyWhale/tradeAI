@@ -13,7 +13,8 @@ public interface TransactionHistoryRepository extends JpaRepository<TransactionH
 
 	@Query("SELECT t " +
 			"FROM TransactionHistory t " +
-			"WHERE t.user = :user AND DATE(t.orderCreatedAt) = :date")
+			"WHERE t.user = :user AND DATE(t.orderCreatedAt) = :date " +
+			"ORDER BY t.orderCreatedAt DESC")
 	List<TransactionHistory> findByUserAndDate(@Param("user") User user, @Param("date") LocalDate date);
 
 	List<TransactionHistory> findTop10ByUserOrderByCreatedAtDesc(User user);

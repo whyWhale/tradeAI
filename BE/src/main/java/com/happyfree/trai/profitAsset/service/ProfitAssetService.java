@@ -467,7 +467,7 @@ public class ProfitAssetService {
 
     public List<AssetProportion> assetProportion() {
         User loginUser = authService.getLoginUser();
-        List<ProfitAssetHistory> all = profitAssetRepository.findByUserAndSettlementDateLessThanOrderBySettlementDateDesc(loginUser, LocalDate.now());
+        List<ProfitAssetHistory> all = profitAssetRepository.findByUserAndSettlementDateLessThan(loginUser, LocalDate.now());
         List<AssetProportion> list = new ArrayList<>();
         int count = 30;
         for (ProfitAssetHistory profitAssetHistory : all) {
