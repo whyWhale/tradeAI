@@ -3,6 +3,7 @@ package com.happyfree.trai.user.service;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.happyfree.trai.auth.service.AuthService;
+import com.happyfree.trai.user.dto.InvestmentType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -77,5 +78,13 @@ public class UserService {
 		}
 
 		return true;
+	}
+
+	public String saveInvestmentType(InvestmentType investmentType) {
+		User loginUser = authService.getLoginUser();
+		loginUser.updateInvestmentType(investmentType.getInvestmentType());
+		userRepository.save(loginUser);
+
+		return loginUser.getInvestmentType();
 	}
 }
