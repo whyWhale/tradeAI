@@ -16,8 +16,6 @@ function connect(ws, c, setResult) {
     if (c.current < 15) {
       c.current += 1;
       setTimeout(() => connect(ws, c, setResult), 1000 * c.current);
-    } else {
-      console.error("Max reconnection attempts reached");
     }
   };
 
