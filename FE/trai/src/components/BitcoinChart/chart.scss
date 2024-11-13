@@ -2,37 +2,37 @@
     display: grid;
     grid-template-columns: 2fr 1fr 2fr;
     grid-template-rows: auto auto;
-    gap: 1px;
-    height: 130px;
+    gap: 0.1vw;
+    height: 15vh;
     width: 100%;
     align-items: center;
-    margin-top:10px;
-    
-    .chart-price-container{
-      grid-area: 3 / 1 / 4 / 2;
+    margin-top: 1vh;
 
-      .chart-price {
-          font-family: 'Pretendard';
-          font-weight: 800;
-          font-size: 32px;
-          display: flex;
-          align-items: left;
-      }
-  
-      .change-text {
-          display: flex;
-          justify-content: space-between;
-          width: 100%;
-          font-family: 'Pretendard';
-          font-weight: 600;
-          font-size: 24px;
-          .signed-price-rate{
-              text-align: 'left';
-          }
-          .change-price {
-              text-align: 'right';
-          }
-      }
+    .chart-price-container {
+        grid-area: 3 / 1 / 4 / 2;
+
+        .chart-price {
+            font-family: 'Pretendard';
+            font-weight: 800;
+            font-size: 2vw;
+            display: flex;
+            align-items: left;
+        }
+
+        .change-text {
+            display: flex;
+            justify-content: space-between;
+            width: 3vh;
+            font-family: 'Pretendard';
+            font-weight: 600;
+            font-size: 1.5vw;
+            .signed-price-rate {
+                text-align: left;
+            }
+            .change-price {
+                text-align: right;
+            }
+        }
     }
 
     .chart-details {
@@ -40,17 +40,14 @@
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-template-rows: repeat(2, 1fr);
-        grid-column-gap: 0px;
-        grid-row-gap: 0px;
-        
-        gap: 0.1px;
+        gap: 0.05vw;
         width: 100%;
-        padding: 10px 0;
-        border-top: 1px solid #e2e8f0;
-        border-bottom: 1px solid #e2e8f0;
+        padding: 0.5vh 0;
+        border-top: 0.1vh solid #e2e8f0;
+        border-bottom: 0.1vh solid #e2e8f0;
         font-family: 'Pretendard';
-        font-size: 11px;
-        line-height: 140%;
+        font-size: 0.7vw;
+        line-height: 1.4;
         text-align: left;
 
         .high {
@@ -70,10 +67,9 @@
             }
         }
         .volume24 {
-            grid-area: 1 / 2 / 2 / 3; 
+            grid-area: 1 / 2 / 2 / 3;
             color: #2D3748;
             font-weight: 400;
-    
             .volume24-value {
                 color: #A0AEC0;
             }
@@ -82,34 +78,32 @@
             grid-area: 2 / 2 / 3 / 3;
             color: #2D3748;
             font-weight: 400;
-    
             .price24-value {
                 color: #A0AEC0;
             }
         }
-
     }
 }
 
 .coin-chart {
-    width: 100%;
+    width: 54vw;
+    height: auto;
     flex: 1;
-    margin-top: 20px;
+    margin-top: 1.5vh;
 
     .chart-menu-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
+        display: flex;
+        justify-content: center;
+        gap: 1vw;
     }
 }
 
 .small-vector {
-    width: 30px;
-    height: 30px;
+    width: 2vw;
+    height: 2vw;
     background: #ffffff;
     border-radius: 50%;
     position: absolute;
     top: 47%;
     left: 36%;
 }
-
