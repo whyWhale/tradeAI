@@ -1,13 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 const UPBIT_URL = "wss://api.upbit.com/websocket/v1";
-
 function connect(ws, c, setResult) {
-  console.log("소켓 start");
   ws.current = new WebSocket(UPBIT_URL);
 
   ws.current.onopen = () => {
-    console.log("WebSocket connected");
-    c.current = 10;
+    c.current = 0;
     const message = [
       {ticket: "nexoneunji"},
       {type: "ticker", codes: ["KRW-BTC"], isOnlyRealtime: true},
@@ -16,11 +13,8 @@ function connect(ws, c, setResult) {
   };
 
   ws.current.onclose = () => {
-    console.log("DISCONNECTED\n\n");
-    console.log("WebSocket closed, attempting to reconnect...");
-    if (c.current < 10) {
+    if (c.current < 15) {
       c.current += 1;
-      console.log('다시시도합니다');
       setTimeout(() => connect(ws, c, setResult), 1000 * c.current);
     } else {
       console.error("Max reconnection attempts reached");
@@ -30,7 +24,6 @@ function connect(ws, c, setResult) {
   ws.current.onmessage = async (event) => {
     const text = await new Response(event.data).text();
     const message = JSON.parse(text);
-    console.log("Received message:", message);
     const {
       low_price,
       high_price,
@@ -61,7 +54,6 @@ function connect(ws, c, setResult) {
       ws.current.close();
     }
 
-    console.log('다시시도합니다');
     setTimeout(() => connect(ws, c, setResult), 1000 * c.current);
   };
 }
