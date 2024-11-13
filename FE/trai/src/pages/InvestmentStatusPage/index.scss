@@ -1,75 +1,70 @@
 /* 기본적인 body, html 스타일 초기화 */
 body, html {
-    margin: 0; /* 기본 여백 제거 */
-    padding: 0; /* 기본 패딩 제거 */
-    background: #F8F9FA; /* 배경색 설정 */
-    box-sizing: border-box; /* 요소의 크기 계산 방식을 border-box로 설정 */
-    font-family: 'Pretendard';
+  margin: 0;
+  padding: 0;
+  background: #F8F9FA;
+  box-sizing: border-box;
+  font-family: 'Pretendard';
 }
-  
+
 /* 모든 요소에 box-sizing: border-box를 적용 */
 *,
 *::before,
 *::after {
-  box-sizing: inherit; /* 부모의 box-sizing을 상속받도록 설정 */
+  box-sizing: inherit;
 }
 
 /* 전체 컨테이너 */
 .investment-status {
-  position: relative; /* 내부 요소들이 절대 위치로 배치될 때 기준이 되는 요소 */
-  width: 100%; /* 전체 너비 설정 */
-  height: 100vh; /* 화면 높이에 맞춤 */
+  position: relative;
+  width: 100%;
+  height: 100vh;
 }
 
 .card-detailedInvestmentReport,
 .card-investmentHistory,
-.card-currentAssetAllocation   {
-  position: absolute; /* 절대 위치 지정 */
+.card-currentAssetAllocation {
+  position: absolute;
   background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 추가 */
-  border-radius: 15px; /* 모서리를 둥글게 설정 */
-  padding-left: 1.5%;
-  padding-right: 1.5%;
-  padding-top: 0.3%;
+  border-radius: 0.8vw;
+  box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.1);
+  padding-left: 1.5vw;
+  padding-right: 1.5vw;
+  padding-top: 0.3vw;
   align-content: center;
 }
-  /* 투자 손익 상세 카드 */
+
+/* 투자 손익 상세 카드 */
 .investmentReport {
-  width: 23.1%; /* 전체 너비의 23.1% */
-  height: 27%; /* 전체 높이의 27% */
-  left: 75.2%; /* 좌측에서 75.2% 떨어진 위치 */
-  top: 4.1%; /* 상단에서 4.1% 떨어진 위치 */
+  width: 23.1vw;
+  height: 27vh;
+  left: 75.2vw;
+  top: 4.1vh;
   position: relative;
-  
-  
 }
 
 .investment-details-table {
-  margin: 5px;
+  margin: 0.3vw;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height:90%;
+  height: 90%;
   color: #2D3748;
-
 
   table {
     align-self: flex-start;
     border-collapse: collapse;
     width: 100%;
-    margin-bottom: 5px;
-    border: none; /* 테이블 자체의 테두리 제거 */
+    margin-bottom: 0.3vw;
+    border: none;
 
     th, td {
-      padding: 10px;
-      border-top: 1px solid #ddd;
-      border-bottom: 1px solid #ddd;
+      padding: 0.5vw;
+      border-top: 0.05vw solid #ddd;
+      border-bottom: 0.05vw solid #ddd;
     }
 
-
-    /* 내부 셀 사이에만 구분선이 보이도록 설정 */
     th:first-child, td:first-child {
       border-left: none;
     }
@@ -82,6 +77,7 @@ body, html {
       border-top: none;
       background-color: transparent;
     }
+
     tr:last-child th, tr:last-child td {
       border-bottom: none;
     }
@@ -101,14 +97,14 @@ body, html {
     display: flex;
     justify-content: center;
     color: var(--trai-disabled);
-    gap: 5px;
+    gap: 0.3vw;
 
     button {
-      padding: 8px 12px;
-      border: 1px solid var(--trai-mint);
+      padding: 0.5vw 0.8vw;
+      border: 0.05vw solid var(--trai-mint);
       background-color: var(--trai-white);
       cursor: pointer;
-      border-radius: 4px;
+      border-radius: 0.2vw;
 
       &:hover {
         background-color: var(--trai-white);
@@ -128,24 +124,24 @@ body, html {
 }
 
 .card-detailedInvestmentReport {
-  width: 57%; /* 전체 너비의 59.2% */
-  height: 91.7%; /* 전체 높이의 91.7% */
-  left: 20.4%; /* 좌측에서 20.4% 떨어진 위치 */
-  top: 4.1%; /* 상단에서 4.1% 떨어진 위치 */
+  width: 57vw;
+  height: 91.7vh;
+  left: 20.4vw;
+  top: 4.1vh;
   position: relative;
   z-index: 1;
 }
 
 .card-investmentHistory {
-  width: 20%; /* 전체 너비의 17.7% */
-  height: 63.2%; /* 전체 높이의 63.2% */
-  left: 78.4%; /* 좌측에서 80.4% 떨어진 위치 */
-  top: 32.8%; /* 상단에서 32.8% 떨어진 위치 */
+  width: 20vw;
+  height: 63.2vh;
+  left: 78.4vw;
+  top: 32.8vh;
 }
 
 .card-currentAssetAllocation {
-  width: 20%; /* 전체 너비의 17.7% */
-  height: 27.5%; /* 전체 높이의 27.5% */
-  left: 78.4%; /* 좌측에서 80.4% 떨어진 위치 */
-  top: 4.1%; /* 상단에서 4.1% 떨어진 위치 */
+  width: 20vw;
+  height: 27.5vh;
+  left: 78.4vw;
+  top: 4.1vh;
 }
