@@ -25,8 +25,8 @@
 @tailwind utilities;
 
 :root {
-  max-width: 1300px;
-  max-height: 660px;
+  min-width: 1300px;
+  min-height: 660px;
 }
 /* :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
