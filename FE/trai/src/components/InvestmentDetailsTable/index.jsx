@@ -32,13 +32,28 @@ const InvestmentDetailsTable = () => {
         <tbody>
           {data.map((item, index) => (
             <tr key={index}>
-              <td>{item.settlementDate ? item.settlementDate.toLocaleString(undefined, { style: 'currency', currency: 'KRW' }) : ""}</td>
-              <td>{item.dailyProfitAndLoss ? item.dailyProfitAndLoss.toLocaleString(undefined, { style: 'currency', currency: 'KRW' }) : ""}</td>
-              <td>{item.dailyProfitRatio || 0}%</td>
-              <td>{item.accumulationProfitAndLoss ? item.accumulationProfitAndLoss.toLocaleString(undefined, { style: 'currency', currency: 'KRW' }) : ""}</td>
-              <td>{item.accumulationProfitRatio || 0}%</td>
-              <td>{item.startingAssets ? item.startingAssets.toLocaleString(undefined, { style: 'currency', currency: 'KRW' }) : ""}</td>
-              <td>{item.endingAssets ? item.endingAssets.toLocaleString(undefined, { style: 'currency', currency: 'KRW' }) : ""}</td>
+              <td>{item.settlementDate}</td>
+              <td>{item.dailyProfitAndLoss !== undefined && item.dailyProfitAndLoss !== null 
+                  ? Number(item.dailyProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                  : ""}
+              </td>
+              <td>{item.dailyProfitRatio != null ? `${item.dailyProfitRatio}%` : ""}</td>
+              <td>
+                {item.accumulationProfitAndLoss !== undefined && item.accumulationProfitAndLoss !== null 
+                  ? Number(item.accumulationProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                  : ""}
+              </td>
+              <td>{item.accumulationProfitRatio != null ? `${item.accumulationProfitRatio}%` : ""}</td>
+              <td>
+                {item.startingAssets !== undefined && item.startingAssets !== null 
+                  ? Number(item.startingAssets).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                  : ""}
+              </td>
+              <td>
+                {item.endingAssets !== undefined && item.endingAssets !== null 
+                  ? Number(item.endingAssets).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                  : ""}
+              </td>
             </tr>
           ))}
         </tbody>
