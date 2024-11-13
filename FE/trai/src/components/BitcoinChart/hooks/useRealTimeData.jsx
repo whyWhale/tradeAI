@@ -13,7 +13,7 @@ function connect(ws, c, setResult) {
   };
 
   ws.current.onclose = () => {
-    if (c.current < 15) {
+    if (c.current < 10) {
       c.current += 1;
       setTimeout(() => connect(ws, c, setResult), 1000 * c.current);
     }
@@ -47,7 +47,7 @@ function connect(ws, c, setResult) {
   };
 
   ws.current.onerror = (event) => {
-    console.error("WebSocket error:", event);
+    console.error("WebSocket error:", event.data);
     if (ws.current.readyState === WebSocket.OPEN) {
       ws.current.close();
     }
