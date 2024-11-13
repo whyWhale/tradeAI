@@ -2,6 +2,16 @@ const blue = '#4FD1C5'; // 원하는 색상 코드로 설정
 const getAlphaBlue = (alpha) => {
   return `rgba(79, 209, 197, ${alpha})`; // alpha 값에 따라 변경
 };
+
+// 반응형 폰트 크기 함수
+const getResponsiveFontSize = () => {
+  const width = window.innerWidth;
+  // 기본 크기를 기준으로 뷰포트 너비에 따라 비율을 계산
+  if (width > 1400) return 12; // 큰 화면에서는 기본 크기 유지
+  if (width > 800) return 10;   // 중간 화면에서는 약간 작은 크기
+  return 8;                     // 작은 화면에서는 더 작은 크기
+};
+
 export const chartStyle = {
     grid: {
       show: true,
@@ -90,7 +100,7 @@ export const chartStyle = {
             show: true,
             // 'fill' | 'stroke' | 'stroke_fill'
             style: 'fill',
-            size: 12,
+            size: getResponsiveFontSize(),  // 반응형으로 설정
             paddingLeft: 4,
             paddingTop: 4,
             paddingRight: 4,
@@ -149,7 +159,7 @@ export const chartStyle = {
           color: '#FEFEFE'
         },
         text: {
-          size: 12,
+          size: getResponsiveFontSize(),  // 반응형으로 설정
           family: 'Helvetica Neue',
           weight: 'normal',
           color: '#D9D9D9',
@@ -249,7 +259,7 @@ export const chartStyle = {
           // 'fill' | 'stroke' | 'stroke_fill'
           style: 'fill',
           color: '#FFFFFF',
-          size: 12,
+          size: getResponsiveFontSize(),  // 반응형으로 설정
           family: 'Helvetica Neue',
           weight: 'normal',
           // 'solid' | 'dashed'
@@ -276,7 +286,7 @@ export const chartStyle = {
         showParams: true,
         defaultValue: 'n/a',
         text: {
-          size: 12,
+          size: getResponsiveFontSize(),  // 반응형으로 설정
           family: 'Helvetica Neue',
           weight: 'normal',
           color: '#D9D9D9',
@@ -384,7 +394,7 @@ export const chartStyle = {
           // 'fill' | 'stroke' | 'stroke_fill'
           style: 'fill',
           color: '#FFFFFF',
-          size: 12,
+          size: getResponsiveFontSize(),  // 반응형으로 설정
           family: 'Helvetica Neue',
           weight: 'normal',
           // 'solid' | 'dashed'
@@ -415,7 +425,7 @@ export const chartStyle = {
           // 'fill' | 'stroke' | 'stroke_fill'
           style: 'fill',
           color: '#FFFFFF',
-          size: 12,
+          size: getResponsiveFontSize(),  // 반응형으로 설정
           family: 'Helvetica Neue',
           weight: 'normal',
           // 'solid' | 'dashed'
@@ -493,7 +503,7 @@ export const chartStyle = {
         // 'fill' | 'stroke' | 'stroke_fill'
         style: 'fill',
         color: '#FFFFFF',
-        size: 12,
+        size: getResponsiveFontSize(),  // 반응형으로 설정
         family: 'Helvetica Neue',
         weight: 'normal',
         // 'solid' | 'dashed'
@@ -512,7 +522,7 @@ export const chartStyle = {
         // 'fill' | 'stroke' | 'stroke_fill'
         style: 'fill',
         color: '#FFFFFF',
-        size: 12,
+        size: getResponsiveFontSize(),  // 반응형으로 설정
         family: 'Helvetica Neue',
         weight: 'normal',
         // 'solid' | 'dashed'
