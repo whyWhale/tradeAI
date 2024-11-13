@@ -1,13 +1,9 @@
 package com.happyfree.trai.user.controller;
 
+import com.happyfree.trai.user.dto.InvestmentType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.happyfree.trai.user.dto.SignUp;
 import com.happyfree.trai.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -64,5 +60,12 @@ public class UserController {
 	@GetMapping("/check")
 	public boolean logout(@RequestParam(name = "email") String email) {
 		return userService.findByEmail(email);
+	}
+
+	@Operation(summary = "투자 성향 업데이트")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
+	@PatchMapping("/investment-type")
+	public ResponseEntity<?> updateInvestmentType(@RequestBody InvestmentType investmentType) {
+		return ResponseEntity.ok(userService.saveInvestmentType(investmentType));
 	}
 }
