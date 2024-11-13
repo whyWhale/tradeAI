@@ -2,8 +2,11 @@ import { useState, useEffect, useRef } from "react";
 const UPBIT_URL = "wss://api.upbit.com/websocket/v1";
 
 function connect(ws, c, setResult) {
-  ws.current = new WebSocket(UPBIT_URL);
+  if(c.current >10){
+    return;
+  }
 
+  ws.current = new WebSocket(UPBIT_URL);
   ws.current.onopen = () => {
     c.current = 0;
     const message = [
