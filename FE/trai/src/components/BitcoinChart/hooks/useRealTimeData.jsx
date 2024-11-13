@@ -17,7 +17,7 @@ function connect(ws, c, setResult) {
       c.current += 1;
       setTimeout(() => connect(ws, c, setResult), 1000 * c.current);
     } else {
-      console.error("Max reconnection attempts reached");
+      c.current=10;
     }
   };
 
@@ -49,7 +49,6 @@ function connect(ws, c, setResult) {
   };
 
   ws.current.onerror = (event) => {
-    console.error("WebSocket error:", event);
     if (ws.current.readyState === WebSocket.OPEN) {
       ws.current.close();
     }
