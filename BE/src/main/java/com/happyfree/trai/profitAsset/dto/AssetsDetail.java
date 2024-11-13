@@ -17,4 +17,11 @@ public class AssetsDetail {
     private BigDecimal availableAmount;
     private BigDecimal profitAndLoss;
     private BigDecimal profitAndLossRatio;
+    private BigDecimal bitcoinAmount;
+    private BigDecimal bitcoinCurrentPrice;
+    private BigDecimal bitcoinAveragePrice;
+    private BigDecimal startingAssets;
+    private BigDecimal totalDepositAmount;
+    private BigDecimal totalWithdrawAmount;
+    private BigDecimal totalProfitAndLoss;
 }
