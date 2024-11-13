@@ -58,7 +58,7 @@ def df_to_json(df: pd.DataFrame) -> dict:
     return processed_data
 
 # Upbit API에서 분 단위 캔들 데이터를 가져오는 함수
-def get_minute_candle_data(market: str, unit: int = 240, count: int = 200, to: str = None) -> Optional[pd.DataFrame]:
+def get_minute_candle_data(market: str, unit: int = 240, count: int = 30, to: str = None) -> Optional[pd.DataFrame]:
     url = f"https://api.upbit.com/v1/candles/minutes/{unit}"
     headers = {"Accept": "application/json"}
     params = {"market": market, "count": count}

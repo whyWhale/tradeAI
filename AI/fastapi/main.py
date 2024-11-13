@@ -92,6 +92,7 @@ class UserInfo(BaseModel):
     user_id: int
     available_amount: float
     btc_balance_krw: float
+    investment_type: str
     investment_performance_summary: List[InvestmentPerformance]
     bitcoin_position_history: List[BitcoinPosition]
 
