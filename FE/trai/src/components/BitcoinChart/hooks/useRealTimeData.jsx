@@ -22,32 +22,33 @@ function connect(ws, c, setResult) {
   ws.current.onmessage = async (event) => {
     const text = await new Response(event.data).text();
     const message = JSON.parse(text);
-    const {
-      low_price,
-      high_price,
-      trade_price,
-      timestamp,
-      acc_trade_volume_24h,
-      acc_trade_price_24h,
-      change,
-      signed_change_price,
-      change_rate,
-    } = message;
-    setResult({
-      low: low_price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-      high: high_price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-      price: trade_price.toLocaleString(),
-      tradeVolume: acc_trade_volume_24h.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-      tradePrice: acc_trade_price_24h.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
-      change: change,
-      changeRate: change_rate,
-      changePrice: signed_change_price.toLocaleString(),
-      timestamp: timestamp,
-    });
+    console.log(message);
+    // const {
+    //   low_price,
+    //   high_price,
+    //   trade_price,
+    //   timestamp,
+    //   acc_trade_volume_24h,
+    //   acc_trade_price_24h,
+    //   change,
+    //   signed_change_price,
+    //   change_rate,
+    // } = message;
+    // setResult({
+    //   low: low_price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+    //   high: high_price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+    //   price: trade_price.toLocaleString(),
+    //   tradeVolume: acc_trade_volume_24h.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+    //   tradePrice: acc_trade_price_24h.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}),
+    //   change: change,
+    //   changeRate: change_rate,
+    //   changePrice: signed_change_price.toLocaleString(),
+    //   timestamp: timestamp,
+    // });
   };
 
   ws.current.onerror = (event) => {
-    console.error("WebSocket error:", event.data);
+    console.error("WebSocket error:", event);
     if (ws.current.readyState === WebSocket.OPEN) {
       ws.current.close();
     }
