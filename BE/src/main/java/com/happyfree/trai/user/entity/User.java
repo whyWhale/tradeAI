@@ -24,4 +24,7 @@ public class User extends BaseEntity {
 	private String accessKey;
 
 	private String secretKey;
+
+	@Column(columnDefinition = "TEXT")
+	private String investmentType;
 }
