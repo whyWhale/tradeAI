@@ -11,19 +11,19 @@ const useAssetData = () => {
   useEffect(() => {
     setLoading(true);
     instance
-      .post(`/api/investments/assets`, {
+      .get(`api/investments/assets`, {
       })
       .then((res) => res.data)
       .then((data) => {
         console.log(data);
         if(data!==null){
-          const totalPurchase=data.totalInvestment;
-          const totalValuation=data.totalEvaluation;
-          const heldKRW=data.totalKRWAssets;
-          const availableBalance=data.availableAmount;
-          const valuationProfit=data.profitAndLoss;
+          const totalPurchase=parseFloat(data.totalInvestment).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,});
+          const totalValuation=parseFloat(data.totalEvaluation).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,});
+          const heldKRW=parseFloat(data.totalKRWAssets).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,});
+          const availableBalance=parseFloat(data.availableAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,});
+          const valuationProfit=parseFloat(data.profitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,});
           const valuationProfitRatio=data.totalProfitAndLossRatio;
-          const totalAssets=data.totalAmount;
+          const totalAssets=parseFloat(data.totalAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2,});
           const returnRate=data.profitAndLossRatio;
           // formattedData 구성
           const formattedData = {
