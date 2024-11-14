@@ -20,7 +20,7 @@ const PatternAgent = ({ className, patternData }) => {
 
   // 패턴 번호에 따라 이미지 소스 설정
   const patternNumber = String(patternData?.pattern_num).replace(/\D/g, '').padStart(2, '0');
-  const patternImageSrc = `/images/${patternNumber}_pattern.webp`;
+  const patternImageSrc = `/images/${patternNumber}_pattern.png`;
 
 
   return(
@@ -71,7 +71,7 @@ PatternAgent.propTypes = {
 export default PatternAgent;
 
 const PatternImage = styled.img`
-  
+  max-width: 80%;
 `
 
 const ChartImage = styled.img`
@@ -84,7 +84,7 @@ const ChartImage = styled.img`
 
 const MoreButton = styled.button`
   font-size: 16px;
-  color: var(--trai-white);
+  color: var(--trai-text);
   cursor: pointer;
 `
 
