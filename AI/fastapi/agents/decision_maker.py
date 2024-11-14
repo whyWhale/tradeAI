@@ -19,7 +19,7 @@ loader = TextLoader(file_path, encoding="utf-8")
 docs = loader.load()
 
 # 벡터 저장소 활용한 문서 임베딩
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=150, chunk_overlap=50)
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=350, chunk_overlap=50)
 split_documents = text_splitter.split_documents(docs)
 embeddings = OpenAIEmbeddings()
 vectorstore = FAISS.from_documents(documents=split_documents, embedding=embeddings)
