@@ -9,7 +9,6 @@ import { IoMdHelpCircleOutline } from 'react-icons/io';
 import { MdCurrencyBitcoin, MdOutlineLogout } from 'react-icons/md';
 import { PiChartLineUpLight, PiHeadCircuit } from 'react-icons/pi';
 import { VscSettings } from 'react-icons/vsc';
-import logo from '@assets/logo/trai_logo_x.png';
 
 const NavBar = ({openModal}) => {
 
@@ -43,7 +42,7 @@ const NavBar = ({openModal}) => {
   return (
     <NavWrapper>
       <LogoArea to="/" className="flex flex-col items-center">
-      <img src={logo} alt="Logo" className="w-24 h-auto" />
+      <img src='/images/logo/trai_logo_x.png' alt="Logo" className="w-24 h-auto" />
       </LogoArea>
 
       <NavContainer>
