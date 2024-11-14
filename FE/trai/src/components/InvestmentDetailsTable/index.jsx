@@ -36,6 +36,46 @@ const InvestmentDetailsTable = () => {
           </tr>
         </thead>
         <tbody>
+  {data.map((item, index) => (
+    <tr key={index}>
+      <td>{item.settlementDate}</td>
+      
+      <td style={{ textAlign: "right", color: getProfitColor(item.dailyProfitAndLoss) }}>
+        {item.dailyProfitAndLoss !== undefined && item.dailyProfitAndLoss !== null 
+          ? `₩${Number(item.dailyProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+          : ""}
+      </td>
+      
+      <td style={{ textAlign: "right" }}>
+        {item.dailyProfitRatio != null ? `${item.dailyProfitRatio}%` : ""}
+      </td>
+      
+      <td style={{ textAlign: "right" }}>
+        {item.accumulationProfitAndLoss !== undefined && item.accumulationProfitAndLoss !== null 
+          ? `₩${Number(item.accumulationProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+          : ""}
+      </td>
+      
+      <td style={{ textAlign: "right" }}>
+        {item.accumulationProfitRatio != null ? `${item.accumulationProfitRatio}%` : ""}
+      </td>
+      
+      <td style={{ textAlign: "right" }}>
+        {item.startingAssets !== undefined && item.startingAssets !== null 
+          ? `₩${Number(item.startingAssets).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+          : ""}
+      </td>
+      
+      <td style={{ textAlign: "right" }}>
+        {item.endingAssets !== undefined && item.endingAssets !== null 
+          ? `₩${Number(item.endingAssets).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
+          : ""}
+      </td>
+    </tr>
+  ))}
+</tbody>
+
+=======
           {data.map((item, index) => (
             <tr key={index}>
               <td>{item.settlementDate}</td>
@@ -68,6 +108,7 @@ const InvestmentDetailsTable = () => {
             </tr>
           ))}
         </tbody>
+>>>>>>> FE/trai/src/components/InvestmentDetailsTable/index.jsx
       </table>
 
       {/* 페이지네이션 */}
