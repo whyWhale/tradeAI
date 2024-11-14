@@ -135,7 +135,7 @@ const CoinChart = () => {
             <div className="chart-details">
               <div className="high">고가<br/><span className="high-value">{`${formatValue(chartDetail.high)} KRW`}</span></div>
               <div className="low">저가<br/><span className="low-value">{`${formatValue(chartDetail.low)} KRW`}</span></div>
-              <div className="volume24">거래량(24h)<br/><span className="volume24-value">{`${formatValue(chartDetail.tradeVolume)} KRW`}</span></div>
+              <div className="volume24">거래량(24H)<br/><span className="volume24-value">{`${formatValue(chartDetail.tradeVolume)} BTC`}</span></div>
               <div className="price24">거래대금(24H)<br/><span className="price24-value">{`${formatValue(chartDetail.tradePrice)} KRW`}</span></div>
             </div>
           </>
