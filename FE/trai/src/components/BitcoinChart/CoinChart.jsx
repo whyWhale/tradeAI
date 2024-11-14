@@ -48,6 +48,7 @@ const CoinChart = () => {
     });
   };
 
+  
   useEffect(() => {
     const initChart = async () => {
       try {
@@ -90,8 +91,17 @@ const CoinChart = () => {
     };
   
     initChart();
+
+    chartRef.current.resize(chartRef.current.clientWidth, chartRef.current.clientHeight);
+
+    // 윈도우 리사이즈 이벤트에 따라 차트 크기 조정
+    const handleResize = () => {
+      chartRef.current.resize(chartRef.current.clientWidth, chartRef.current.clientHeight);
+    };
+    window.addEventListener('resize', handleResize);
   
     return () => {
+      window.removeEventListener('resize', handleResize);
       dispose("coin-chart"); // 컴포넌트가 언마운트될 때 차트를 해제
     };
   }, []);
@@ -116,7 +126,7 @@ const CoinChart = () => {
         {chartDetail ? (
           <>
             <div className="chart-price-container" style={ chartDetail.priceStyle }>
-              <div className="chart-price">{`${formatValue(chartDetail.price)}`}<span  style={{  position: 'relative', top: '16px', fontSize: '16px' }}>KRW</span></div>
+              <div className="chart-price">{`${formatValue(chartDetail.price)}`}<span  style={{  position: 'relative', top: '1.14vw', fontSize: '1.14vw' }}>KRW</span></div>
               <div className="change-text">
                 <span className="signed-price-rate">{`${formatValue(chartDetail.changeRate)}`}</span>
                 <span className="change-price">{`${formatValue(chartDetail.changePrice)}`}</span>

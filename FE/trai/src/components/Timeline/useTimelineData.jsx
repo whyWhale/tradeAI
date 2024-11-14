@@ -12,7 +12,7 @@ function formatDate(isoString) {
     const seconds = date.getSeconds().toString().padStart(2, '0');
     
     // 오전/오후 구분
-    const period = hours >= 12 ? "PM" : "AM";
+    const period = hours >= 12 ? "오후" : "오전";
     hours = hours % 12 || 12; // 12시간제로 변환 (0시는 12로 표시)
   
     return `${month}월 ${day}일 ${hours}:${minutes}:${seconds} ${period}`;

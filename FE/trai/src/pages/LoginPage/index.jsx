@@ -44,7 +44,7 @@ const LoginPage = () => {
     return (
         <div className="flex w-full justify-between">
             <button className="flex flex-col ml-[150px] w-[370px] mt-20 p-10">
-                <div className="font-helveticaBold text-trai-mint text-[28px] mb-1">Welcome Back</div>
+                <div className="font-helveticaBold text-trai-mint text-[28px] mb-1">Welcome Back!</div>
                 <div className="font-helveticaLight text-trai-greytext text-[16px] mb-8">로그인 후 TRAI 서비스를 이용해보세요</div>
 
                 <form onSubmit={handleSubmit(login)} className="flex flex-col gap-6">
@@ -52,29 +52,29 @@ const LoginPage = () => {
                         {loginStatus}
                     </div>
                     <InputGroup>
-                        <Label className="ml-1">Email</Label>
+                        <Label className="ml-1">이메일</Label>
                         <Input
                             type="email"
                             {...register(
                                 "email",
                                 {required: "Email is Required."}
                             )}
-                            placeholder="Enter your email"
+                            placeholder="이메일을 입력해주세요"
                         />
                     </InputGroup>
 
                     <InputGroup>
-                        <Label className="ml-1">Password</Label>
+                        <Label className="ml-1">비밀번호</Label>
                         <Input
                             type="password"
                             {...register(
                                 "password",
                                 {required: "Password is Required."}
                             )}
-                            placeholder="Enter your password"
+                            placeholder="비밀번호를 입력해주세요"
                         />
                     </InputGroup>
-                    <LoginButton>Login</LoginButton>
+                    <LoginButton>로그인</LoginButton>
                     <div className="flex gap-2 justify-center mt-2 text-[12px]">
                         <div className="text-trai-greytext">계정이 없으신가요?</div>
                         <Link to='/signup' className="text-trai-mint">회원가입</Link>

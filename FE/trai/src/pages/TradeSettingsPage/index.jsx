@@ -68,7 +68,7 @@ const TradeSettings = () => {
           <NavBar/>
         </aside>
 
-        <section className='flex-1 p-8 bg-gray-100 mt-40'>
+        <section className='flex-1 p-8 bg-gray-100 mt-40 mb-40'>
           <div className='flex flex-col gap-6 bg-white p-6 shadow-md rounded-lg mx-auto max-w-3xl'>
             <label htmlFor='investmentStyle' className='text-lg font-semibold'>본인의 투자 성향을 작성해주세요.</label>
             {isSaved && <span className="text-sm text-green-500">수정이 완료되었어요 🌈</span>}
