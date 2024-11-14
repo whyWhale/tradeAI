@@ -30,7 +30,7 @@ const AssetOverview = () => {
           {/* Info Cards */}
             <>
               <div className="info-card-small card1">
-                <div className="card-title">총 보유 자산</div>
+                <div className="card-title">총 보유자산</div>
                 <div style={{ fontSize: "1vw" }}>
                   <span>{assetLoading || assetError ? "?" : (assetEmpty ? "자산 정보가 없습니다." : `${assetData.totalAssets} KRW`)}</span>
                   <span style={{ float: "right", color: "#48BB78" }}>{assetLoading ||assetError? " ? " :(assetEmpty ? "자산 정보가 없습니다." : `${assetData.valuationProfitRatio}`)} %</span>

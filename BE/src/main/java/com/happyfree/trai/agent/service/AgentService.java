@@ -214,6 +214,10 @@ public class AgentService {
                         transactionHistory.updateProfitAndLoss(profitAndLoss);
                     }
 
+                    if (transactionHistory.getProfitAndLoss() == null) {
+                        transactionHistory.updateProfitAndLoss(BigDecimal.ZERO);
+                    }
+
                     transactionHistoryRepository.save(transactionHistory);
                 }
             } else {

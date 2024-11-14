@@ -80,12 +80,12 @@ const SignupPage = () => {
                 <form onSubmit={handleSubmit(onSubmit)}>
 
                     <div className="flex flex-col  mb-2">
-                        <label className="ml-1 text-[14px] mb-2">Email</label>
+                        <label className="ml-1 text-[14px] mb-2">이메일</label>
                         <div className="flex gap-2 justify-between">
                             <InputEmail
                                 type="email"
                                 {...register("email", {required: "이메일은 필수 입력값입니다."})}
-                                placeholder="Enter your email"
+                                placeholder="이메일을 입력해주세요"
                                 className="w-full h-12"
                             />
                             <DuplicateButton onClick={checkEmail}>중복확인</DuplicateButton>
@@ -100,7 +100,7 @@ const SignupPage = () => {
                     </div>
 
                     <div className="flex flex-col mb-4 gap-1">
-                        <label className="ml-1 text-[14px]">Password</label>
+                        <label className="ml-1 text-[14px]">비밀번호</label>
                         <Input
                             type="password"
                             {...register("password", {
@@ -110,7 +110,7 @@ const SignupPage = () => {
                                     message: "비밀번호는 최소 4자 이상이어야 합니다."
                                 }
                             })}
-                            placeholder="Enter your password"
+                            placeholder="비밀번호를 입력해주세요"
                         />
                         <div className="text-xs text-trai-error ml-2 h-2">
                             {errors.password && <p>{errors.password.message}</p>}
@@ -118,11 +118,11 @@ const SignupPage = () => {
                     </div>
 
                     <div className="flex flex-col mb-2 gap-1">
-                        <label className="ml-1 text-[14px]">Confirm Password</label>
+                        <label className="ml-1 text-[14px]">비밀번호 확인</label>
                         <Input
                             type="password"
                             {...register("confirmPassword", {required: "비밀번호 재확인을 해주세요."})}
-                            placeholder="Enter your password again"
+                            placeholder="비밀번호를 다시 입력해주세요"
                         />
                         <div className="text-xs ml-2 h-5">
                             {password && confirmPassword ? (
@@ -134,7 +134,7 @@ const SignupPage = () => {
                     </div>
 
                     <div className="flex flex-col mb-4 gap-2">
-                        <label className="ml-1 text-[14px]">Your Role</label>
+                        <label className="ml-1 text-[14px]">사용자 모드</label>
                         <div className="flex ml-2 gap-3 text-[14px]">
                             <label className="flex">
                                 <input
@@ -172,7 +172,7 @@ const SignupPage = () => {
                         </label>
                     </CheckboxContainer>
 
-                    <SingupButton type="submit" disabled={!isAgreed} className="w-full">Sign Up</SingupButton>
+                    <SingupButton type="submit" disabled={!isAgreed} className="w-full">회원가입</SingupButton>
 
                     {isModalOpen && (
                         <ModalOverlay onClick={closeModal}>

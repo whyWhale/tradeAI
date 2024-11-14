@@ -12,6 +12,12 @@ const InvestmentDetailsTable = () => {
     setCurrentPage(page);
   };
 
+  const getProfitColor = (value) => {
+    if (value > 0) return '#C84A31';  // 빨간색
+    if (value < 0) return '#1261C4';  // 파란색
+    return 'inherit';  // 기본색상
+  }
+
   if (loading) return <div className='spinner'></div>;
   if (error) return <div>오류가 발생했습니다. 데이터를 다시 불러와 주세요.</div>;
 
@@ -33,25 +39,30 @@ const InvestmentDetailsTable = () => {
           {data.map((item, index) => (
             <tr key={index}>
               <td>{item.settlementDate}</td>
-              <td>{item.dailyProfitAndLoss !== undefined && item.dailyProfitAndLoss !== null 
-                  ? Number(item.dailyProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+              <td style={{ color: getProfitColor(item.dailyProfitAndLoss) }}>
+                  {item.dailyProfitAndLoss !== undefined && item.dailyProfitAndLoss !== null 
+                  ? Number(item.dailyProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })
                   : ""}
               </td>
-              <td>{item.dailyProfitRatio != null ? `${item.dailyProfitRatio}%` : ""}</td>
-              <td>
+              <td style={{ color: getProfitColor(item.dailyProfitRatio) }}>
+                {item.dailyProfitRatio != null ? `${item.dailyProfitRatio}%` : ""}
+              </td>
+              <td style={{ color: getProfitColor(item.accumulationProfitAndLoss) }}>
                 {item.accumulationProfitAndLoss !== undefined && item.accumulationProfitAndLoss !== null 
-                  ? Number(item.accumulationProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                  ? Number(item.accumulationProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })
                   : ""}
               </td>
-              <td>{item.accumulationProfitRatio != null ? `${item.accumulationProfitRatio}%` : ""}</td>
+              <td style={{ color: getProfitColor(item.accumulationProfitRatio) }}>
+                {item.accumulationProfitRatio != null ? `${item.accumulationProfitRatio}%` : ""}
+                </td>
               <td>
                 {item.startingAssets !== undefined && item.startingAssets !== null 
-                  ? Number(item.startingAssets).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                  ? Number(item.startingAssets).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })
                   : ""}
               </td>
               <td>
                 {item.endingAssets !== undefined && item.endingAssets !== null 
-                  ? Number(item.endingAssets).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                  ? Number(item.endingAssets).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })
                   : ""}
               </td>
             </tr>
