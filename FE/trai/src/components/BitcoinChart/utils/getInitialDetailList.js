@@ -9,7 +9,8 @@ const getInitialDetailList = (unit) => {
     .then(res => res.data)
     .then((data) => {
       return data.map((item) => {
-        const {   low_price,
+        const {   
+            low_price,
             high_price,
             trade_price,
             timestamp,

@@ -41,7 +41,7 @@ const TimelineContainer = styled.div`
   width: 100%;
   padding: 0.2vw;
   overflow-y: auto;
-  max-height: auto; // 스크롤 가능하도록 최대 높이 설정
+  max-height: 50.2vh; // 스크롤 가능하도록 최대 높이 설정
   border-right: 0.1vw solid #e0e0e0;
 
   /* 스크롤바 스타일 */
@@ -100,6 +100,8 @@ const Icon = styled.div`
 `;
 
 const Content = styled.div`
+  font-size: 0.9vw;
+
   display: flex;
   flex-direction: column;
 `;
