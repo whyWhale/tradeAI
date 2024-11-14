@@ -98,7 +98,7 @@ const Container = styled.div`
     height: 100%;
     border-radius: 20px;
     padding: 20px;
-    background: linear-gradient(180deg, var(--trai-white), var(--trai-navy));
+    background: var(--trai-white);
   }
 
   .item:nth-child(3) {
