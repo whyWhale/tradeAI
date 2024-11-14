@@ -27,10 +27,11 @@ const useAssetData = (BTCPrice) => {
             TotalInvestment: parseFloat(data.totalInvestment),
             TotalKRWAssets: parseFloat(data.totalKRWAssets),
             TotalDepositAmount: parseFloat(data.totalDepositAmount),
-            StartingAsset: parseFloat(data.startingAsset),
-            NetAssetChange: parseFloat(data.totalWithdrawAmount) - parseFloat(data.totalDepositAmount) - parseFloat(data.startingAsset),
+            StartingAsset: parseFloat(data.startingAssets),
+            NetAssetChange: parseFloat(data.totalWithdrawAmount) - parseFloat(data.totalDepositAmount) - parseFloat(data.startingAssets),
           };
           setAssetData(formattedData);
+          console.log(formattedData);
         } else {
           setEmpty(true);
         }
@@ -53,7 +54,7 @@ const useAssetData = (BTCPrice) => {
         totalAssets: (BTCPrice * assetData.BitcoinAmount + assetData.TotalKRWAssets).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
         valuationProfit: (BTCPrice * assetData.BitcoinAmount - assetData.TotalInvestment).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
         valuationProfitRatio: (BTCPrice * assetData.BitcoinAmount - assetData.TotalInvestment) / assetData.TotalInvestment,
-        returnRate: ((BTCPrice * assetData.BitcoinAmount + assetData.NetAssetChange) / assetData.TotalInvestment) * 100,
+        returnRate: 100* ((BTCPrice * assetData.BitcoinAmount)+assetData.TotalKRWAssets + assetData.NetAssetChange) / (assetData.StartingAsset+assetData.TotalDepositAmount),
       };
       setAssetData(updatedAssetData);
     }
