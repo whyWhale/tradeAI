@@ -8,11 +8,11 @@ const Modal = ({ title, message, onConfirm, onCancel, confirmText = 'Confirm', c
         <Title>{title}</Title>
         <Message>{message}</Message>
         <ButtonContainer>
-          <Button onClick={onCancel} variant="cancel">
-            {cancelText}
-          </Button>
           <Button onClick={onConfirm} variant="confirm">
             {confirmText}
+          </Button>
+          <Button onClick={onCancel} variant="cancel">
+            {cancelText}
           </Button>
         </ButtonContainer>
       </ModalContainer>

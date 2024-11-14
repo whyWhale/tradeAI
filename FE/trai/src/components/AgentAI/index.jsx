@@ -7,11 +7,11 @@ import QuantAgent from "@components/MultipleAgents/QuantAgent";
 import PatternAgent from "@components/MultipleAgents/PatternAgent";
 import FngAgent from "@components/MultipleAgents/FngAgent";
 import NewsAgent from "@components/MultipleAgents/NewsAgent";
-import MasterAgent from "@components/MultipleAgents/MasterAgent";
+import DecisionAgent from "@components/MultipleAgents/DecisionAgent";
 
 const AgentAI = ({ agentId, selectedDate }) => {
 
-  const [data, setData] = useState(null);
+  // const [data, setData] = useState(null);
 
   const [parsedData, setParsedData] = useState(null);
 
@@ -28,12 +28,12 @@ const AgentAI = ({ agentId, selectedDate }) => {
         const parsedData = JSON.parse(response.data.jsonData);
         const quantData = parsedData.quant;
         const patternData = parsedData.chart_pattern;
-        const masterData = parsedData.master;
+        const decisionData = parsedData.decision_maker;
         const newsData = parsedData.news_search;
         const fngData = parsedData.fng;
 
-        setData(response.data);
-        setParsedData({ quantData, patternData, masterData, newsData, fngData });
+        // setData(response.data);
+        setParsedData({ quantData, patternData, decisionData, newsData, fngData });
         console.log("Received agentId:", agentId);
         console.log("parsedData", parsedData);
       } catch(error){
@@ -57,7 +57,7 @@ const AgentAI = ({ agentId, selectedDate }) => {
       <QuantAgent className="item" quantData={parsedData?.quantData}/>
       <PatternAgent className="item" patternData={parsedData?.patternData}/>
       <FngAgent className="item" fngData={parsedData?.fngData} selectedDate={selectedDate}/>
-      <MasterAgent className="item" masterData={parsedData?.masterData}/>
+      <DecisionAgent className="item" decisionData={parsedData?.decisionData}/>
       <NewsAgent className="item" newsData={parsedData?.newsData} />
     </Container>
   )
@@ -98,7 +98,7 @@ const Container = styled.div`
     height: 100%;
     border-radius: 20px;
     padding: 20px;
-    background: linear-gradient(180deg, var(--trai-white), var(--trai-navy));
+    background: var(--trai-white);
   }
 
   .item:nth-child(3) {

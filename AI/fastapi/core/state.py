@@ -7,7 +7,7 @@ import operator
 class State(BaseModel):
     metadata: Optional[dict] = None
     user_info: Optional[dict] = None
-    master: Annotated[dict, operator.or_] = {}
+    decision_maker: Annotated[dict, operator.or_] = {}
     portfolio: Annotated[dict, operator.or_] = {}
     # messages: Annotated[list, add_messages] = []
     fng: Annotated[dict, operator.or_] = {}
