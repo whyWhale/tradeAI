@@ -10,7 +10,7 @@ from agents.fng import fng_agent
 from agents.news_search import news_search_agent
 from agents.quant import quant_agent
 from agents.chart_pattern import chart_pattern_agent
-from agents.rag_test import master_agent
+from agents.decision_maker import decision_agent
 from agents.portfolio import portfolio_agent
 from core.logging import langsmith
 
@@ -25,7 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 router = APIRouter(prefix="/ai")
-langsmith(project_name="trai-v1", set_enable=True)
+langsmith(project_name="trai-v1-sj", set_enable=True)
 
 
 # Graph
@@ -36,7 +36,7 @@ graph_builder.add_node("news_search_agent", news_search_agent)
 graph_builder.add_node("quant_agent", quant_agent)
 graph_builder.add_node("chart_pattern_agent", chart_pattern_agent)
 # Lv.2
-graph_builder.add_node("master_agent", master_agent)
+graph_builder.add_node("decision_agent", decision_agent)
 # Lv.3
 graph_builder.add_node("portfolio_agent", portfolio_agent)
 
@@ -56,12 +56,12 @@ graph_builder.add_edge(START, "news_search_agent")
 graph_builder.add_edge(START, "quant_agent")
 graph_builder.add_edge(START, "chart_pattern_agent")
 
-graph_builder.add_edge("fng_agent", "master_agent")
-graph_builder.add_edge("news_search_agent", "master_agent")
-graph_builder.add_edge("quant_agent", "master_agent")
-graph_builder.add_edge("chart_pattern_agent", "master_agent")
+graph_builder.add_edge("fng_agent", "decision_agent")
+graph_builder.add_edge("news_search_agent", "decision_agent")
+graph_builder.add_edge("quant_agent", "decision_agent")
+graph_builder.add_edge("chart_pattern_agent", "decision_agent")
 
-graph_builder.add_edge("master_agent", "portfolio_agent")
+graph_builder.add_edge("decision_agent", "portfolio_agent")
 
 graph_builder.add_edge("portfolio_agent", END)
 graph = graph_builder.compile()
@@ -92,6 +92,7 @@ class UserInfo(BaseModel):
     user_id: int
     available_amount: float
     btc_balance_krw: float
+    investment_type: str
     investment_performance_summary: List[InvestmentPerformance]
     bitcoin_position_history: List[BitcoinPosition]
 

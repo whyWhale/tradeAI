@@ -18,7 +18,7 @@ file_path = os.path.join(os.path.dirname(__file__), "investment.txt")
 loader = TextLoader(file_path, encoding="utf-8")
 docs = loader.load()
 
-# 벡터저장소 활용한 문서 임베딩
+# 벡터 저장소 활용한 문서 임베딩
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=150, chunk_overlap=50)
 split_documents = text_splitter.split_documents(docs)
 embeddings = OpenAIEmbeddings()
@@ -30,11 +30,13 @@ def investment_preference_search(query: str) -> str:
     relevant_docs = preference_retriever.invoke(query)
     return relevant_docs[0].page_content if relevant_docs else "예외: 유사한 투자 성향을 찾을 수 없습니다."
 
-master_template = """
-    당신은 비트코인 투자 분석 전문가입니다.
-    4시간마다 시장 분석을 통해서 비트코인 투자 결정을 하고 있는 상황입니다.
+decision_template = """
+    당신은 KRW-BTC 페어의 비트코인 거래를 위해 고급 가상 비서 역할을 수행합니다.
+    주요 목표는 수익률 극대화와 데이터 기반 접근을 통한 거래 결정입니다.
+    시장 분석, 실시간 데이터, 비트코인 관련 뉴스 인사이트, 차트 패턴, 투자 성향을 모두 활용하여 거래 전략을 수립하세요.
+    각 거래 추천 시, 행동, 그 근거, 투자 비율을 명확하게 설명하고 리스크 관리 프로토콜과의 일관성을 유지해야 합니다.
 
-    현재 투자 전문가들은 비트코인 투자 결정을 다음과 같이 했습니다:
+    현재 투자 전문가들의 의견은 다음과 같습니다:
     {master_decision}
 
     fng는 공포 탐욕 지수를 분석하는 전문가, 
@@ -44,10 +46,10 @@ master_template = """
     해당 결정을 뒷받침하는 투자 전문가들의 의견을 종합해주세요:
     {agents_analysis}
 
-    만약, 투자 전문가들의 의견이 "DRAW"라면, 전반적인 내용을 종합하여 "BUY", "SELL", "HOLD" 중 하나를 골라주세요.
-
-    이후 사용자의 투자 성향 정보를 바탕으로 수익을 위한 최종 투자 결정을 내리세요:
+    투자자의 성향에 따라 적극적인 투자 성향을 반영하여 최종 결정을 내리세요:
     {investment_preference}
+
+    투자 성향에 따라 수익을 극대화할 수 있도록 최종 결정을 내려주세요. 관망을 최소화하고, 최대한 BUY 또는 SELL 결정을 권장하며, 시장 상황에 따라 리스크를 관리합니다.
 
     최종 결정
     - 결과는 반드시 JSON 형식으로 출력하세요.
@@ -59,16 +61,16 @@ master_template = """
 
     주의사항:
     - decision은 반드시 BUY 또는 SELL 또는 HOLD 중 하나여야 합니다
-    """
+"""
 
-class MasterAnalysis(BaseModel):
+class DecisionAnalysis(BaseModel):
     summary: str
     percentage: int
     decision: Literal["BUY", "SELL", "HOLD"]
 
-master_prompt_template = PromptTemplate.from_template(master_template)
-master_output_parser = JsonOutputParser(pydantic_object=MasterAnalysis)
-master_chain = master_prompt_template | llm | master_output_parser
+decision_prompt_template = PromptTemplate.from_template(decision_template)
+decision_output_parser = JsonOutputParser(pydantic_object=DecisionAnalysis)
+decision_chain = decision_prompt_template | llm | decision_output_parser
 
 def extract_agent_decisions(state):
     combined_analysis = []
@@ -95,11 +97,15 @@ def count_decision(decision: Optional[str]) -> tuple[int, int, int]:
         return (0, 0, 1)
     return (0, 0, 0)  # 유효하지 않은 결정의 경우 제외
 
-# 마스터 에이전트
-def master_agent(state: State) -> dict:
+# 결정 에이전트
+def decision_agent(state: State) -> dict:
     # 투자 성향 정보 가져오기
     investment_type = state.user_info.get("investment_type")
-    investment_preference = investment_preference_search(investment_type) if investment_type else "투자 성향 정보가 제공되지 않았습니다."
+    investment_preference = (
+        investment_preference_search(investment_type)
+        if investment_type is not None and investment_type != "None"
+        else "투자 성향 정보가 제공되지 않았습니다."
+    )
 
     total_buy = 0
     total_sell = 0
@@ -126,7 +132,7 @@ def master_agent(state: State) -> dict:
     # 마스터 결정 진행
     agents_analysis = extract_agent_decisions(state)
     try:
-        result = master_chain.invoke({
+        result = decision_chain.invoke({
             "master_decision": master_decision,
             "agents_analysis": agents_analysis,
             "investment_preference": investment_preference,
@@ -139,7 +145,7 @@ def master_agent(state: State) -> dict:
         raise
 
     return {
-        "master": {
+        "decision_maker": {
             "decision": result["decision"],
             "summary": result["summary"],
             "investment_preference": investment_preference
