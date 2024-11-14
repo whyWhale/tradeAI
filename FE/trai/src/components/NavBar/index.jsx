@@ -42,7 +42,7 @@ const NavBar = ({openModal}) => {
   return (
     <NavWrapper>
       <LogoArea to="/" className="flex flex-col items-center">
-      <img src='/images/logo/trai_logo_x.png' alt="Logo" className="w-24 h-auto" />
+      <img src="/images/trai_logo_x.png" alt="Logo" className="w-24 h-auto" />
       </LogoArea>
 
       <NavContainer>
