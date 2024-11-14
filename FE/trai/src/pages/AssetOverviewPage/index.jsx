@@ -27,7 +27,7 @@ const AssetOverview = () => {
     }
   }, [BTCPrice, initialAssetData]);
 
-  const decisionCount = useSelector((state) => state.decisionCount.totalCount);
+  const decisionCount = useSelector((state) => state.decisionCount.totalCount);   
 
   return (
     <div className='flex bg-trai-background min-h-screen' style={{ width: '100vw', height: '100vh' }}>
@@ -45,7 +45,7 @@ const AssetOverview = () => {
                 <div className="card-title">총 보유 자산 <span style={{ float: "right", color: "#48BB78" }}>일일 수익률</span></div>
                 <div style={{ fontSize: "1vw" }}>
                   <span>{assetEmpty ? "자산 정보가 없습니다." : `${assetData.totalAssets} KRW`}</span>
-                  <span style={{ float: "right", color: "#48BB78" }}>{assetEmpty ? "자산 정보가 없습니다." : `${assetData.valuationProfitRatio.toFixed(2)}`} %</span>
+                  <span style={{ float: "right", color: "#48BB78" }}>{assetEmpty ? "자산 정보가 없습니다." : `${assetData.returnRate.toFixed(2)}`} %</span>
                 </div>
               </div>
 
@@ -67,7 +67,7 @@ const AssetOverview = () => {
                 <div className="card-title">평가 손익<span style={{ float: "right", color: "#48BB78" }}>현재 수익률</span></div>
                 <div style={{ fontSize: "1vw" }}>
                   <span>{assetEmpty ? "자산 정보가 없습니다." : `${assetData.valuationProfit}`} KRW</span>
-                  <span style={{ float: "right", color: "#48BB78" }}>{assetEmpty ? "자산 정보가 없습니다." : `${assetData.returnRate.toFixed(2)}`} %</span>
+                  <span style={{ float: "right", color: "#48BB78" }}>{assetEmpty ? "자산 정보가 없습니다." : `${assetData.valuationProfitRatio.toFixed(2)}`} %</span>
                 </div>
               </div>
             </>
