@@ -7,10 +7,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
 import com.happyfree.trai.auth.detail.CustomUserDetails;
 import com.happyfree.trai.user.entity.User;
 import com.happyfree.trai.user.repository.UserRepository;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import static com.happyfree.trai.global.exception.ErrorCode.USER_NOT_FOUND;
 
@@ -22,15 +23,17 @@ public class AuthService implements UserDetailsService {
 
 	public User getLoginUser() {
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (!(principal instanceof CustomUserDetails)) {
+		if (!(principal instanceof CustomUserDetails detail)) {
 			throw new CustomException(USER_NOT_FOUND);
 		}
 
-		CustomUserDetails detail = (CustomUserDetails)principal;
-		User user = userRepository.findByEmail(detail.getUsername())
+        User user = userRepository.findByEmail(detail.getUsername())
 				.orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-		if ("ROLE_USER".equals(user.getRole())) {
+		String currentUrl = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+				.getRequest().getRequestURI();
+
+		if ("ROLE_USER".equals(user.getRole()) && !"/api/agent-history/ai".equals(currentUrl)) {
 			return userRepository.findFirstByRole("ROLE_ADMIN")
 					.orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 		}
