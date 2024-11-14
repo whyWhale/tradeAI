@@ -7,8 +7,8 @@ import PropTypes from 'prop-types';
 const Card = ({ color }) => {
   const meshRef = useRef();
 
-  const width = 10;
-  const height = 15.8;
+  const width = 15.8;
+  const height = 10;
   const radius = 0.5;
   const x = width / 2 - radius;
   const y = height / 2 - radius;
@@ -36,12 +36,12 @@ const Card = ({ color }) => {
     <mesh
       ref={meshRef}
       geometry={geometry}
-      rotation={[0, 0, Math.PI * 0.1]}
+      rotation={[0, 0, Math.PI * 0.05]}
     >
       <meshStandardMaterial
         color={color}
         side={THREE.DoubleSide}
-        roughness={0.6} //표면 거칠기. 높을수록 덜 반짝임
+        roughness={0.9} //표면 거칠기. 높을수록 덜 반짝임
         metalness={0.3} //금속성. 높을수록 더 금속처럼 보임
         clearcoat={0.1} //투명 코팅층의 강도
         clearcoatRoughness={0.8} //코팅층의 거칠기, 낮을수록 매끄러움
