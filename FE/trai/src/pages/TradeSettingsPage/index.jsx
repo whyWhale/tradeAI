@@ -103,7 +103,7 @@ const TradeSettings = () => {
                   type="button"
                   onClick={handleOpenModal}
                   className={`p-2 text-white rounded w-30 ${isEditing ? 'bg-gray-300 cursor-not-allowed' : 'bg-trai-navy'}`}
-                  disabled={isEditing}
+                  disabled={true}
               >
                 실시간 투자 하기
               </button>
