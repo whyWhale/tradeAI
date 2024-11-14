@@ -74,7 +74,7 @@ const Explain = styled.h2`
 
 // Responsive Bar Chart Component with Gradient
 const MyResponsiveBar = ({ data }) => (
-    <div style={{ height: 90 }}>
+    <div style={{ height: '40vh' }}>
       <ResponsiveBar
           data={data}
           keys={['코인 비중', '기타 비중']}
