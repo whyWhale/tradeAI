@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import { instance } from '@api/axios';
+import PropTypes from 'prop-types';
 import { useDispatch } from "react-redux";
-import { clearToken } from "@store/reducers/authSlice.jsx";
+import { NavLink, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 
 import { IoMdHelpCircleOutline } from 'react-icons/io';
-import { VscSettings } from 'react-icons/vsc';
-import { PiChartLineUpLight, PiHeadCircuit } from 'react-icons/pi';
 import { MdCurrencyBitcoin, MdOutlineLogout } from 'react-icons/md';
+import { PiChartLineUpLight, PiHeadCircuit } from 'react-icons/pi';
+import { VscSettings } from 'react-icons/vsc';
+import logo from '../../assets/logo/trai_logo_x.png';
 
 const NavBar = ({openModal}) => {
 
@@ -42,9 +42,8 @@ const NavBar = ({openModal}) => {
 
   return (
     <NavWrapper>
-      <LogoArea to="/">
-        <div>로고</div>
-        <p>T R A I</p>
+      <LogoArea to="/" className="flex flex-col items-center">
+      <img src={logo} alt="Logo" className="w-24 h-auto" />
       </LogoArea>
 
       <NavContainer>
