@@ -4,6 +4,7 @@ import NavBar from '@components/NavBar';
 import Modal from '@components/Modal';
 import { instance } from "@api/axios.js";
 import {useNavigate} from "react-router-dom";
+import BitBot from '@components/BitBot';
 
 const TradeSettings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -11,6 +12,12 @@ const TradeSettings = () => {
   const [savedValue, setSavedValue] = useState('');
   const navigate = useNavigate();
   const [isSaved, setIsSaved] = useState(false);
+
+
+  const [isBitModalOpen, setBitIsModalOpen] = useState(false);
+  
+  const openBitModal = () => setBitIsModalOpen(true);
+  const closeBitModal = () => setBitIsModalOpen(false);
 
   useEffect(() => {
     const ivt = async () => {
@@ -64,8 +71,8 @@ const TradeSettings = () => {
 
   return (
       <div className='flex bg-trai-background min-h-screen'>
-        <aside className='w-72'>
-          <NavBar/>
+        <aside className="navbar">
+          <NavBar openModal={openBitModal} />
         </aside>
 
         <section className='flex-1 p-8 bg-gray-100 mt-40 mb-40'>
@@ -120,6 +127,7 @@ const TradeSettings = () => {
                   cancelText="아니오"
               />
           )}
+          {isBitModalOpen && <BitBot onClose={closeBitModal} />}
         </section>
       </div>
   );

@@ -25,7 +25,7 @@ const TradeDetails = () => {
 
   return (
     <div className='flex bg-trai-background min-h-screen' style={{ width: '1400px' }}>
-      <aside className='w-72' style={{ position: 'fixed', top: '0', left: '0', height: '100vh', overflowY: 'auto' }}>
+      <aside className="navbar">
         <NavBar openModal={openModal} />
       </aside>
       <section className='flex-1 ml-[300px]'>

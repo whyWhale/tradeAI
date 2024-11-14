@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -14,6 +15,8 @@ const NavBar = ({openModal}) => {
 
   let navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleLogout = async () => {
     try {
@@ -34,9 +37,11 @@ const NavBar = ({openModal}) => {
     }
   };
 
+  const openLogoutModal = () => setIsModalOpen(true);
+  const closeLogoutModal = () => setIsModalOpen(false);
 
   return (
-    <div className="flex flex-col items-center">
+    <NavWrapper>
       <LogoArea to="/">
         <div>로고</div>
         <p>T R A I</p>
@@ -60,7 +65,7 @@ const NavBar = ({openModal}) => {
             <div className="PageIcon"><PiHeadCircuit /></div>
             <div className="PageName">거래 상세 및 전략</div>
           </StyledNavLink>
-          <StyledLogoutButton onClick={handleLogout}>
+          <StyledLogoutButton onClick={openLogoutModal}>
             <div className="PageIcon"><MdOutlineLogout /></div>
             <div className="PageName">로그아웃</div>
           </StyledLogoutButton>
@@ -73,13 +78,33 @@ const NavBar = ({openModal}) => {
         <div className="text-trai-white text-[0.8vw] ml-2 mb-2">아래의 버튼을 눌러 확인해보세요.</div>
         <BotButton onClick={openModal}>BitBot에게 물어보기</BotButton>
       </BotArea>
-    </div>
+
+      {isModalOpen && (
+        <ModalOverlay onClick={closeLogoutModal}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <p>정말 로그아웃하시겠습니까?</p>
+            <ModalButtonContainer>
+              <ConfirmButton onClick={handleLogout}>확인</ConfirmButton>
+              <CancelButton onClick={closeLogoutModal}>취소</CancelButton>
+            </ModalButtonContainer>
+          </ModalContent>
+        </ModalOverlay>
+      )}
+    </NavWrapper>
   );
 };
 
 NavBar.propTypes = {
   openModal: PropTypes.func.isRequired,
 }
+
+const NavWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  justify-content: space-between; /* 하단 고정을 위해 추가 */
+`;
 
 const StyledNavLink = styled(NavLink)`
   display: flex;
@@ -120,17 +145,16 @@ const StyledNavLink = styled(NavLink)`
   }
 `;
 
-
 const StyledLogoutButton = styled.div`
   display: flex;
   gap: 2vw;
   align-items: center;
   margin: 0.2vw;
-  margin-top: 2vh;
   padding: 1vh 1.2vw;
   border-radius: 1vw;
   background-color: transparent;
   cursor: pointer;
+  transition: background-color 0.2s;
 
   .PageIcon {
     background-color: var(--trai-white);
@@ -146,10 +170,9 @@ const StyledLogoutButton = styled.div`
   }
 
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: rgba(0, 128, 128, 0.1); /* 배경 색으로 hover 반응 범위를 넓힘 */
   }
 `;
-
 
 const LogoArea = styled(NavLink)`
   display: flex;
@@ -159,7 +182,13 @@ const LogoArea = styled(NavLink)`
   border-bottom: 0.1vw var(--trai-disabled) solid;
 `;
 
-const NavContainer = styled.div``;
+const NavContainer = styled.div`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2vh;
+`;
 
 const NavList = styled.ul`
   margin: 1vh;
@@ -171,24 +200,23 @@ const BotArea = styled.div`
   background-color: var(--trai-mint);
   border-radius: 1vw;
   width: 15vw;
-  height: 24vh;
-  max-height: 200px;
+  max-width: 300px;
   padding: 1vh;
-  margin-top: 2vh;
+  margin-bottom: 2vh; /* 하단 여백 추가 */
 `;
 
 const BotButton = styled.button`
   background-color: var(--trai-white);
   color: var(--trai-mint);
   border-radius: 0.7vw;
-  width: 14vw;
+  width: 100%;
   height: 7vh;
   max-height: 60px;
   font-size: 2vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 1vh auto;
+  margin-top: 1vh;
   border: 0.1vw solid #e8e8e8;
   transition: all 0.2s;
   box-shadow: 0.4vw 0.4vw 0.8vw rgba(0, 128, 128, 0.2), -0.2vw -0.2vw 0.4vw rgba(255, 255, 255, 0.3);
@@ -197,5 +225,62 @@ const BotButton = styled.button`
     box-shadow: inset 0.3vw 0.3vw 0.8vw rgba(0, 128, 128, 0.3), inset -0.3vw -0.3vw 0.8vw rgba(255, 255, 255, 0.7);
   }
 `;
+// 모달 스타일 정의
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
 
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 300px;
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+`;
+
+const ModalButtonContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-top: 15px;
+`;
+
+
+const ConfirmButton = styled.button`
+  padding: 8px 16px;
+  background-color: var(--trai-mint);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: 600;
+    background-color: #45a29e; 
+  }
+`;
+
+const CancelButton = styled.button`
+  padding: 8px 16px;
+  background-color: #ccc;
+  color: #333;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+
+  &:hover {
+    font-weight: 600;
+    background-color: #999;
+  }
+`;
 export default NavBar;
