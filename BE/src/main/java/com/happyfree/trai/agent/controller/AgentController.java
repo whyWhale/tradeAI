@@ -31,11 +31,11 @@ public class AgentController {
 		return ResponseEntity.ok(agentService.findAgentHistoryById(agentId));
 	}
 
-	@Operation(summary = "에이전트 요청")
+	@Operation(summary = "에이전트 테스트")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
 	@GetMapping("/ai")
 	public ResponseEntity<?> requestAgent() {
-		CompletableFuture.runAsync(agentService::sendAssetsDataToAgent);
+		CompletableFuture.runAsync(agentService::requestAIAnalysisForUser);
 
 		return ResponseEntity.ok().build();
 	}

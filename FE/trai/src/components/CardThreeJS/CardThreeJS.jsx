@@ -45,11 +45,15 @@ const CardThreeJS = ({ onSelectAgent }) => {
   const [colorIndex, setColorIndex] = useState(0);
   const cardRef = useRef();
 
+  const rotationY = useRef(0); // 회전 각도 추적용 변수 추가
+
   const handleButtonClick = (index) => {
     setColorIndex(index);
+    rotationY.current += 2 * Math.PI; // 항상 360도씩 회전하도록 설정
+
     if (cardRef.current) {
       gsap.to(cardRef.current.rotation, {
-        y: cardRef.current.rotation.y - Math.PI,
+        y: rotationY.current,
         duration: 1,
         ease: 'back.out(2.5)',
       });
@@ -79,14 +83,14 @@ const CardThreeJS = ({ onSelectAgent }) => {
           <Environment preset="studio" />
           <group ref={cardRef}>
             <Card color={COLORS[colorIndex]} />
-            <group position={[-2, 2, 0.3]} rotation={[0, 0, Math.PI * 0.1]}>
+            <group position={[-2, 2, 0.3]} rotation={[0, 0, Math.PI * 0.05]}>
               <Center>
                 <Text3D
                   size={1}
-                  height={0.1}
+                  height={0.2}
                   curveSegments={12}
                   bevelEnabled
-                  bevelThickness={0.01}
+                  bevelThickness={0.02}
                   bevelSize={0.01}
                   bevelOffset={0}
                   bevelSegments={5}
@@ -95,8 +99,8 @@ const CardThreeJS = ({ onSelectAgent }) => {
                   {TEXTS[colorIndex]}
                   <meshStandardMaterial 
                     color={TEXT_COLORS[colorIndex]} 
-                    metalness={0.5}
-                    roughness={0.2}
+                    metalness={0.2}
+                    roughness={0.5}
                   />
                 </Text3D>
               </Center>

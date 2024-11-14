@@ -14,7 +14,7 @@ public enum ErrorCode {
     ORDER_ERROR(HttpStatus.BAD_REQUEST, "주문하기 진행 중 오류가 발생했습니다."),
     ORDER_AMOUNT_TOO_SMALL(HttpStatus.BAD_REQUEST, "주문 금액이 6000원 이하입니다."),
     AGENT_NOT_FOUND(HttpStatus.NOT_FOUND, "AI Agent 기록이 없습니다."),
-    ;
+    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "관리자 전용 기능입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

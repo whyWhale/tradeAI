@@ -17,7 +17,7 @@ const MainPage = () => {
 
     return (
         <div className="w-full flex flex-col" style={{ overflowX: 'hidden' }}>
-            <div className='flex justify-end pr-12 bg-trai-navy'>
+            <div className='flex justify-end items-center pr-12 bg-trai-navy'>
                 
                 <StyledLink to={'/trade-settings'}>
                     거래 설정
@@ -26,7 +26,7 @@ const MainPage = () => {
                     자산 현황
                 </StyledLink>
                 <StyledLink to={'/investment-status'}>
-                    투자 현황
+                    투자 내역
                 </StyledLink>
                 <StyledLink to={'/trade-details'}>
                     거래 상세 및 전략
@@ -65,12 +65,14 @@ const MainPage = () => {
                                 transition: 'all 0.5s ease-in-out'
                             }}
                         >
-                            <h3 className='font-bold mb-10 text-center text-[24px]'>
+                            {/* <h3 className='font-bold mb-10 text-center text-[24px]'>
                                 {agentsData[selectedAgentIndex].name}
                             </h3>
                             <div className='text-[16px] leading-relaxed'>
                                 {agentsData[selectedAgentIndex].description}
-                            </div>
+                            </div> */}
+                            <AgentTitle>{agentsData[selectedAgentIndex].name}</AgentTitle>
+                            <AgentDescription>{agentsData[selectedAgentIndex].description}</AgentDescription>
                         </AgentCard>
                     </div>
                 </div>
@@ -98,28 +100,28 @@ const MainPage = () => {
 
 const agentsData = [
     {
-        name: "차트 분석 에이전트",
-        description: "차트 데이터 분석 에이전트는 시장의 역사적 가격 움직임을 기반으로 시장 동향을 파악하고 예측합니다. 이를 통해 상승 및 하락 추세, 지지선과 저항선 등의 중요한 가격 패턴을 식별하여, 향후 가격 변동에 대한 초기 판단을 제공합니다. 이 에이전트는 주로 캔들 차트와 이동평균선 등의 지표를 활용하여 단기 및 장기 추세를 분석합니다."
+        name: "퀀트 분석 에이전트",
+        description: "퀀트 분석 에이전트는 기술적 지표를 바탕으로 데이터를 분석하여 투자 결정을 내리는 역할을 합니다. 캔들 데이터를 기반으로 RSI, MACD, 볼린저 밴드 등 다양한 지표를 분석해 시장을 냉철하게 진단하며, 데이터 기반의 거래 전략을 수립합니다. 이처럼 수치 분석에 따른 전략적 접근을 통해 시장의 흐름을 반영한 결정을 제공합니다."
     },
     {
-        name: "패턴 분석 에이전트",
-        description: "차트 패턴 분석 에이전트는 주가 및 가상화폐 가격 변동에서 반복적으로 나타나는 차트 패턴을 식별합니다. 주로 삼각형 패턴, 헤드 앤 숄더 패턴, 이중 바닥과 같은 기술적 패턴을 분석하여, 추세 전환이나 지속의 가능성을 예측합니다. 이를 통해 시장의 기술적 흐름을 파악하고, 보다 정밀한 거래 결정을 내리도록 돕습니다."
+        name: "차트 패턴 에이전트",
+        description: "차트 패턴 에이전트는 비트코인 차트의 주요 패턴을 분석하여 상승과 하락의 가능성을 예측하는 전문가로, 시장 흐름을 실시간으로 파악하는 역할을 수행합니다. 4시간 단위의 비트코인 차트를 바탕으로 상승 삼각형, 하락 삼각형 등 10개의 대표적인 패턴을 탐지하며, 명확한 패턴이 없더라도 방향성에 맞춰 결정을 내립니다. 이를 통해 시장의 미묘한 변화를 반영한 거래 결정을 지원합니다."
     },
     {
         name: "심리 분석 에이전트",
-        description: "공포 탐욕 지수 판단 에이전트는 투자자들의 심리 상태를 나타내는 지표를 분석하여 시장의 공포와 탐욕 수준을 평가합니다. 공포가 높을 때는 매도 압력이 강해지고, 탐욕이 높을 때는 매수 압력이 증가하는 경향이 있습니다. 이 에이전트는 이러한 심리 지표를 통해 적절한 매수 및 매도 시점을 파악하는 데 도움을 줍니다."
+        description: "심리 분석 에이전트는 시장의 공포 탐욕 지수를 통해 투자 심리를 분석합니다. 극심한 공포부터 탐욕까지의 감정 상태를 수치화하여, 시장 참여자들이 비트코인 시장에 대해 느끼는 감정의 흐름을 포착합니다. 이를 통해 현재의 시장 분위기를 진단하고, 시장의 감정적 흐름에 따른 투자 결정을 지원합니다."
     },
     {
-        name: "뉴스 모니터 에이전트",
-        description: "최신 뉴스 반영 에이전트는 실시간으로 제공되는 경제 및 산업 뉴스를 분석하여 시장에 미칠 잠재적 영향을 평가합니다. 주요 이벤트나 정책 변화, 기업의 발표 등 뉴스에 따른 급격한 시장 반응을 반영하여, 투자 전략을 세울 때 고려해야 할 중요한 외부 요인을 제공합니다."
+        name: "뉴스 분석 에이전트",
+        description: "뉴스 분석 에이전트는 최신 비트코인 관련 뉴스를 분석하여, 시장에 즉각적인 영향을 줄 수 있는 정보를 바탕으로 투자 결정을 지원합니다. 주요 뉴스와 그 시사점들을 반영해 시장의 상황을 빠르게 파악하며, 복잡한 뉴스 동향에서도 실시간으로 방향성 있는 거래 결정을 내릴 수 있습니다."
     },
     {
-        name: "마스터 에이전트",
-        description: "마스터 에이전트는 각기 다른 에이전트들의 분석 결과를 종합하여 최종적인 거래 판단을 내립니다. 각 에이전트가 제공하는 정보의 중요도와 신뢰도를 고려하여 최적의 매수 및 매도 결정을 내리도록 설계되었습니다. 이 에이전트는 전체 전략을 통합하여 일관된 투자 전략을 제공합니다."
+        name: "최종 결정 에이전트",
+        description: "최종 결정 에이전트는 차트 패턴, 공포 탐욕 지수, 뉴스, 기술적 지표 등 모든 에이전트들의 분석을 종합하여 최종 거래 전략을 수립합니다. 다양한 요소들을 종합적으로 고려해 사용자의 투자 성향에 맞춘 결정을 내리며, 수익률을 극대화할 수 있는 전략을 제안합니다. 리스크 관리 원칙을 반영하여 신뢰성 있는 결정을 제공합니다."
     },
     {
-        name: "전략 학습 에이전트",
-        description: "회고 에이전트는 과거의 거래 결정을 평가하고, 실패와 성공 요인을 분석하여 향후 개선 사항을 도출합니다. 이 에이전트는 학습을 통해 기존 전략의 효율성을 높이고, 반복적인 실수를 방지할 수 있도록 설계되었습니다. 이를 통해 지속적으로 진화하는 거래 전략을 유지합니다."
+        name: "포트폴리오 관리 에이전트",
+        description: "포트폴리오 관리 에이전트는 투자자의 현재 자산 상황과 성향에 맞춘 투자 비율을 설정하여 효과적인 자산 운영을 돕습니다. 자산 현황, 최근 투자 성과, 비트코인 보유량을 바탕으로 적절한 비율을 제안해 리스크를 최소화하고 안정적인 성과를 추구합니다."
     },
 ];
 
@@ -193,7 +195,7 @@ const AgentCard = styled.div`
     transition: all 0.3s ease-in-out;
     border: 2px solid white;
     border-radius: 5px;
-    padding: 30px;
+    padding: 50px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     height: 70%;
     display: flex;
@@ -209,7 +211,17 @@ const AgentCard = styled.div`
         transform: translateY(-5px);
     }
 `
+const AgentTitle = styled.h3`
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 30px;
+`;
 
+const AgentDescription = styled.p`
+    font-size: 16px;
+    line-height: 1.8;
+    color: var(--trai-text);
+`;
 
 const ThirdContainer = styled.div`
     background-color: var(--trai-disabled);
