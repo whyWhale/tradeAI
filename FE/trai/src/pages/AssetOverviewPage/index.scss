@@ -16,25 +16,25 @@ body, html {
 
 .card-title {
   color: #A0AEC0;
-  font-size:13px;
+  font-size:0.9vw;
 
 }
 
 .card-content{
-  font-size:10px;
+  font-size:0.7vw;
 }
 
 /* 전체 컨테이너 */
 .investment-status {
   position: relative; /* 내부 요소들이 절대 위치로 배치될 때 기준이 되는 요소 */
-  width: 100%; /* 전체 너비 설정 */
+  width: 100vw; /* 전체 너비 설정 */
   height: 100vh; /* 화면 높이에 맞춤 */
 }
 
 /* 왼쪽 네비게이션 바 */
 .navbar {
   position: absolute; /* 절대 위치 지정 */
-  width: 18.6%; /* 전체 너비의 18.6%로 설정 */
+  width: 18.6vw; /* 전체 너비의 18.6%로 설정 */
   height: 100vh; /* 화면 전체 높이 차지 */
   left: 0; /* 왼쪽에 고정 */
   top: 0; /* 위쪽에 고정 */
@@ -46,8 +46,8 @@ body, html {
 .main-content {
   position: absolute; /* 절대 위치 지정 */
   display: flex; /* 내부 요소를 flex 컨테이너로 설정 */
-  left: 0.8%; /* navbar 오른쪽에 위치하도록 설정 */
-  right: 0%; /* 오른쪽 끝까지 확장 */
+  left: 0.8vw; /* navbar 오른쪽에 위치하도록 설정 */
+  right: 0vw; /* 오른쪽 끝까지 확장 */
   top: 0; /* 위쪽에 고정 */
   bottom: 0; /* 아래쪽 끝까지 확장 */
 }
@@ -65,69 +65,69 @@ body, html {
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 약간의 그림자 효과 추가 */
   border-radius: 15px; /* 모서리를 둥글게 설정 */
-  padding-left: 1.5%;
-  padding-right: 1.5%;
-  padding-top: 0.3%;
+  padding-left: 1.5vw;
+  padding-right: 1.5vw;
+  padding-top: 0.3vh;
   align-content: center;
 }
 
 /* 큰 정보 카드 */
 .info-card-large {
-  width: 23.1%; /* 전체 너비의 23.1% */
-  height: 27%; /* 전체 높이의 27% */
-  left: 75.2%; /* 좌측에서 75.2% 떨어진 위치 */
-  top: 4.1%; /* 상단에서 4.1% 떨어진 위치 */
+  width: 23.1vw; /* 전체 너비의 23.1% */
+  height: 27vh; /* 전체 높이의 27% */
+  left: 75.2vw; /* 좌측에서 75.2% 떨어진 위치 */
+  top: 4.1vh; /* 상단에서 4.1% 떨어진 위치 */
   position: relative;
   z-index: 1;
 }
 
 /* 중간 크기 정보 카드 */
 .info-card-medium {
-  width: 14.3%; /* 전체 너비의 14.3% */
-  height: 27%; /* 전체 높이의 27% */
-  left: 60.1%; /* 좌측에서 60.1% 떨어진 위치 */
-  top: 4.1%; /* 상단에서 4.1% 떨어진 위치 */
+  width: 14.3vw; /* 전체 너비의 14.3% */
+  height: 27vh; /* 전체 높이의 27% */
+  left: 60.1vw; /* 좌측에서 60.1% 떨어진 위치 */
+  top: 4.1vh; /* 상단에서 4.1% 떨어진 위치 */
 }
 
 /* 작은 정보 카드 1 */
 .info-card-small.card1 {
-  width: 18.7%; /* 전체 너비의 18.7% */
-  height: 12.6%; /* 전체 높이의 12.6% */
-  left: 20.6%; /* 좌측에서 20.6% 떨어진 위치 */
-  top: 4.3%; /* 상단에서 4.3% 떨어진 위치 */
+  width: 18.7vw; /* 전체 너비의 18.7% */
+  height: 12.6vh; /* 전체 높이의 12.6% */
+  left: 20.6vw; /* 좌측에서 20.6% 떨어진 위치 */
+  top: 4.3vh; /* 상단에서 4.3% 떨어진 위치 */
 }
 
 /* 작은 정보 카드 2 */
 .info-card-small.card2 {
-  width: 18.7%; /* 전체 너비의 18.7% */
-  height: 12.6%; /* 전체 높이의 12.6% */
-  left: 40.2%; /* 좌측에서 40.2% 떨어진 위치 */
-  top: 4.2%; /* 상단에서 4.2% 떨어진 위치 */
+  width: 18.7vw; /* 전체 너비의 18.7% */
+  height: 12.6vh; /* 전체 높이의 12.6% */
+  left: 40.2vw; /* 좌측에서 40.2% 떨어진 위치 */
+  top: 4.2vh; /* 상단에서 4.2% 떨어진 위치 */
 }
 
 /* 작은 정보 카드 3 */
 .info-card-small.card3 {
-  width: 18.7%; /* 전체 너비의 18.7% */
-  height: 12.6%; /* 전체 높이의 12.6% */
-  left: 20.6%; /* 좌측에서 20.6% 떨어진 위치 */
-  top: 18.5%; /* 상단에서 18.5% 떨어진 위치 */
+  width: 18.7vw; /* 전체 너비의 18.7% */
+  height: 12.6vh; /* 전체 높이의 12.6% */
+  left: 20.6vw; /* 좌측에서 20.6% 떨어진 위치 */
+  top: 18.5vh; /* 상단에서 18.5% 떨어진 위치 */
 }
 
 /* 작은 정보 카드 4 */
 .info-card-small.card4 {
-  width: 18.7%; /* 전체 너비의 18.7% */
-  height: 12.6%; /* 전체 높이의 12.6% */
-  left: 40.2%; /* 좌측에서 40.2% 떨어진 위치 */
-  top: 18.5%; /* 상단에서 18.5% 떨어진 위치 */
+  width: 18.7vw; /* 전체 너비의 18.7% */
+  height: 12.6vh; /* 전체 높이의 12.6% */
+  left: 40.2vw; /* 좌측에서 40.2% 떨어진 위치 */
+  top: 18.5vh; /* 상단에서 18.5% 떨어진 위치 */
 }
 
 /* 차트 영역 */
 .chart {
   align-items: center;
-  width: 59.2%; /* 전체 너비의 59.2% */
-  height: 63.2%; /* 전체 높이의 63.2% */
-  left: 20.4%; /* 좌측에서 20.4% 떨어진 위치 */
-  top: 32.6%; /* 상단에서 32.6% 떨어진 위치 */
+  width: 59.2vw; /* 전체 너비의 59.2% */
+  height: 63.2vh; /* 전체 높이의 63.2% */
+  left: 20.4vw; /* 좌측에서 20.4% 떨어진 위치 */
+  top: 32.6vh; /* 상단에서 32.6% 떨어진 위치 */
   display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -142,7 +142,7 @@ body, html {
     align-items: left;
     font-family: 'Pretendard';
     font-weight: 700;
-    font-size: 24px;
+    font-size: 1.6vw;
     color: #000000;
   }
 
@@ -150,13 +150,13 @@ body, html {
 		display: flex;
 		flex-direction: column;
 		border-radius: 2px;
-		width: 100%;
-		height: 80%;
+		width: 80vw;
+		height: 40vh;
 		padding: 2% 1% 2% 2%;
 		.chart-titker {
 			margin: 0;
 			color: #252525;
-			padding-bottom: 10px;
+			padding-bottom: 0.01vh;
       		font-size: 2.2rem;
 		}
 		.coin-chart {
@@ -167,8 +167,8 @@ body, html {
 			display: flex;
 			flex-direction: row;
 			align-items: center;
-			margin-top: 1%;
-			font-size: 12px;
+			margin-top: 0.01vh;
+			font-size: 0.9vw;
 			color: #606060;
 			button {
 				cursor: pointer;
@@ -178,7 +178,7 @@ body, html {
 				height: 24px;
 				line-height: 26px;
 				padding: 0 6px;
-				font-size: 12px;
+				font-size: 0.9vw;
 				color: #fff;
 				border: none;
 				outline: none;
@@ -189,12 +189,8 @@ body, html {
 
 /* 사이드바 영역 */
 .sidebar {
-  width: 17.7%; /* 전체 너비의 17.7% */
-  height: 63.2%; /* 전체 높이의 63.2% */
-  left: 80.4%; /* 좌측에서 80.4% 떨어진 위치 */
-  top: 32.8%; /* 상단에서 32.8% 떨어진 위치 */
-}
-
-.currency {
-  vertical-align: baseline; /* KRW, BTC 단위 살짝 아래에 정렬 */
+  width: 17.7vw; /* 전체 너비의 17.7% */
+  height: 63.2vh; /* 전체 높이의 63.2% */
+  left: 80.4vw; /* 좌측에서 80.4% 떨어진 위치 */
+  top: 32.8vh; /* 상단에서 32.8% 떨어진 위치 */
 }

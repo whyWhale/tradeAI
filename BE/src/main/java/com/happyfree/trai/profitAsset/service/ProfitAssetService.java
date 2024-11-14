@@ -467,7 +467,7 @@ public class ProfitAssetService {
 
     public List<AssetProportion> assetProportion() {
         User loginUser = authService.getLoginUser();
-        List<ProfitAssetHistory> all = profitAssetRepository.findByUserAndSettlementDateLessThanOrderBySettlementDateDesc(loginUser, LocalDate.now());
+        List<ProfitAssetHistory> all = profitAssetRepository.findByUserAndSettlementDateLessThan(loginUser, LocalDate.now());
         List<AssetProportion> list = new ArrayList<>();
         int count = 30;
         for (ProfitAssetHistory profitAssetHistory : all) {
@@ -600,11 +600,12 @@ public class ProfitAssetService {
         String secretKey = loginUser.getSecretKey();
         LocalDate today = LocalDate.now();
 
+        BigDecimal bitcoinAveragePrice = getBTCAveragePrice(accessKey, secretKey);
+        BigDecimal bitcoinCurrentPrice = getBitcoinCurrentPrice();
         BigDecimal bitcoinAmount = getBitcoinAmount(accessKey, secretKey);
-        BigDecimal totalEvaluation = getBitcoinCurrentPrice().multiply(bitcoinAmount);
-        BigDecimal totalInvestment = getBTCAveragePrice(accessKey, secretKey).multiply(bitcoinAmount);
+        BigDecimal totalEvaluation = bitcoinCurrentPrice.multiply(bitcoinAmount);
+        BigDecimal totalInvestment = bitcoinAveragePrice.multiply(bitcoinAmount);
         BigDecimal profitAndLoss = totalEvaluation.subtract(totalInvestment);
-
         BigDecimal totalAmount = totalEvaluation.add(getTotalKRW(accessKey, secretKey));
 
         BigDecimal startingAssets = BigDecimal.ZERO;
@@ -635,7 +636,6 @@ public class ProfitAssetService {
                     .multiply(BigDecimal.valueOf(100))
                     .setScale(2, RoundingMode.DOWN);
         }
-        log.info("profitAndLossRatio : {}", profitAndLossRatio);
 
         return AssetsDetail.builder()
                 .totalAmount(totalAmount)
@@ -646,6 +646,13 @@ public class ProfitAssetService {
                 .availableAmount(getAvailableKRW(accessKey, secretKey))
                 .profitAndLoss(profitAndLoss)
                 .profitAndLossRatio(profitAndLossRatio)
+                .bitcoinAmount(bitcoinAmount)
+                .bitcoinAveragePrice(bitcoinAveragePrice)
+                .bitcoinCurrentPrice(bitcoinCurrentPrice)
+                .startingAssets(startingAssets)
+                .totalDepositAmount(totalDepositAmount)
+                .totalWithdrawAmount(totalWithdrawAmount)
+                .totalProfitAndLoss(totalProfitAndLoss)
                 .build();
     }
 

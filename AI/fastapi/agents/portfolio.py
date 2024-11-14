@@ -48,18 +48,25 @@ portfolio_chain = portfolio_prompt_template | llm | portfolio_output_parser
 
 # 주문 금액 결정 함수
 def order_amount_calculator(decision, percent, available_order_amount, btc_holdings_in_krw):
+    # percent를 숫자 형식으로 변환
+    try:
+        percent = float(percent)
+    except ValueError:
+        print("Error: percent 값이 숫자 형식이 아닙니다.")
+        return 0  # percent가 숫자 형식이 아닌 경우 0 반환
+
     if decision == 'HOLD':
         return 0
 
+    # BUY 또는 SELL 결정에 따른 주문 금액 계산
     order_amount = (percent / 100) * (available_order_amount if decision == 'BUY' else btc_holdings_in_krw)
 
-    if decision == 'BUY':
-        return max(6000, order_amount)
-    elif decision == 'SELL':
+    if decision == 'BUY' or decision == 'SELL':
         return max(6000, order_amount)
 
     # 예외적으로 다른 값이 들어왔을 경우 0 반환
     return 0
+
 
 # 에이전트
 def portfolio_agent(state: State) -> State:
@@ -67,16 +74,16 @@ def portfolio_agent(state: State) -> State:
 
     # 의사 결정 실행
     result = portfolio_chain.invoke({
-        "final_decision": state.master["decision"],
+        "final_decision": state.decision_maker["decision"],
         "available_amount": state.user_info["available_amount"],
         "btc_balance_krw": state.user_info["btc_balance_krw"],
-        "investment_preference": state.master["investment_preference"],
+        "investment_preference": state.decision_maker["investment_preference"],
         "investment_performance_summary": state.user_info["investment_performance_summary"],
         "bitcoin_position_history": state.user_info["bitcoin_position_history"]
     })
 
     order_amount = order_amount_calculator(
-        state.master["decision"],
+        state.decision_maker["decision"],
         result["percentage"],
         state.user_info["available_amount"],
         state.user_info["btc_balance_krw"]
@@ -88,7 +95,7 @@ def portfolio_agent(state: State) -> State:
             "order_amount": order_amount,
             "summary": result["summary"]
         },
-        "master": {
+        "decision_maker": {
             "percentage": result["percentage"],
             "order_amount": order_amount
         }

@@ -110,7 +110,7 @@ public class AgentService {
                         .userId(user.getId())
                         .btcBalanceKrw(totalBTCAmount.multiply(tradePrice).floatValue())
                         .availableAmount(totalKRWAssets.floatValue())
-                        .investmentType(user.getInvestmentType() != null ? user.getInvestmentType() : "none")
+                        .investmentType(user.getInvestmentType() != null ? user.getInvestmentType() : "None")
                         .investmentPerformanceSummary(investmentPerformanceSummary)
                         .bitcoinPositionHistory(bitcoinPositionHistory)
                         .build();
@@ -145,8 +145,8 @@ public class AgentService {
     private void processAnalysisResult(JsonNode result, AssetData assetData) {
         try {
             // 매수, 매도 결정과 투자 퍼센트 추출
-            String decision = result.path("master").path("decision").asText();
-            int percentage = result.path("master").path("percentage").asInt();
+            String decision = result.path("decision_maker").path("decision").asText();
+            int percentage = result.path("decision_maker").path("percentage").asInt();
             long userId = result.path("user_info").path("user_id").asLong();
 
             User user = userRepository.findById(userId)
@@ -212,6 +212,10 @@ public class AgentService {
                                 .subtract(new BigDecimal(transactionHistory.getPaidFee()).multiply(new BigDecimal("2")));
 
                         transactionHistory.updateProfitAndLoss(profitAndLoss);
+                    }
+
+                    if (transactionHistory.getProfitAndLoss() == null) {
+                        transactionHistory.updateProfitAndLoss(BigDecimal.ZERO);
                     }
 
                     transactionHistoryRepository.save(transactionHistory);
