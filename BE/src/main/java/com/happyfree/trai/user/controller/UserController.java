@@ -55,4 +55,11 @@ public class UserController {
 	public ResponseEntity<?> updateInvestmentType(@RequestBody InvestmentType investmentType) {
 		return ResponseEntity.ok(userService.saveInvestmentType(investmentType));
 	}
+
+	@Operation(summary = "투자 성향 가져오기")
+	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
+	@GetMapping("/investment-type")
+	public ResponseEntity<?> a() {
+		return ResponseEntity.ok(userService.it());
+	}
 }

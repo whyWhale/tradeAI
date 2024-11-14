@@ -1,114 +1,127 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect, useState } from 'react';
 
 import NavBar from '@components/NavBar';
 import Modal from '@components/Modal';
+import { instance } from "@api/axios.js";
+import {useNavigate} from "react-router-dom";
 
 const TradeSettings = () => {
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-  } = useForm();
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [savedValue, setSavedValue] = useState('');
+  const navigate = useNavigate();
+  const [isSaved, setIsSaved] = useState(false);
+
+  useEffect(() => {
+    const ivt = async () => {
+      try {
+        const response = await instance.get('/api/users/investment-type');
+        setSavedValue(response.data);
+      } catch (error) {
+        console.error("Error fetching investment type:", error);
+      }
+    };
+
+    ivt();
+  }, []);
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
-  }
+  };
 
   const handleConfirm = () => {
     setIsModalOpen(false);
-  }
+    instance.get('/api/agent-history/ai');
+    navigate('/trade-details')
+    alert('거래내역 페이지로 이동합니다.')
+  };
 
   const handleCancel = () => {
     setIsModalOpen(false);
-  }
+  };
 
   // 수정 버튼 클릭 시
   const handleEdit = () => {
     setIsEditing(true);
-    // 저장된 값으로 폼 초기화
-    reset({ investmentStyle: savedValue });
-  }
+  };
 
-  // 저장 수정
-  const onSubmit = (data) => {
-    console.log("저장 수정 버튼 발동", data);
-    setSavedValue(data.investmentStyle);
-    setIsEditing(false);
-  }
+  // 저장 버튼 클릭 시
+  const handleSave = async () => {
+    const investmentType = {
+      investmentType: savedValue
+    };
 
-
-  // 테스트 기능
-  const handleTestRequest = () => {
-    console.log("test function start");
-  }
-
+    try {
+      const response = await instance.patch('/api/users/investment-type', investmentType);
+      setSavedValue(response.data);
+      setIsEditing(false);
+      setIsSaved(true);
+      setTimeout(() => setIsSaved(false), 3000);
+    } catch (error) {
+      console.error("Error updating investment type:", error);
+    }
+  };
 
   return (
-    <div className='flex bg-trai-background min-h-screen'>
-      <aside className='w-72'>
-        <NavBar />
-      </aside>
+      <div className='flex bg-trai-background min-h-screen'>
+        <aside className='w-72'>
+          <NavBar/>
+        </aside>
 
-      <section className='flex-1'>
+        <section className='flex-1 p-8 bg-gray-100 mt-40'>
+          <div className='flex flex-col gap-6 bg-white p-6 shadow-md rounded-lg mx-auto max-w-3xl'>
+            <label htmlFor='investmentStyle' className='text-lg font-semibold'>본인의 투자 성향을 작성해주세요.</label>
+            {isSaved && <span className="text-sm text-green-500">수정이 완료되었어요 🌈</span>}
+            <textarea
+                id='investmentStyle'
+                value={savedValue}
+                onChange={(e) => setSavedValue(e.target.value)}
+                className={`p-4 border rounded w-full h-40 ${!isEditing ? 'bg-gray-100' : 'bg-white'}`}
+                placeholder='예시: 저는 공격적인 투자를 선호합니다.'
+                readOnly={!isEditing}
+            />
 
-        <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col gap-4 bg-trai-white p-4 m-10'>
-          <label htmlFor='investmentStyle'>본인의 투자 성향을 작성해주세요.</label>
-          <input
-            id='investmentStyle'
-            type='text'
-            
-            className={`p-2 border rounded w-full ${!isEditing ? 'bg-gray-100' : 'bg-white'}`}
-            placeholder='예시: 저는 공격적인 투자를 선호합니다.'
-            
-          />
-
-          <div className='flex justify-evenly'>
-            {!isEditing ? (
-              <button 
-                type='button' 
-                onClick={handleEdit} 
-                className='bg-trai-mint p-2 text-trai-white rounded'
-              > 수정 </button>
-            ) : (
-              <button 
-                type='submit' 
-                className='bg-trai-mint p-2 text-trai-white rounded'
-              > 저장 </button>
-            )}
-            <button 
-              type='button' 
-              onClick={handleTestRequest} 
-              className='bg-trai-navy p-2 text-trai-white rounded'
-            >
-              Test
-            </button>
+            <div className='flex justify-evenly'>
+              {!isEditing ? (
+                  <button
+                      type="button"
+                      onClick={handleEdit}
+                      className="bg-trai-mint p-2 text-white rounded w-24"
+                  >
+                    수정
+                  </button>
+              ) : (
+                  <button
+                      type="button"
+                      onClick={handleSave}
+                      className="bg-trai-mint p-2 text-white rounded w-24"
+                  >
+                    저장
+                  </button>
+              )}
+              <button
+                  type="button"
+                  onClick={handleOpenModal}
+                  className={`p-2 text-white rounded w-30 ${isEditing ? 'bg-gray-300 cursor-not-allowed' : 'bg-trai-navy'}`}
+                  disabled={isEditing}
+              >
+                실시간 투자 하기
+              </button>
+            </div>
           </div>
-        </form>
 
-
-
-        {/* 모달 테스트 */}
-        <button onClick={handleOpenModal} className='bg-trai-mint p-2 m-2 text-trai-white rounded'>
-          Modal
-        </button>
-        {isModalOpen && (
-          <Modal
-            title="Test Modal"
-            message="Are you sure you want to continue?"
-            onConfirm={handleConfirm}
-            onCancel={handleCancel}
-            confirmText="continue"
-            cancelText="delete"
-          />
-        )}
-      </section>
-    </div>
+          {isModalOpen && (
+              <Modal
+                  title="현재 성향으로 투자를 진행합니다."
+                  message="진행하시겠습니까?"
+                  onConfirm={handleConfirm}
+                  onCancel={handleCancel}
+                  confirmText="네"
+                  cancelText="아니오"
+              />
+          )}
+        </section>
+      </div>
   );
 };
 
