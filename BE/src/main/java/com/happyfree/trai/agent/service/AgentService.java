@@ -2,6 +2,7 @@ package com.happyfree.trai.agent.service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -9,6 +10,7 @@ import com.happyfree.trai.agent.dto.AgentDecisionResult;
 import com.happyfree.trai.agent.entity.Agent;
 import com.happyfree.trai.agent.dto.AssetData;
 import com.happyfree.trai.agent.repository.AgentRepository;
+import com.happyfree.trai.auth.service.AuthService;
 import com.happyfree.trai.global.exception.CustomException;
 import com.happyfree.trai.profitAsset.dto.RecentInvestmentSummary;
 import com.happyfree.trai.profitAsset.entity.ProfitAssetHistory;
@@ -55,6 +57,8 @@ public class AgentService {
 
     private final ProfitAssetService profitAssetService;
 
+    private final AuthService authService;
+
     private final UserRepository userRepository;
 
     private final AgentRepository agentRepository;
@@ -80,66 +84,78 @@ public class AgentService {
                 .build();
     }
 
-    @Transactional
-    public void sendAssetsDataToAgent() {
+    public void requestAIAnalysisForAllAdmins() {
         List<User> allAdminUser = userRepository.findByRole("ROLE_ADMIN");
+        allAdminUser.forEach(this::requestAIAnalysis);
+    }
 
-        allAdminUser.forEach(user -> {
-            try {
-                String accessKey = user.getAccessKey();
-                String secretKey = user.getSecretKey();
-                // 데이터 수집
-                BigDecimal totalBTCAmount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
-                BigDecimal tradePrice = profitAssetService.getBitcoinCurrentPrice();
-                BigDecimal totalKRWAssets = profitAssetService.getTotalKRW(accessKey, secretKey);
+    public void requestAIAnalysisForUser() {
+        User loginUser = authService.getLoginUser();
+        if (loginUser.getRole().equals("ROLE_USER")) {
+            throw new CustomException(UNAUTHORIZED_ACCESS);
+        }
+        requestAIAnalysis(loginUser);
+    }
 
-                List<ProfitAssetHistory> profitAssetHistories = profitAssetRepository
-                        .findTop5ByUserAndSettlementDateLessThanOrderBySettlementDateDesc(user, LocalDate.now());
-                List<RecentInvestmentSummary> investmentPerformanceSummary = profitAssetHistories.stream()
-                        .map(RecentInvestmentSummary::from)
-                        .collect(Collectors.toList());
+    public void requestAIAnalysis(User user) {
+        try {
+            AssetData assetData = createAssetData(user);
+            sendToAIServer(assetData);
+        } catch (Exception e) {
+            throw new CustomException(ASSET_DATA_ERROR);
+        }
+    }
 
-                List<TransactionHistory> transactionHistories = transactionHistoryRepository
-                        .findTop10ByUserOrderByCreatedAtDesc(user);
-                List<RecentTransactionHistory> bitcoinPositionHistory = transactionHistories.stream()
-                        .map(RecentTransactionHistory::from)
-                        .collect(Collectors.toList());
+    private AssetData createAssetData(User user) throws JsonProcessingException {
+        String accessKey = user.getAccessKey();
+        String secretKey = user.getSecretKey();
 
-                // 단일 AssetData 객체 생성
-                AssetData assetData = AssetData.builder()
-                        .userId(user.getId())
-                        .btcBalanceKrw(totalBTCAmount.multiply(tradePrice).floatValue())
-                        .availableAmount(totalKRWAssets.floatValue())
-                        .investmentType(user.getInvestmentType() != null ? user.getInvestmentType() : "None")
-                        .investmentPerformanceSummary(investmentPerformanceSummary)
-                        .bitcoinPositionHistory(bitcoinPositionHistory)
-                        .build();
+        BigDecimal totalBTCAmount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
+        BigDecimal tradePrice = profitAssetService.getBitcoinCurrentPrice();
+        BigDecimal totalKRWAssets = profitAssetService.getTotalKRW(accessKey, secretKey);
 
-                // AI 서버로 단일 요청 전송
-                webClient
-                        .post()
-                        .uri("http://3.35.238.247:8000/ai/analysis")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(assetData)
-                        .retrieve()
-                        .bodyToMono(JsonNode.class)
-                        .subscribe(
-                                result -> {
-                                    try {
-                                        processAnalysisResult(result, assetData);
-                                    } catch (Exception e) {
-                                        throw new CustomException(AI_PROCESS_ERROR);
-                                    }
-                                },
-                                error -> {
-                                    log.error("AI Server Error: {}", error.getMessage());
-                                }
-                        );
+        List<ProfitAssetHistory> profitAssetHistories = profitAssetRepository
+                .findTop5ByUserAndSettlementDateLessThanOrderBySettlementDateDesc(user, LocalDate.now());
+        List<RecentInvestmentSummary> investmentPerformanceSummary = profitAssetHistories.stream()
+                .map(RecentInvestmentSummary::from)
+                .collect(Collectors.toList());
 
-            } catch (Exception e) {
-                throw new CustomException(ASSET_DATA_ERROR);
-            }
-        });
+        List<TransactionHistory> transactionHistories = transactionHistoryRepository
+                .findTop10ByUserOrderByCreatedAtDesc(user);
+        List<RecentTransactionHistory> bitcoinPositionHistory = transactionHistories.stream()
+                .map(RecentTransactionHistory::from)
+                .collect(Collectors.toList());
+
+        return AssetData.builder()
+                .userId(user.getId())
+                .btcBalanceKrw(totalBTCAmount.multiply(tradePrice).floatValue())
+                .availableAmount(totalKRWAssets.floatValue())
+                .investmentType(user.getInvestmentType() != null ? user.getInvestmentType() : "None")
+                .investmentPerformanceSummary(investmentPerformanceSummary)
+                .bitcoinPositionHistory(bitcoinPositionHistory)
+                .build();
+    }
+
+    private void sendToAIServer(AssetData assetData) {
+        webClient
+                .post()
+                .uri("http://3.35.238.247:8000/ai/analysis")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(assetData)
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .subscribe(
+                        result -> {
+                            try {
+                                processAnalysisResult(result, assetData);
+                            } catch (Exception e) {
+                                throw new CustomException(AI_PROCESS_ERROR);
+                            }
+                        },
+                        error -> {
+                            log.error("AI Server Error: {}", error.getMessage());
+                        }
+                );
     }
 
     private void processAnalysisResult(JsonNode result, AssetData assetData) {
