@@ -10,7 +10,7 @@ const DecisionStatusChart = () => {
     const isAllZero = holdCount === 0 && buyCount === 0 && sellCount === 0;
 
     return (
-        <div className='piechart' style={{ width: '100%', height: '90%', margin: '0 auto' }}>
+        <div className='piechart' style={{ width: '100%', height: '90%', margin: '0 auto', marginTop: '1.5vh' }}>
             {isAllZero ? (
                 <div className='card-content' style={{marginTop:'23%'}}>
                     &nbsp;&nbsp;&nbsp;투자가 아직 시작되지 않았습니다.
@@ -22,7 +22,7 @@ const DecisionStatusChart = () => {
                         { id: '매수', value: buyCount },
                         { id: '홀드', value: holdCount },
                     ]}
-                    margin={{ top: 20, right: 0, bottom: 20, left: 0 }}
+                    margin={{ top: 25, right: 0, bottom: 20, left: 0 }}
                     innerRadius={0.5}
                     padAngle={1}
                     cornerRadius={3}
@@ -37,43 +37,20 @@ const DecisionStatusChart = () => {
                     theme={{
                         labels: {
                             text: {
-                                fontSize: '0.8rem',
+                                fontSize: '0.8vw',
                                 fill: '#101010',
                                 fontFamily: 'Pretendard-Regular',
                             },
+                            zIndex: '100',
                         },
                         legends: {
                             text: {
-                                fontSize: '1rem',
+                                fontSize: '1vw',
                                 fill: '#101010',
                                 fontFamily: 'Pretendard-Regular',
                             },
                         },
                     }}
-                    legends={[
-                        {
-                            anchor: 'bottom',
-                            direction: 'row',
-                            justify: false,
-                            translateX: 0,
-                            translateY: 80,
-                            itemsSpacing: 0,
-                            itemWidth: 100,
-                            itemHeight: 18,
-                            itemDirection: 'left-to-right',
-                            itemOpacity: 1,
-                            symbolSize: 15,
-                            symbolShape: 'circle',
-                            effects: [
-                                {
-                                    on: 'hover',
-                                    style: {
-                                        itemTextColor: 'olive',
-                                    },
-                                },
-                            ],
-                        },
-                    ]}
                 />
             )}
         </div>
