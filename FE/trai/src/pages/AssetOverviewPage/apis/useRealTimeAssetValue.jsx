@@ -18,8 +18,8 @@ const useRealTimeAssetValue = (BTCPrice, assetData) => {
     totalValuation: (BTCPrice * assetData.BitcoinAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
     totalAssets: (BTCPrice * assetData.BitcoinAmount + assetData.TotalKRWAssets).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
     valuationProfit: (BTCPrice * assetData.BitcoinAmount - assetData.TotalInvestment).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-    valuationProfitRatio: 100* (BTCPrice * assetData.BitcoinAmount - assetData.TotalInvestment) / assetData.TotalInvestment,
-    returnRate: 100* ((BTCPrice * assetData.BitcoinAmount)+assetData.TotalKRWAssets + assetData.NetAssetChange) / (assetData.StartingAsset+assetData.TotalDepositAmount),
+    valuationProfitRatio: assetData.TotalInvestment !== 0 ? 100 * (BTCPrice * assetData.BitcoinAmount - assetData.TotalInvestment) / assetData.TotalInvestment : 0, // TotalInvestment가 0일 경우 0을 반환
+     returnRate: 100* ((BTCPrice * assetData.BitcoinAmount)+assetData.TotalKRWAssets + assetData.NetAssetChange) / (assetData.StartingAsset+assetData.TotalDepositAmount),
 };
 
   return updatedAssetData;
