@@ -28,7 +28,7 @@ const CoinChart = () => {
   const lastTimestampRef = useRef(null); // 마지막 캔들의 타임스탬프를 저장
   const uuid = useRef(uuidv4()); // 고정된 uuid 생성
 
-  const realTimeData = useRealTimeData(chartInitialized, uuid.current); // 초기화가 완료된 후에만 실행
+  const { result: realTimeData, getWebSocket } = useRealTimeData(chartInitialized, uuid.current);  // 초기화가 완료된 후에만 실행
   const dispatch = useDispatch(); // Redux dispatch 함수 정의
 
   const formatValue = (value) => (value !== null && value !== undefined ? value.toLocaleString() : "0");
@@ -130,9 +130,14 @@ const CoinChart = () => {
     return () => {
       // 언마운트될 때 dispose 호출
       if (chartRef.current) {
-        console.log("dispose 호출");
         dispose("coin-chart");
         chartRef.current = null;
+      }
+
+      // 웹소켓 강제 종료
+      const ws = getWebSocket();
+      if (ws) {
+        ws.close();
       }
     };
   }, []);

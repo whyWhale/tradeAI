@@ -76,6 +76,7 @@ const useRealTimeData = (chartInitialized, uuid) => {
   const [result, setResult] = useState();
   const ws = useRef(null);
   const c = useRef(0);
+  const getWebSocket = () => ws.current;
 
   useEffect(() => {
     if (!chartInitialized) return; // 초기화가 완료되지 않았으면 연결하지 않음
@@ -89,7 +90,7 @@ const useRealTimeData = (chartInitialized, uuid) => {
     };
   }, [chartInitialized, dispatch]);
 
-  return result;
+  return {result, getWebSocket};
 };
 
 export default useRealTimeData;
