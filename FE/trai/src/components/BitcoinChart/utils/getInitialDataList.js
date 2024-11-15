@@ -4,8 +4,8 @@ const getInitialDataList = (unit) => {
   return axios.get(`https://www.trai-ai.site/api/upbit/candles/minutes/${unit}`, {
       params: {
       market: 'KRW-BTC',
-      to: new Date(+new Date() + 3240 * 10000).toISOString().replace("T", " ").replace(/\..*/, ''),
-      count: 720 // 12시간 = 720분
+      to: new Date(+new Date() + 200*60 * 10000).toISOString().replace("T", " ").replace(/\..*/, ''),
+      count: 200  // 캔들 최대 200개까지 받을 수 있음
     }
   })
       .then(res => res.data)
