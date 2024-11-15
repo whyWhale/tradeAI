@@ -24,11 +24,11 @@ const TradeDetails = () => {
   };
 
   return (
-    <div className='flex bg-trai-background min-h-screen' style={{ width: '1400px' }}>
+    <div className='flex bg-trai-background min-h-screen' style={{ width: '1390px' }}>
       <aside className="navbar">
         <NavBar openModal={openModal} />
       </aside>
-      <section className='flex-1 ml-[300px]'>
+      <section className='flex-1 ml-[275px] mt-[10px]'>
         <div><DailyTradeHistory onSelectAgentId={handleSelectAgentId} selectedDate={selectedDate} onDateChange={handleDateChange} /></div>
         <div><AgentAI agentId={agentId} selectedDate={selectedDate} /></div>
         {isModalOpen && <BitBot onClose={closeModal} />}

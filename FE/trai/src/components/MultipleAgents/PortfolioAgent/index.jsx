@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 import { IoCloseCircleOutline } from "react-icons/io5"; 
 
-const DecisionAgent = ({ className, decisionData }) => {
+const PortfolioAgent = ({ className, portfolioData }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -16,59 +16,40 @@ const DecisionAgent = ({ className, decisionData }) => {
   }
 
   return(
-    <Container className={className}>
-      <h1 className="font-bold text-[16px] mr-2">종합 전략</h1>
+    <div className={className}>
+      <h1 className="font-bold text-[16px] mr-2">포폴 전략</h1>
       <MoreButton onClick={handleModalOpen}>더보기</MoreButton>
-      <div
-        className="font-bold text-[80px] mt-4 mb-2"
-        // style={{
-        //   color:
-        //     decisionData?.decision === 'BUY'
-        //       ? 'var(--trai-buy)'
-        //       : decisionData?.decision === 'SELL'
-        //       ? 'var(--trai-sell)'
-        //       : 'var(--trai-text)',
-        // }}
-      >
-        {decisionData?.decision}
+      <div className="font-bold text-[80px] text-center mt-4 mb-2">
+        {portfolioData?.percentage}
       </div>
-      {/* <div className="font-bold text-[100px] mt-4 mb-2">{decisionData?.percentage}</div> */}
-      {/* <div className="text-[14px]">{decisionData?.summary.slice(0, 100)}</div> */}
+      {/* <div className="text-[14px]">{portfolioData?.summary.slice(0, 100)}</div> */}
 
       {isModalOpen && (
         <ModalOverlay>
           <ModalContent>
             <div className="flex justify-between items-centers">
-              <h2 className="font-bold text-[24px] mb-8">Decision Agent</h2>
+              <h2 className="font-bold text-[24px] mb-8">Portfolio Agent</h2>
               <CloseButton onClick={handleCloseModal}><IoCloseCircleOutline /></CloseButton>
             </div>
-            <div className="font-bold text-[20px] mb-5 pl-5">최종 거래 판단: {decisionData?.decision}</div>
-            <div className="font-bold text-[20px] mb-5 pl-5">거래 비율: {decisionData?.percentage}</div>
-            <div className="text-[18px] text-justify leading-9 pl-5 pr-5"> {decisionData?.summary}</div>
+            <div className="font-bold text-[20px] mb-5 pl-5">거래 비율: {portfolioData?.percentage}</div>
+            <div className="text-[18px] text-justify leading-9 pl-5 pr-5"> {portfolioData?.summary}</div>
           </ModalContent>
         </ModalOverlay>
       )}
 
-    </Container>
+    </div>
   )
 }
 
-DecisionAgent.propTypes = {
+PortfolioAgent.propTypes = {
   className: PropTypes.string,
-  decisionData: PropTypes.shape({
-    decision: PropTypes.string,
+  portfolioData: PropTypes.shape({
     percentage: PropTypes.string,
     summary: PropTypes.string,
   }).isRequired,
 }
 
-export default DecisionAgent;
-
-
-// background: linear-gradient(180deg, var(--trai-sell), var(--trai-background));
-// background-color: var(--trai-sell);
-const Container = styled.div`
-`
+export default PortfolioAgent;
 
 
 const MoreButton = styled.button`
