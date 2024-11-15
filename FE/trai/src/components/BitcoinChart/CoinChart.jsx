@@ -10,6 +10,7 @@ import { chartStyle } from './chartStyle';
 import useRealTimeData from "./hooks/useRealTimeData";
 import ChartButton from './ChartButton';
 import { updateBTCData } from "../../store/reducers/BTCDataSlice"
+import { v4 as uuidv4 } from 'uuid';
 
 const types = [
   { key: "candle_solid", text: "solid" },
@@ -25,8 +26,9 @@ const CoinChart = () => {
   const [chartDetail, setChartDetail] = useState(null); 
   const [currentCandle, setCurrentCandle] = useState(null);
   const lastTimestampRef = useRef(null); // 마지막 캔들의 타임스탬프를 저장
+  const uuid = uuidv4(); // 고유한 UUID 생성
 
-  const realTimeData = useRealTimeData(chartInitialized); // 초기화가 완료된 후에만 실행
+  const realTimeData = useRealTimeData(chartInitialized, uuid); // 초기화가 완료된 후에만 실행
   const dispatch = useDispatch(); // Redux dispatch 함수 정의
 
   const formatValue = (value) => (value !== null && value !== undefined ? value.toLocaleString() : "0");

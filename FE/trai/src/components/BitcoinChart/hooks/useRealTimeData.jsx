@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux';
 
 const UPBIT_URL = "wss://api.upbit.com/websocket/v1";
 
-function connect(ws, c, setResult, dispatch) {
+function connect(ws, c, setResult, dispatch, uuid) {
   if (c.current > 10) {
     return;
   }
@@ -13,7 +13,7 @@ function connect(ws, c, setResult, dispatch) {
   ws.current.onopen = () => {
     c.current = 0;
     const message = [
-      { ticket: "BTC" },
+      { ticket: uuid },
       { type: "ticker", codes: ["KRW-BTC"], isOnlyRealtime: true },
     ];
     ws.current.send(JSON.stringify(message));
@@ -70,7 +70,7 @@ function connect(ws, c, setResult, dispatch) {
   };
 }
 
-const useRealTimeData = (chartInitialized) => {
+const useRealTimeData = (chartInitialized, uuid) => {
   const dispatch = useDispatch();
 
   const [result, setResult] = useState();
@@ -80,7 +80,7 @@ const useRealTimeData = (chartInitialized) => {
   useEffect(() => {
     if (!chartInitialized) return; // 초기화가 완료되지 않았으면 연결하지 않음
 
-    connect(ws, c, setResult, dispatch); // dispatch 전달
+    connect(ws, c, setResult, dispatch, uuid); // dispatch 전달
 
     return () => {
       if (ws.current) {
