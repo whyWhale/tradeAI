@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 import styled from "styled-components";
 import PropTypes from "prop-types";
+import { IoCloseCircleOutline } from "react-icons/io5"; 
 
 const NewsAgent = ({ className, newsData }) => {
   const [ isModalOpen, setIsModalOpen] = useState(false);
@@ -12,6 +13,18 @@ const NewsAgent = ({ className, newsData }) => {
     setIsModalOpen(false);
   }
 
+  // 모달이 열릴 때 배경 스크롤 비활성화
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isModalOpen]);
+  
   return(
     <div className={className}>
       <div className="flex justify-between items-center mb-4">
@@ -36,13 +49,20 @@ const NewsAgent = ({ className, newsData }) => {
       {isModalOpen && (
         <ModalOverlay>
           <ModalContent>
-            <div className="flex gap-12">
-              <div className="w-[400px] flex flex-col h-full justify-between">
-                <h2 className="font-bold text-[20px]">News Agent</h2>
-                <div className="flex flex-col">
+            <div className="flex flex-col">
+              <div className="flex flex-col justify-between">
+                <h2 className="font-bold text-[32px] pb-[40px]">최신 뉴스 반영</h2>
+                <CloseButton onClick={handleCloseModal}><IoCloseCircleOutline /></CloseButton>
+                {/* <div className="flex flex-col">
                   <div className="text-[60px] mb-10">{newsData.decision}</div>
                   <div className="mb-10">{newsData.summary}</div>
-                </div>
+                </div> */}
+                <SummaryContainer>
+                <DecisionText decision={newsData?.decision}>
+                  {newsData?.decision}
+                </DecisionText>
+                <SummaryContent>{newsData?.summary}</SummaryContent>
+              </SummaryContainer>
               </div>
               <ModalNewsContainer>
                 {newsData.sources.map((news, index) => (
@@ -51,15 +71,15 @@ const NewsAgent = ({ className, newsData }) => {
                       href={news.url} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="flex gap-8 p-8 w-full h-[32px] items-center hover:bg-trai-navy hover:text-trai-white"
+                      className="flex gap-8 p-8 w-full h-[28px] items-center hover:bg-trai-navy hover:text-trai-white"
                     >
-                      <p className="text-[28px]">{index+1}</p>
-                      <p className="text-[20px]">{news.title}</p>
+                      <p className="text-[25px]">{index+1}</p>
+                      <p className="text-[18px]">{news.title}</p>
                     </a>
                   </ModalNewsItem>
                 ))}
               </ModalNewsContainer>
-            <CloseButton onClick={handleCloseModal}>페이지로 돌아가기</CloseButton>
+            {/* <CloseButton onClick={handleCloseModal}>페이지로 돌아가기</CloseButton> */}
             </div>
           </ModalContent>
         </ModalOverlay>
@@ -100,10 +120,11 @@ const NewsItem = styled.li`
   }
 `
 
+
 const MoreButton = styled.button`
-  font-size: 12px;
+  font-size: 16px;
   color: var(--trai-text);
-  cursorL pointer;
+  cursor: pointer;
 `
 
 const ModalOverlay = styled.div`
@@ -112,7 +133,7 @@ const ModalOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--trai-background);
+  background: rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,31 +142,79 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   display: flex;
+  flex-direction: column;
   background-color: var(--trai-white);
   padding: 30px;
   border-radius: 10px;
-  max-width: 1200px;
-  height: 700px;
+  width: 800px;
+  height: 550px;
   position: relative;
+  overflow-y: auto;
+
+  box-sizing: content-box;
+  padding-right: 20px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--trai-navy);
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: var(--trai-disabled);
+  }
 `
 
-const ModalNewsContainer = styled.div`
-  height: 550px;
-  overflow-y: auto;
-  padding: 8px;
+
+const SummaryContainer = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  padding: 0 75px;
+  border-radius: 8px;
+  margin-top: 5px;
+  line-height: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `;
 
-const CloseButton = styled.button`
-  position: absolute;
-  font-size: 16px;
-  bottom: 20px;
-  right: 20px;
-  width: 180px;
-  height: 40px;
-  color: var(--trai-white);
-  background-color: var(--trai-navy);
-  cursor: pointer;
+const SummaryContent = styled.span`
+  font-size: 18px;
+  line-height: 36px;
+  color: #333;
+`;
+
+const DecisionText = styled.div`
+  font-weight: bold;
+  font-size: 32px;
+  color: ${({ decision }) => {
+    switch (decision) {
+      case 'BUY':
+        return 'var(--trai-buy)';
+      case 'SELL':
+        return 'var(--trai-sell)';
+      case 'HOLD':
+        return 'gray';
+      default:
+        return 'black';
+    }
+  }};
+  margin-bottom: 10px;
 `
+
+
+const ModalNewsContainer = styled.div`
+  width: 80%;
+  padding: 0 8px;
+  max-height: 300px;
+  border-radius: 8px;
+  margin: 0 auto;
+`;
 
 const ModalNewsItem = styled.div`
   margin: 8px 0;
@@ -153,4 +222,13 @@ const ModalNewsItem = styled.div`
     color: var(--trai-text);
     text-decoration: none;
   }
+`
+
+const CloseButton = styled.button`
+  position: absolute;
+  font-size: 32px;
+  top: 20px;
+  right: 20px;
+  color: var(--trai-navy);
+  cursor: pointer;
 `

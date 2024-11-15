@@ -1,9 +1,10 @@
-import { useState } from 'react';
-
+import { useState, useEffect } from 'react';
 import styled from "styled-components";
 import PropTypes  from "prop-types";
 
 import { ImEnlarge2 } from "react-icons/im";
+import { IoCloseCircleOutline } from "react-icons/io5"; 
+
 
 const PatternAgent = ({ className, patternData }) => {
 
@@ -17,6 +18,17 @@ const PatternAgent = ({ className, patternData }) => {
     setIsModalOpen(false);
   }
 
+  // 모달이 열릴 때 배경 스크롤 비활성화
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isModalOpen]);
 
   // 패턴 번호에 따라 이미지 소스 설정
   const patternNumber = String(patternData?.pattern_num).replace(/\D/g, '').padStart(2, '0');
@@ -37,18 +49,25 @@ const PatternAgent = ({ className, patternData }) => {
         <ModalOverlay>
           <ModalContent>
             <div className='flex flex-col'>
-              <h2 className="font-bold text-[20px]">Pattern Agent</h2>
-              <div className='font-bold text-[32px]'>{patternData?.decision}</div>
+              <h2 className="font-bold text-[32px]">차트 패턴 분석</h2>
+              <CloseButton onClick={handleCloseModal}><IoCloseCircleOutline /></CloseButton>
               <div className='flex justify-center my-4'>
-                <ChartImage
-                  className="max-w-full max-h-[400px] object-contain"
-                  src={patternData?.image_base64}
-                  alt="chart_image"
-                />
+                {patternData?.image_base64 ? (
+                  <ChartImage
+                    className="max-w-full max-h-[400px] object-contain"
+                    src={patternData.image_base64}
+                    alt="chart_image"
+                  />
+                ) : (
+                  <StyledText>저장된 이미지가 없습니다</StyledText>
+                )}
               </div>
-
-              <div>{patternData?.summary}</div>
-              <CloseButton onClick={handleCloseModal}>close</CloseButton>
+              <SummaryContainer>
+                <DecisionText decision={patternData?.decision}>
+                  {patternData?.decision}
+                </DecisionText>
+                <SummaryContent>{patternData?.summary}</SummaryContent>
+              </SummaryContainer>
             </div>
           </ModalContent>
         </ModalOverlay>
@@ -77,9 +96,27 @@ const PatternImage = styled.img`
 const ChartImage = styled.img`
   border: 1px solid #ddd;
   border-radius: 4px;
+  padding: 10px;
+  width: 80%; /* 화면 너비의 80%로 설정 */
+  max-width: 1366px; /* 이미지의 최대 너비를 원본 크기로 제한 */
+  height: auto; /* 비율 유지 */
+  object-fit: contain;
+`
+
+const StyledText = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
   padding: 5px;
-  max-width: 80%;
-  height: auto;
+  width: 80%; /* ChartImage와 동일한 너비 */
+  max-width: 1366px; /* 최대 너비 제한 */
+  height: 400px;
+  font-size: 16px;
+  color: #666;
+  background-color: #f9f9f9;
+  text-align: center;
 `
 
 const MoreButton = styled.button`
@@ -94,7 +131,7 @@ const ModalOverlay = styled.div`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--trai-background);
+  background: rgba(0,0,0,0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -103,23 +140,76 @@ const ModalOverlay = styled.div`
 
 const ModalContent = styled.div`
   display: flex;
+  flex-direction: column;
   background-color: var(--trai-white);
-  color: black;
   padding: 30px;
   border-radius: 10px;
-  max-width: 1200px;
-  height: 700px;
+  width: 800px;
+  height: 550px; 
   position: relative;
+  overflow-y: auto;
+
+  box-sizing: content-box;
+  padding-right: 20px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--trai-navy);
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: var(--trai-disabled);
+  }
 `
+
 
 const CloseButton = styled.button`
   position: absolute;
-  font-size: 16px;
-  bottom: 20px;
+  font-size: 32px;
+  top: 20px;
   right: 20px;
-  width: 100px;
-  height: 40px;
-  color: var(--trai-white);
-  background-color: var(--trai-navy);
+  color: var(--trai-navy);
   cursor: pointer;
 `
+
+const SummaryContainer = styled.div`
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  padding: 0 75px;
+  border-radius: 8px;
+  margin-top: 5px;
+  line-height: 36px;
+  max-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
+const DecisionText = styled.div`
+  font-weight: bold;
+  font-size: 32px;
+  color: ${({ decision }) => {
+    switch (decision) {
+      case 'BUY':
+        return 'var(--trai-buy)';
+      case 'SELL':
+        return 'var(--trai-sell)';
+      case 'HOLD':
+        return 'gray';
+      default:
+        return 'black';
+    }
+  }};
+  margin-bottom: 10px;
+`
+const SummaryContent = styled.span`
+  font-size: 18px;
+  line-height: 36px;
+  color: #333;
+`;
