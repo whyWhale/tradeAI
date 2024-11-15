@@ -18,7 +18,7 @@ const DailyTradeHistory = ({ onSelectAgentId, selectedDate, onDateChange }) => {
   const formatDate = (isoString) => {
     const [date, time] = isoString.split("T");
     const formatTime = time.split(".")[0];
-    return `${date} ${formatTime}`;
+    return `${formatTime}`;
   }
 
   const handleDateChange = async(event) => {
@@ -110,13 +110,13 @@ const DailyTradeHistory = ({ onSelectAgentId, selectedDate, onDateChange }) => {
             tradeData.map((data, index) => (
               <tr key={index} onClick={() => handleRowClick(data.agentId)}>
                 <td>{formatDate(data.orderCreatedAt)}</td>
-                <td>{data.price}</td>
-                <td>{data.averagePrice}</td>
+                <td>{`₩${new Intl.NumberFormat().format(Math.trunc(data.price))}`}</td>
+                <td>{`₩${new Intl.NumberFormat().format(Math.trunc(data.averagePrice))}`}</td>
                 <td><ActionLabel type={data.side}>{data.side ? data.side.toUpperCase() : 'N/A'}</ActionLabel></td>
-                <td>{data.executedFunds}</td>
-                <td>{data.totalEvaluation}</td>
-                <td>{data.totalAmount}</td>
-                <td>{data.profitAndLoss ? data.profitAndLoss : 0}</td>
+                <td>{data.executedFunds !== 0 ? `₩${new Intl.NumberFormat().format(Math.trunc(data.executedFunds))}` : Math.trunc(data.executedFunds)}</td>
+                <td>{`₩${new Intl.NumberFormat().format(Math.trunc(data.totalEvaluation))}`}</td>
+                <td>{`₩${new Intl.NumberFormat().format(Math.trunc(data.totalAmount))}`}</td>
+                <td>{data.profitAndLoss ? `₩${new Intl.NumberFormat().format(Math.trunc(data.profitAndLoss))}` : 0}</td>
               </tr>
             ))
           ) : (
@@ -178,7 +178,7 @@ const Table = styled.table`
 
   tbody {
     display: block;
-    max-height: 300px;
+    max-height: 150px;
     overflow-y: auto;
     width: 100%;
 
