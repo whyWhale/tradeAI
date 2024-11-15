@@ -43,7 +43,7 @@ const CoinChart = () => {
       changeRate: `${(data.changeRate * 100).toFixed(2)}%`,
       changePrice: `${data.change === "RISE" ? "▲" : data.change === "FALL" ? "▼" : ""}${data.changePrice}`,
       priceStyle: {
-        color: data.change === "RISE" ? "#F13B3B" : data.change === "FALL" ? "#3030FD" : "#CBD5E0"
+        color: data.change === "RISE" ? "#EB5757" : data.change === "FALL" ? "#2D9CDB" : "#CBD5E0"
       }
     });
   };

@@ -13,7 +13,7 @@ const InvestmentHistory = () => {
     return (
       <HistoryContainer>
         <Header>
-          <Explain>전체 자산 대비 코인성 자산의 비중을 표시합니다.</Explain>
+          <Explain>전체 자산 대비 코인성 자산의 비중을<br/> 표시합니다.</Explain>
         </Header>
         {assetProportionLoading ? (
             <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><span className="spinner"></span></div>
@@ -65,6 +65,7 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 1.2vh;
 `;
 
 const Explain = styled.h2`
@@ -74,7 +75,7 @@ const Explain = styled.h2`
 
 // Responsive Bar Chart Component with Gradient
 const MyResponsiveBar = ({ data }) => (
-    <div style={{ height: '40vh' }}>
+    <div style={{ height: '38vh' }}>
       <ResponsiveBar
           data={data}
           keys={['코인 비중', '기타 비중']}

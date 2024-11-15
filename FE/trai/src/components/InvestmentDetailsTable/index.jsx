@@ -36,45 +36,66 @@ const InvestmentDetailsTable = () => {
           </tr>
         </thead>
         <tbody>
-  {data.map((item, index) => (
-    <tr key={index}>
-      <td>{item.settlementDate}</td>
-      
-      <td style={{ textAlign: "right", color: getProfitColor(item.dailyProfitAndLoss) }}>
-        {item.dailyProfitAndLoss !== undefined && item.dailyProfitAndLoss !== null 
-          ? `₩${Number(item.dailyProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
-          : ""}
-      </td>
-      
-      <td style={{ textAlign: "right", color: getProfitColor(item.dailyProfitRatio)}}>
-        {item.dailyProfitRatio != null ? `${item.dailyProfitRatio}%` : ""}
-      </td>
-      
-      <td style={{ textAlign: "right", color: getProfitColor(item.accumulationProfitAndLoss) }}>
-        {item.accumulationProfitAndLoss !== undefined && item.accumulationProfitAndLoss !== null 
-          ? `₩${Number(item.accumulationProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
-          : ""}
-      </td>
-      
-      <td style={{ textAlign: "right", color: getProfitColor(item.accumulationProfitRatio) }}>
-        {item.accumulationProfitRatio != null ? `${item.accumulationProfitRatio}%` : ""}
-      </td>
-      
-      <td style={{ textAlign: "right" }}>
-        {item.startingAssets !== undefined && item.startingAssets !== null 
-          ? `₩${Number(item.startingAssets).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
-          : ""}
-      </td>
-      
-      <td style={{ textAlign: "right" }}>
-        {item.endingAssets !== undefined && item.endingAssets !== null 
-          ? `₩${Number(item.endingAssets).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`
-          : ""}
-      </td>
-    </tr>
-  ))}
-</tbody>
+          {data.map((item, index) => (
+            <tr key={index}>
+              <td>{item.settlementDate}</td>
+              
+              <td style={{ textAlign: "right", color: getProfitColor(item.dailyProfitAndLoss), whiteSpace: "nowrap", width: "3vw" }}>
+                {item.dailyProfitAndLoss !== undefined && item.dailyProfitAndLoss !== null ? (
+                  <>
+                    <span style={{ display: "inline-block", width: "2.5vw", textAlign: "left" }}>₩</span>
+                    <span style={{ display: "inline-block", textAlign: "right", width: "calc(100% - 2.5vw)" }}>
+                      {Number(item.dailyProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                    </span>
+                  </>
+                ) : ""}
+              </td>
 
+              
+              <td style={{ textAlign: "center", color: getProfitColor(item.dailyProfitRatio)}}>
+                {item.dailyProfitRatio != null ? `${item.dailyProfitRatio}%` : ""}
+              </td>
+              
+              <td style={{ textAlign: "right", color: getProfitColor(item.accumulationProfitAndLoss), whiteSpace: "nowrap", width: "3vw" }}>
+                {item.accumulationProfitAndLoss !== undefined && item.accumulationProfitAndLoss !== null ? (
+                  <>
+                    <span style={{ display: "inline-block", width: "2.5vw", textAlign: "left" }}>₩</span>
+                    <span style={{ display: "inline-block", textAlign: "right", width: "calc(100% - 2.5vw)" }}>
+                      {Number(item.accumulationProfitAndLoss).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                    </span>
+                  </>
+                ) : ""}
+              </td>
+              
+              <td style={{ textAlign: "center", color: getProfitColor(item.accumulationProfitRatio) }}>
+                {item.accumulationProfitRatio != null ? `${item.accumulationProfitRatio}%` : ""}
+              </td>
+
+              <td style={{ textAlign: "right", whiteSpace: "nowrap", width: "3vw" }}>
+                {item.startingAssets !== undefined && item.startingAssets !== null ? (
+                  <>
+                    <span style={{ display: "inline-block", width: "2.5vw", textAlign: "left" }}>₩</span>
+                    <span style={{ display: "inline-block", textAlign: "right", width: "calc(100% - 2.5vw)" }}>
+                      {Number(item.startingAssets).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                    </span>
+                  </>
+                ) : ""}
+              </td>
+
+              <td style={{ textAlign: "right", whiteSpace: "nowrap", width: "3vw" }}>
+                {item.endingAssets !== undefined && item.endingAssets !== null ? (
+                  <>
+                    <span style={{ display: "inline-block", width: "2.5vw", textAlign: "left" }}>₩</span>
+                    <span style={{ display: "inline-block", textAlign: "right", width: "calc(100% - 2.5vw)" }}>
+                      {Number(item.endingAssets).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                    </span>
+                  </>
+                ) : ""}
+              </td>
+              
+            </tr>
+          ))}
+        </tbody>
       </table>
 
       {/* 페이지네이션 */}

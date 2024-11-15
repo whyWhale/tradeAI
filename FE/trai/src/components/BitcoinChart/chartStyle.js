@@ -36,13 +36,13 @@ export const chartStyle = {
       bar: {
         upColor: '#EB5757',
         downColor: '#2D9CDB',
-        noChangeColor: '#888888',
+        noChangeColor: '#CBD5E0',
         upBorderColor: '#EB5757',
         downBorderColor: '#2D9CDB',
-        noChangeBorderColor: '#888888',
+        noChangeBorderColor: '#CBD5E0',
         upWickColor: '#EB5757',
         downWickColor: '#2D9CDB',
-        noChangeWickColor: '#888888'
+        noChangeWickColor: '#CBD5E0'
       },
       area: {
         lineSize: 2,

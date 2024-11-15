@@ -13,7 +13,7 @@ function connect(ws, c, setResult, dispatch) {
   ws.current.onopen = () => {
     c.current = 0;
     const message = [
-      { ticket: "nexoneunji" },
+      { ticket: "BTC" },
       { type: "ticker", codes: ["KRW-BTC"], isOnlyRealtime: true },
     ];
     ws.current.send(JSON.stringify(message));
