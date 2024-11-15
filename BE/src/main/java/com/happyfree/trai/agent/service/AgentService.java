@@ -175,6 +175,8 @@ public class AgentService {
             log.info("decision : {}", decision);
             log.info("percentage : {}", percentage);
 
+            BigDecimal averageBitcoinPrice = profitAssetService.getBTCAveragePrice(accessKey, secretKey);
+
             // 매수, 매도 주문 처리
             boolean enoughAmount = true;
             if (decision.equals("BUY")) {
@@ -207,7 +209,6 @@ public class AgentService {
             agentRepository.save(agent);
 
             BigDecimal nowBitcoinCount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
-            BigDecimal averageBitcoinPrice = profitAssetService.getBTCAveragePrice(accessKey, secretKey);
 
             // 투자 내역 저장
             if (enoughAmount && (decision.equals("SELL") || decision.equals("BUY"))) {
