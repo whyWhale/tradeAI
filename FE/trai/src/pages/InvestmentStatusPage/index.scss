@@ -32,6 +32,9 @@ body, html {
   padding-right: 1.5vw;
   padding-top: 0.3vw;
   align-content: center;
+  .card-title{
+    left: 1.2vw;
+  }
 }
 
 /* 투자 손익 상세 카드 */
@@ -133,6 +136,7 @@ body, html {
 }
 
 .card-investmentHistory {
+  padding-left: 0.4vw !important;
   width: 20vw;
   height: 63.2vh;
   left: 78.4vw;

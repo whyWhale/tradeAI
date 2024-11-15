@@ -76,16 +76,15 @@ const AssetOverview = () => {
           <div className="info-card-medium">
             <div className="card-title" style={{
               position: 'absolute',
-              top: '2.5%',
-              left: '5%',      
-              paddingBottom: "5%"}}>투자 요약</div>
+              top: '0.5vh',
+              left: '5%'}}>투자 요약</div>
             
             {investmentLoading || investmentError ? (
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <div className="spinner"></div>
               </div>
             ) : (
-              <div className='card-content'>
+              <div className='card-content' style={{paddingTop:"1.2vh"}}>
                 {tradeInitialized === false ? (
                   <div> &nbsp;&nbsp;&nbsp;투자가 아직 시작되지 않았습니다. </div>
                 ) : (
@@ -105,7 +104,11 @@ const AssetOverview = () => {
           </div>
           
           <div className="info-card-large">
-            <div className="card-title">최근 거래 {decisionCount}회 의사결정 현황</div>
+            <div className="card-title" style={{
+              position: 'absolute',
+              top: '0.5vh',
+              left: '5%',      
+              paddingBottom: "1.5vh"}}>최근 거래 {decisionCount}회 의사결정 현황</div>
             <DecisionStatusChart />
           </div>
 
@@ -122,7 +125,7 @@ const AssetOverview = () => {
             <div className="card-title" style={{
               position: 'absolute',
               top: '2.5%',
-              left: '5%',      
+              left: '5%',
               paddingBottom: "5%"}}>투자 내역</div>
             <Timeline />
           </div>
