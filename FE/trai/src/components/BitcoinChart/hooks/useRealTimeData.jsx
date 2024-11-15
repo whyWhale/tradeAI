@@ -19,10 +19,10 @@ function connect(ws, c, setResult, dispatch, uuid) {
     ws.current.send(JSON.stringify(message));
   };
 
-  ws.current.onclose = () => {
+  ws.current.onclose = () => {  //연결 끊어지면 재연결 시도
     if (c.current < 10) {
       c.current += 1;
-      setTimeout(() => connect(ws, c, setResult, dispatch), 2500 * c.current);
+      setTimeout(() => connect(ws, c, setResult, dispatch, uuid), 2500 * c.current);
     }
   };
 
@@ -54,43 +54,45 @@ function connect(ws, c, setResult, dispatch, uuid) {
     };
 
     setResult(formattedResult);
-    
-    // Redux 스토어에 trade_price 업데이트
     dispatch(updateBTCData(trade_price));
   };
 
-  ws.current.onerror = (event) => {
+  ws.current.onerror = () => {
     if (ws.current.readyState === WebSocket.OPEN) {
       ws.current.close();
     }
     if (c.current < 10) {
-      c.current += 1;
-      setTimeout(() => connect(ws, c, setResult, dispatch), 2500 * c.current);
+      c.current += 1; //오류 발생하여 재연결 시도
+      setTimeout(() => connect(ws, c, setResult, dispatch, uuid), 2500 * c.current);
     }
   };
 }
 
 const useRealTimeData = (chartInitialized, uuid) => {
   const dispatch = useDispatch();
-
   const [result, setResult] = useState();
   const ws = useRef(null);
   const c = useRef(0);
-  const getWebSocket = () => ws.current;
 
   useEffect(() => {
-    if (!chartInitialized) return; // 초기화가 완료되지 않았으면 연결하지 않음
+    if (!chartInitialized) return;
 
-    connect(ws, c, setResult, dispatch, uuid); // dispatch 전달
+    connect(ws, c, setResult, dispatch, uuid);
+
+    // 10초마다 재연결 시도하기 위해 c.current를 0으로 초기화
+    const intervalId = setInterval(() => {
+      c.current = 0;
+    }, 10000); // 10초마다 초기화
 
     return () => {
       if (ws.current) {
         ws.current.close();
       }
+      clearInterval(intervalId); // 컴포넌트 언마운트 시 interval 해제
     };
-  }, [chartInitialized, dispatch]);
+  }, [chartInitialized, dispatch, uuid]);
 
-  return {result, getWebSocket};
+  return { result, getWebSocket: () => ws.current };
 };
 
 export default useRealTimeData;
