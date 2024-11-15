@@ -31,7 +31,6 @@ const useAssetProportionHistory = () => {
               '기타 비중': 100 - coinPercentage,
           };
         });
-        console.log(formattedData);
         setData(formattedData);
         setEmpty(false);
       } else {

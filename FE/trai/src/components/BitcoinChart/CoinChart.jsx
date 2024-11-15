@@ -5,11 +5,9 @@ import { useDispatch } from "react-redux";
 import Layout from "./Layout";
 import "./chart.scss"; 
 import getInitialDataList from "./utils/getInitialDataList";
-import getInitialDetailList from "./utils/getInitialDetailList";
 import getLanguageOption from "./utils/getLanguageOption";
 import { chartStyle } from './chartStyle';
 import useRealTimeData from "./hooks/useRealTimeData";
-// import useNewData from "./hooks/useNewData";
 import ChartButton from './ChartButton';
 import { updateBTCData } from "../../store/reducers/BTCDataSlice"
 
@@ -23,12 +21,12 @@ const types = [
 const CoinChart = () => {
   const chartRef = useRef(null);
   const [chartInitialized, setChartInitialized] = useState(false);
-  const [priceInitialized, setPriceInitialized] = useState(false);
   const [activeType, setActiveType] = useState("candle_solid");
   const [chartDetail, setChartDetail] = useState(null); 
+  const [currentCandle, setCurrentCandle] = useState(null);
+  const lastTimestampRef = useRef(null); // 마지막 캔들의 타임스탬프를 저장
 
   const realTimeData = useRealTimeData(chartInitialized); // 초기화가 완료된 후에만 실행
-  // const newData = useNewData(1, priceInitialized); // 초기화가 완료된 후에만 실행
   const dispatch = useDispatch(); // Redux dispatch 함수 정의
 
   const formatValue = (value) => (value !== null && value !== undefined ? value.toLocaleString() : "0");
@@ -48,82 +46,108 @@ const CoinChart = () => {
     });
   };
 
+  const updateCandle = (data) => {
+    // 1분 단위 타임스탬프
+    const timestamp = Math.floor(data.timestamp / 60000) * 60000;
+  
+    if (!lastTimestampRef.current || lastTimestampRef.current === timestamp) {
+      // 현재 캔들을 업데이트
+      setCurrentCandle((prevCandle) => {
+        if (!prevCandle) {
+          return {
+            open: data.open,
+            high: data.high,
+            low: data.low,
+            close: data.close,
+            timestamp: timestamp,
+            tradePrice: data.tradePrice,
+            tradeVolume: data.tradeVolume,
+          };
+        }
+  
+        return {
+          ...prevCandle,
+          high: Math.max(prevCandle.high, data.high),
+          low: Math.min(prevCandle.low, data.low),
+          close: data.close,
+          tradeVolume: prevCandle.tradeVolume + data.tradeVolume,
+        };
+      });
+    } else {
+      // 1분이 지나면 새로운 캔들 생성
+      const newCandle = {
+        open: data.open,
+        high: data.high,
+        low: data.low,
+        close: data.close,
+        timestamp: timestamp,
+        tradePrice: data.tradePrice,
+        tradeVolume: data.tradeVolume,
+      };
+  
+      // 완료된 이전 캔들을 차트에 추가
+      chartRef.current.applyMoreData([currentCandle]); // prevCandle 대신 currentCandle 사용
+  
+      // 현재 캔들을 새로운 캔들로 교체
+      setCurrentCandle(newCandle);
+  
+      // 마지막 타임스탬프 갱신
+      lastTimestampRef.current = timestamp;
+    }
+  };
+  
+
   
   useEffect(() => {
     const initChart = async () => {
-      try {
-        chartRef.current = init("coin-chart");
-        chartRef.current.setStyleOptions({
-          ...getLanguageOption(),
-          ...chartStyle,
-        });
-  
-        // 차트 데이터와 시세 정보 초기화 루프
-        while (!chartInitialized || !priceInitialized) {
-          try {
-            if (!chartInitialized) {
-              const chartDataList = await getInitialDataList(1);
-              if (chartRef.current) {
-                chartRef.current.applyNewData(chartDataList);
-                setChartInitialized(true);
-              }
+      if (!chartInitialized) {
+        try {
+          chartRef.current = init("coin-chart");
+          chartRef.current.setStyleOptions({
+            ...getLanguageOption(),
+            ...chartStyle,
+          });
+          const chartDataList = await getInitialDataList(1);
+          if (chartRef.current && chartDataList && chartDataList[0]) {
+            
+            chartRef.current.applyNewData(chartDataList);
+            setChartInitialized(true);
+            updateChartDetail(chartDataList[0]);
+            if(chartDataList[0].price!==undefined){
+              dispatch(updateBTCData(chartDataList[0].price));
             }
-  
-            if (!priceInitialized) {
-              const detailDataList = await getInitialDetailList();
-              if (detailDataList && detailDataList[0]) {
-                updateChartDetail(detailDataList[0]);
-                dispatch(updateBTCData(detailDataList[0].price));
-                setPriceInitialized(true);
-              }
-            }
-          } catch (error) {
-            console.error("Failed to fetch data. Retrying in 10 seconds...", error);
           }
-  
-          if (!chartInitialized || !priceInitialized) {
-            await new Promise((resolve) => setTimeout(resolve, 10000));
-          }
+        } catch (error) {
+          console.error("Failed to initialize chart data.", error);
         }
-      } catch (error) {
-        console.error("Failed to initialize chart data.", error);
       }
     };
   
     initChart();
-
-    chartRef.current.resize(chartRef.current.clientWidth, chartRef.current.clientHeight);
-
-    // 윈도우 리사이즈 이벤트에 따라 차트 크기 조정
-    const handleResize = () => {
-      chartRef.current.resize(chartRef.current.clientWidth, chartRef.current.clientHeight);
-    };
-    window.addEventListener('resize', handleResize);
-  
+    
     return () => {
-      window.removeEventListener('resize', handleResize);
-      dispose("coin-chart"); // 컴포넌트가 언마운트될 때 차트를 해제
     };
   }, []);
   
-  
+  const handleResize = () => {
+    if (chartRef.current) {
+      chartRef.current.resize(chartRef.current.clientWidth, chartRef.current.clientHeight);
+    }
+  };
 
-  // useEffect(() => {
-  //   if (newData) {      
-  //     chartRef.current.updateData(newData); 
-  //   }
-  // }, [newData]); 
+  window.addEventListener("resize", handleResize);
 
   useEffect(() => {
     if (realTimeData) {
-      updateChartDetail(realTimeData); 
+      updateChartDetail(realTimeData);
+      updateCandle(realTimeData);
     }
-  }, [realTimeData]); 
-
+  }, [realTimeData]);
+  
   return (
     <>
       <div className="chart-header">
-        {chartDetail ? (
+      {(chartInitialized && chartDetail?.price && parseInt(chartDetail?.price, 10) !== 0) ? (
           <>
             <div className="chart-price-container" style={ chartDetail.priceStyle }>
               <div className="chart-price">{`${formatValue(chartDetail.price)}`}<span  style={{  position: 'relative', top: '1.14vw', fontSize: '1.14vw' }}>KRW</span></div>
@@ -133,14 +157,14 @@ const CoinChart = () => {
               </div>
             </div>
             <div className="chart-details">
-              <div className="high">고가<br/><span className="high-value">{`${formatValue(chartDetail.high)} KRW`}</span></div>
-              <div className="low">저가<br/><span className="low-value">{`${formatValue(chartDetail.low)} KRW`}</span></div>
+              <div className="high">고가<br/><span className="high-value">{`${chartDetail.high} KRW`}</span></div>
+              <div className="low">저가<br/><span className="low-value">{`${chartDetail.low} KRW`}</span></div>
               <div className="volume24">거래량(24H)<br/><span className="volume24-value">{`${formatValue(chartDetail.tradeVolume)} BTC`}</span></div>
               <div className="price24">거래대금(24H)<br/><span className="price24-value">{`${formatValue(chartDetail.tradePrice)} KRW`}</span></div>
             </div>
           </>
         ) : (
-          <div class="loader">&nbsp;&nbsp;&nbsp;시세&nbsp;정보를<br/>불러오는&nbsp;중입니다.</div>
+          <div className="loader">&nbsp;&nbsp;&nbsp;시세&nbsp;정보를<br/>불러오는&nbsp;중입니다.</div>
         )}
       </div>
       <Layout>
