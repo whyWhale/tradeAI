@@ -24,7 +24,7 @@ const DecisionAgent = ({ className, decisionData, portfolioData }) => {
       </div>
       <div className="flex font-bold text-[72px] justify-evenly mt-10">
         <div>{decisionData?.decision}</div>
-        <div>{` | ${decisionData?.percentage}%`}</div>
+        {decisionData?.decision != 'HOLD' ? <div>{` ${decisionData?.percentage}%`}</div> : null }
       </div>
       {/* <div className="text-[14px]">{decisionData?.summary.slice(0, 100)}</div> */}
 

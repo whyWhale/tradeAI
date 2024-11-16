@@ -115,9 +115,9 @@ const NewsList = styled.ul`
 
 const NewsItem = styled.li`
   margin: 5px 0;
-  font-size: 12px;
+  font-size: 14px;
   a {
-    color: var(--trai-greytext);
+    color: var(--trai-text);
     text-decoration: none;
   }
 `
