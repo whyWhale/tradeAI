@@ -29,7 +29,7 @@ const TimelineItem = ({ item }) => {
       <Icon type={item.kind} />
       <Content>
         {item.kind === "HOLD" ? '홀드' : (item.kind ==="SELL"?"매도":"매수")}
-        {item.volume && <Amount>{item.money} KRW</Amount>}
+        {item.volume && <Amount>{item.money.toLocaleString()} KRW</Amount>}
         <Date>{item.date}</Date>
       </Content>
     </Item>

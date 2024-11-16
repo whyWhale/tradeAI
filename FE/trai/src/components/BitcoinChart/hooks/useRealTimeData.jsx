@@ -4,25 +4,27 @@ import { useDispatch } from 'react-redux';
 
 const UPBIT_URL = "wss://api.upbit.com/websocket/v1";
 
-function connect(ws, c, setResult, dispatch) {
-  if (c.current > 10) {
+function connect(ws, c, setResult, dispatch, uuid, isConnected) {
+  if (c.current > 10 || isConnected.current) {
     return;
   }
 
   ws.current = new WebSocket(UPBIT_URL);
   ws.current.onopen = () => {
-    c.current = 0;
+    isConnected.current = true; // 연결 성공
+    c.current = 0; // 재연결 카운터 초기화
     const message = [
-      { ticket: "BTC" },
+      { ticket: uuid },
       { type: "ticker", codes: ["KRW-BTC"], isOnlyRealtime: true },
     ];
     ws.current.send(JSON.stringify(message));
   };
 
   ws.current.onclose = () => {
+    isConnected.current = false; // 연결이 끊어지면 false
     if (c.current < 10) {
       c.current += 1;
-      setTimeout(() => connect(ws, c, setResult, dispatch), 2500 * c.current);
+      setTimeout(() => connect(ws, c, setResult, dispatch, uuid, isConnected), 2500 * c.current);
     }
   };
 
@@ -54,42 +56,40 @@ function connect(ws, c, setResult, dispatch) {
     };
 
     setResult(formattedResult);
-    
-    // Redux 스토어에 trade_price 업데이트
     dispatch(updateBTCData(trade_price));
   };
 
-  ws.current.onerror = (event) => {
+  ws.current.onerror = () => {
     if (ws.current.readyState === WebSocket.OPEN) {
       ws.current.close();
     }
-    if (c.current < 10) {
+    if (!isConnected.current && c.current < 10) { // 연결이 안된 상태에서만 재연결 시도
       c.current += 1;
-      setTimeout(() => connect(ws, c, setResult, dispatch), 2500 * c.current);
+      setTimeout(() => connect(ws, c, setResult, dispatch, uuid, isConnected), 2500 * c.current);
     }
   };
 }
 
-const useRealTimeData = (chartInitialized) => {
+const useRealTimeData = (chartInitialized, uuid) => {
   const dispatch = useDispatch();
-
   const [result, setResult] = useState();
   const ws = useRef(null);
   const c = useRef(0);
+  const isConnected = useRef(false); // 연결 상태를 추적
 
   useEffect(() => {
-    if (!chartInitialized) return; // 초기화가 완료되지 않았으면 연결하지 않음
+    if (!chartInitialized) return;
 
-    connect(ws, c, setResult, dispatch); // dispatch 전달
+    connect(ws, c, setResult, dispatch, uuid, isConnected);
 
     return () => {
       if (ws.current) {
         ws.current.close();
       }
     };
-  }, [chartInitialized, dispatch]);
+  }, [chartInitialized, dispatch, uuid]);
 
-  return result;
+  return { result, getWebSocket: () => ws.current };
 };
 
 export default useRealTimeData;
