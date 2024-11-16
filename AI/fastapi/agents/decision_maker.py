@@ -56,7 +56,7 @@ decision_template = """
     - 출력 예시:
     {{
         "decision": "BUY 또는 SELL 또는 HOLD 중 하나로만 작성",
-        "summary": "투자 결정에 대한 이유를 자세히 서술"
+        "summary": "투자 결정에 대한 이유를 자세히 서술. 전문가의 이름을 한글로 만들어서 설명."
     }}
 
     주의사항:
