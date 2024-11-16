@@ -22,10 +22,12 @@ const DecisionAgent = ({ className, decisionData, portfolioData }) => {
         <h1 className="font-bold text-[16px] mr-2">종합 전략</h1>
         <MoreButton onClick={handleModalOpen}><FaPlus/></MoreButton>
       </div>
-      <div className="flex font-bold text-[72px] justify-evenly mt-10">
-        <div>{decisionData?.decision}</div>
-        {decisionData?.decision != 'HOLD' ? <div>{` ${decisionData?.percentage}%`}</div> : null }
-      </div>
+      {decisionData?.percentage !== undefined && (
+        <div className="flex font-bold text-[72px] justify-evenly mt-10">
+          <div>{decisionData?.decision}</div>
+          {decisionData?.decision !== 'HOLD' && <div>{` ${decisionData?.percentage}%`}</div>}
+        </div>
+      )}
       {/* <div className="text-[14px]">{decisionData?.summary.slice(0, 100)}</div> */}
 
       {isModalOpen && (
@@ -35,11 +37,14 @@ const DecisionAgent = ({ className, decisionData, portfolioData }) => {
               <h2 className="font-bold text-[32px] mb-8">종합 전략</h2>
               <CloseButton onClick={handleCloseModal}><IoCloseCircleOutline /></CloseButton>
             </div>
-            <div className="font-bold text-[24px] mb-5 pl-[75px]">최종 거래 판단: {decisionData?.decision}</div>
-            <div className="text-[18px] text-justify leading-9 pl-[75px] pr-[75px]"> {decisionData?.summary}</div>
-
-            
-            <div className="font-bold text-[24px] mt-10 mb-5 pl-[75px]">거래 비율: {`${decisionData?.percentage}%`}</div>
+            {decisionData?.percentage !== undefined && (
+              <div>
+                <div className="font-bold text-[24px] mb-5 pl-[75px]">최종 거래 판단: {decisionData?.decision}</div>
+                <div className="text-[18px] text-justify leading-9 pl-[75px] pr-[75px]"> {decisionData?.summary}</div>
+    
+                <div className="font-bold text-[24px] mt-10 mb-5 pl-[75px]">거래 비율: {`${decisionData?.percentage}%`}</div>
+              </div>
+            )}
             <div className="text-[18px] text-justify leading-9 pl-[75px] pr-[75px]">{portfolioData?.summary}</div>
           </ModalContent>
         </ModalOverlay>
