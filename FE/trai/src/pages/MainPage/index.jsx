@@ -16,8 +16,8 @@ const MainPage = () => {
     
 
     return (
-        <div className="w-full flex flex-col" style={{ overflowX: 'hidden' }}>
-            <div className='flex justify-end pr-12 bg-trai-navy'>
+        <div className="w-full h-screen flex flex-col" style={{overflowX: 'hidden'}}>
+            <div className='w-full flex justify-end bg-trai-navy'>
                 
                 <StyledLink to={'/trade-settings'}>
                     거래 설정
@@ -34,9 +34,9 @@ const MainPage = () => {
                 <Logout/>
             </div>
 
-            <FirstContainer className="flex">
+            <FirstContainer className="flex w-full">
 
-                <div className='w-[350px] flex-shrink-0'>
+                <div className='w-[350px] ml-[120px] mr-[50px] flex-shrink-0'>
                     <div className='text-trai-white text-[80px] mt-[150px] font-bold'>T R A I</div>
                     <div className='text-trai-white text-[40px] mt-[50px] font-bold'>Trade Smarter,</div>
                     <div className='flex'>
@@ -46,7 +46,7 @@ const MainPage = () => {
                         </div>
                     </div>
                 </div>
-                <HomeImage className="flex flex-end h-[700px] relative top-[-15%] right-[8%]"
+                <HomeImage className="flex flex-end h-[700px] relative top-[-7%]"
                             src="/images/figmaimage2.png" alt="image"/>
             </FirstContainer>
 
@@ -172,6 +172,10 @@ const HomeImage = styled.img`
 
     @media (min-width: 1000px) {
         display: block;
+        position: relative;
+        width: 800px;
+        height: 600px;
+        object-fit: cover;
     }
 `
 
@@ -179,13 +183,17 @@ const HomeImage = styled.img`
 const FirstContainer = styled.div`
     background: linear-gradient(180deg, var(--trai-navy), var(--trai-mint));
     height: 700px;
-    padding: 50px 150px;
+    padding: 50px;
+    max-width: 100%;
+    margin: 0 auto;
 `
 
 const SecondContainer = styled.div`
     background-color: var(--trai-background);
     min-height: 700px;
-    padding: 50px 150px;
+    padding: 50px;
+    max-width: 100%;
+    margin: 0 auto;
 `
 
 const AgentCard = styled.div`
@@ -219,6 +227,8 @@ const ThirdContainer = styled.div`
 
 const FAQContainer = styled.div`
     background-color: var(--trai-background);
+    max-width: 100%;
+    box-sizing: border-box;
     padding: 15px 20px;
     margin-bottom: 15px;
     border-radius: 10px;

@@ -146,28 +146,32 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   background-color: var(--trai-white);
-  padding: 30px;
+  color: var(--trai-text);
+  padding: 30px 40px 30px 30px;
   border-radius: 10px;
   width: 800px;
-  height: 550px;
+  height: 550px; 
   position: relative;
   overflow-y: auto;
-
   box-sizing: content-box;
   padding-right: 20px;
 
   &::-webkit-scrollbar {
     width: 8px;
+    margin-right: 10px;
   }
 
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: var(--trai-navy);
+    border: 2px solid var(--trai-white);
   }
 
   &::-webkit-scrollbar-track {
     border-radius: 10px;
     background-color: var(--trai-disabled);
+    margin: 10px 0;
+    border: 4px solid var(--trai-white);
   }
 `
 

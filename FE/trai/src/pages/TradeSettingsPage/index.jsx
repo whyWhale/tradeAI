@@ -70,12 +70,12 @@ const TradeSettings = () => {
   };
 
   return (
-      <div className='flex bg-trai-background min-h-screen'>
+      <div className='flex bg-trai-background h-screen'>
         <aside className="navbar">
           <NavBar openModal={openBitModal} />
         </aside>
 
-        <section className='flex-1 p-8 bg-gray-100 mt-40 mb-40'>
+        <section className='flex-1 p-8 bg-trai-background mt-40 mb-40'>
           <div className='flex flex-col gap-6 bg-white p-6 shadow-md rounded-lg mx-auto max-w-3xl'>
             <label htmlFor='investmentStyle' className='text-lg font-semibold'>본인의 투자 성향을 작성해주세요.</label>
             {isSaved && <span className="text-sm text-green-500">수정이 완료되었어요 🌈</span>}
@@ -83,7 +83,7 @@ const TradeSettings = () => {
                 id='investmentStyle'
                 value={savedValue}
                 onChange={(e) => setSavedValue(e.target.value)}
-                className={`p-4 border rounded w-full h-40 ${!isEditing ? 'bg-gray-100' : 'bg-white'}`}
+                className={`p-4 border rounded w-full h-40 resize-none ${!isEditing ? 'bg-gray-100' : 'bg-trai-white'}`}
                 placeholder='예시: 저는 공격적인 투자를 선호합니다.'
                 readOnly={!isEditing}
             />
@@ -93,7 +93,7 @@ const TradeSettings = () => {
                   <button
                       type="button"
                       onClick={handleEdit}
-                      className="bg-trai-mint p-2 text-white rounded w-24"
+                      className="bg-trai-mint p-2 text-white rounded-md w-24"
                   >
                     수정
                   </button>
@@ -101,7 +101,7 @@ const TradeSettings = () => {
                   <button
                       type="button"
                       onClick={handleSave}
-                      className="bg-trai-mint p-2 text-white rounded w-24"
+                      className="bg-trai-mint p-2 text-white rounded-md w-24"
                   >
                     저장
                   </button>

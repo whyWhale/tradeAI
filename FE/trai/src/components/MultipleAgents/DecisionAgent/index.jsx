@@ -2,9 +2,10 @@ import { useState } from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
+import { FaPlus } from "react-icons/fa6";
 import { IoCloseCircleOutline } from "react-icons/io5"; 
 
-const DecisionAgent = ({ className, decisionData }) => {
+const DecisionAgent = ({ className, decisionData, portfolioData }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -17,34 +18,29 @@ const DecisionAgent = ({ className, decisionData }) => {
 
   return(
     <Container className={className}>
-      <h1 className="font-bold text-[16px] mr-2">종합 전략</h1>
-      <MoreButton onClick={handleModalOpen}>더보기</MoreButton>
-      <div
-        className="font-bold text-[80px] mt-4 mb-2"
-        // style={{
-        //   color:
-        //     decisionData?.decision === 'BUY'
-        //       ? 'var(--trai-buy)'
-        //       : decisionData?.decision === 'SELL'
-        //       ? 'var(--trai-sell)'
-        //       : 'var(--trai-text)',
-        // }}
-      >
-        {decisionData?.decision}
+      <div className="flex justify-between">
+        <h1 className="font-bold text-[16px] mr-2">종합 전략</h1>
+        <MoreButton onClick={handleModalOpen}><FaPlus/></MoreButton>
       </div>
-      {/* <div className="font-bold text-[100px] mt-4 mb-2">{decisionData?.percentage}</div> */}
+      <div className="flex font-bold text-[72px] justify-evenly mt-10">
+        <div>{decisionData?.decision}</div>
+        <div>{` | ${decisionData?.percentage}%`}</div>
+      </div>
       {/* <div className="text-[14px]">{decisionData?.summary.slice(0, 100)}</div> */}
 
       {isModalOpen && (
         <ModalOverlay>
           <ModalContent>
             <div className="flex justify-between items-centers">
-              <h2 className="font-bold text-[24px] mb-8">Decision Agent</h2>
+              <h2 className="font-bold text-[32px] mb-8">종합 전략</h2>
               <CloseButton onClick={handleCloseModal}><IoCloseCircleOutline /></CloseButton>
             </div>
-            <div className="font-bold text-[20px] mb-5 pl-5">최종 거래 판단: {decisionData?.decision}</div>
-            <div className="font-bold text-[20px] mb-5 pl-5">거래 비율: {decisionData?.percentage}</div>
-            <div className="text-[18px] text-justify leading-9 pl-5 pr-5"> {decisionData?.summary}</div>
+            <div className="font-bold text-[24px] mb-5 pl-[75px]">최종 거래 판단: {decisionData?.decision}</div>
+            <div className="text-[18px] text-justify leading-9 pl-[75px] pr-[75px]"> {decisionData?.summary}</div>
+
+            
+            <div className="font-bold text-[24px] mt-10 mb-5 pl-[75px]">거래 비율: {`${decisionData?.percentage}%`}</div>
+            <div className="text-[18px] text-justify leading-9 pl-[75px] pr-[75px]">{portfolioData?.summary}</div>
           </ModalContent>
         </ModalOverlay>
       )}
@@ -60,6 +56,10 @@ DecisionAgent.propTypes = {
     percentage: PropTypes.string,
     summary: PropTypes.string,
   }).isRequired,
+  portfolioData: PropTypes.shape({
+    percentage: PropTypes.string,
+    summary: PropTypes.string,
+  }).isRequired,
 }
 
 export default DecisionAgent;
@@ -71,8 +71,8 @@ const Container = styled.div`
 
 
 const MoreButton = styled.button`
-  font-size: 12px;
-  color: var(--trai-text);
+  font-size: 16px;
+  color: var(--trai-white);
   cursor: pointer;
 `
 
@@ -93,28 +93,32 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   background-color: var(--trai-white);
-  padding: 30px;
+  color: var(--trai-text);
+  padding: 30px 40px 30px 30px;
   border-radius: 10px;
   width: 800px;
   height: 550px; 
   position: relative;
   overflow-y: auto;
-
   box-sizing: content-box;
   padding-right: 20px;
 
   &::-webkit-scrollbar {
     width: 8px;
+    margin-right: 10px;
   }
 
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: var(--trai-navy);
+    border: 2px solid var(--trai-white);
   }
 
   &::-webkit-scrollbar-track {
     border-radius: 10px;
     background-color: var(--trai-disabled);
+    margin: 10px 0;
+    border: 4px solid var(--trai-white);
   }
 `
 
