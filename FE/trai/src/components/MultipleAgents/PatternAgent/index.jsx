@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from "styled-components";
 import PropTypes  from "prop-types";
 
-import { ImEnlarge2 } from "react-icons/im";
+import { FaPlus } from "react-icons/fa6";
 import { IoCloseCircleOutline } from "react-icons/io5"; 
 
 
@@ -39,7 +39,7 @@ const PatternAgent = ({ className, patternData }) => {
     <div className={className}>
       <div className='flex justify-between items-center mb-4'>
         <h1 className='text-[16px] font-bold'>차트 패턴 분석</h1>
-        <MoreButton onClick={handleMoreClick}><ImEnlarge2 /></MoreButton>
+        <MoreButton onClick={handleMoreClick}><FaPlus /></MoreButton>
       </div>
       <div className="flex justify-center">
           <PatternImage src={patternImageSrc} alt="pattern image"/>

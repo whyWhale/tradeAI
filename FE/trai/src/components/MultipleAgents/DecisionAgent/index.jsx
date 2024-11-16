@@ -66,7 +66,6 @@ export default DecisionAgent;
 
 
 // background: linear-gradient(180deg, var(--trai-sell), var(--trai-background));
-// background-color: var(--trai-sell);
 const Container = styled.div`
 `
 
