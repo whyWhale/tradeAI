@@ -25,7 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 router = APIRouter(prefix="/ai")
-langsmith(project_name="trai-v2", set_enable=True)
+langsmith(project_name="trai-v3", set_enable=True)
 
 
 # Graph
