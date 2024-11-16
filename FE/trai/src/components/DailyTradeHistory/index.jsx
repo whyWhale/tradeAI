@@ -113,10 +113,10 @@ const DailyTradeHistory = ({ onSelectAgentId, selectedDate, onDateChange }) => {
                 <td>{`₩${new Intl.NumberFormat().format(Math.trunc(data.price))}`}</td>
                 <td>{`₩${new Intl.NumberFormat().format(Math.trunc(data.averagePrice))}`}</td>
                 <td><ActionLabel type={data.side}>{data.side ? data.side.toUpperCase() : 'N/A'}</ActionLabel></td>
-                <td>{data.executedFunds !== 0 ? `₩${new Intl.NumberFormat().format(Math.trunc(data.executedFunds))}` : Math.trunc(data.executedFunds)}</td>
+                <td>{`₩${new Intl.NumberFormat().format(Math.trunc(data.executedFunds))}`}</td>
                 <td>{`₩${new Intl.NumberFormat().format(Math.trunc(data.totalEvaluation))}`}</td>
                 <td>{`₩${new Intl.NumberFormat().format(Math.trunc(data.totalAmount))}`}</td>
-                <td>{data.profitAndLoss ? `₩${new Intl.NumberFormat().format(Math.trunc(data.profitAndLoss))}` : 0}</td>
+                <td>{data.profitAndLoss != null ? `₩${new Intl.NumberFormat().format(Math.trunc(data.profitAndLoss))}` : `₩0`}</td>
               </tr>
             ))
           ) : (
