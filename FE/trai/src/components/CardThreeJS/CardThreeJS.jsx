@@ -83,7 +83,7 @@ const CardThreeJS = ({ onSelectAgent }) => {
           <Environment preset="studio" />
           <group ref={cardRef}>
             <Card color={COLORS[colorIndex]} />
-            <group position={[-2, 2, 0.3]} rotation={[0, 0, Math.PI * 0.05]}>
+            <group position={[-3, 1, 0.3]} rotation={[0, 0, Math.PI * 0.05]}>
               <Center>
                 <Text3D
                   size={1}

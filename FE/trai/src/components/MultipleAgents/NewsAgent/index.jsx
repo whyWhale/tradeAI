@@ -29,7 +29,7 @@ const NewsAgent = ({ className, newsData }) => {
   return(
     <div className={className}>
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-[16px] font-bold ">최신 뉴스 반영</h1>
+        <h1 className="text-[16px] font-bold ">참고 뉴스</h1>
           {/* 더보기 버튼 */}
           {newsData?.sources.length > 0 && (
             <MoreButton onClick={handleMoreClick}><FaPlus/></MoreButton>
@@ -52,7 +52,7 @@ const NewsAgent = ({ className, newsData }) => {
           <ModalContent>
             <div className="flex flex-col">
               <div className="flex flex-col justify-between">
-                <h2 className="font-bold text-[32px] pb-[40px]">최신 뉴스 반영</h2>
+                <h2 className="font-bold text-[32px] pb-[40px]">참고 뉴스</h2>
                 <CloseButton onClick={handleCloseModal}><IoCloseCircleOutline /></CloseButton>
                 {/* <div className="flex flex-col">
                   <div className="text-[60px] mb-10">{newsData.decision}</div>

@@ -37,6 +37,7 @@ const AgentAI = ({ agentId, selectedDate }) => {
         // setData(response.data);
         setParsedData({ quantData, patternData, decisionData, newsData, fngData, portfolioData });
         console.log("Received agentId:", agentId);
+        console.log("parsing 전: ", response.data.jsonData);
         console.log("parsedData", parsedData);
       } catch(error){
         console.error("데이터 요청 오류: ", error);
