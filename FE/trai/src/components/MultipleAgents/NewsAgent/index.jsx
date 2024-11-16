@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from "styled-components";
 import PropTypes from "prop-types";
 import { IoCloseCircleOutline } from "react-icons/io5"; 
+import { FaPlus } from "react-icons/fa6";
 
 const NewsAgent = ({ className, newsData }) => {
   const [ isModalOpen, setIsModalOpen] = useState(false);
@@ -31,7 +32,7 @@ const NewsAgent = ({ className, newsData }) => {
         <h1 className="text-[16px] font-bold ">최신 뉴스 반영</h1>
           {/* 더보기 버튼 */}
           {newsData?.sources.length > 0 && (
-            <MoreButton onClick={handleMoreClick}>더보기</MoreButton>
+            <MoreButton onClick={handleMoreClick}><FaPlus/></MoreButton>
           )} 
       </div>
 
@@ -71,13 +72,14 @@ const NewsAgent = ({ className, newsData }) => {
                       href={news.url} 
                       target="_blank" 
                       rel="noopener noreferrer" 
-                      className="flex gap-8 p-8 w-full h-[28px] items-center hover:bg-trai-navy hover:text-trai-white"
+                      className="flex gap-8 p-6 w-full h-[28px] items-center hover:bg-trai-navy hover:text-trai-white"
                     >
-                      <p className="text-[25px]">{index+1}</p>
-                      <p className="text-[18px]">{news.title}</p>
+                      <p className="text-[25px] font-bold">{index+1}</p>
+                      <p className="text-[18px] font-bold">{news.title}</p>
                     </a>
                   </ModalNewsItem>
                 ))}
+                <div className='h-[20px]'></div>
               </ModalNewsContainer>
             {/* <CloseButton onClick={handleCloseModal}>페이지로 돌아가기</CloseButton> */}
             </div>
@@ -144,28 +146,32 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   background-color: var(--trai-white);
-  padding: 30px;
+  color: var(--trai-text);
+  padding: 30px 40px 30px 30px;
   border-radius: 10px;
   width: 800px;
-  height: 550px;
+  height: 550px; 
   position: relative;
   overflow-y: auto;
-
   box-sizing: content-box;
   padding-right: 20px;
 
   &::-webkit-scrollbar {
     width: 8px;
+    margin-right: 10px;
   }
 
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: var(--trai-navy);
+    border: 2px solid var(--trai-white);
   }
 
   &::-webkit-scrollbar-track {
     border-radius: 10px;
     background-color: var(--trai-disabled);
+    margin: 10px 0;
+    border: 4px solid var(--trai-white);
   }
 `
 
@@ -177,6 +183,7 @@ const SummaryContainer = styled.div`
   padding: 0 75px;
   border-radius: 8px;
   margin-top: 5px;
+  margin-bottom: 15px;
   line-height: 36px;
   display: flex;
   flex-direction: column;
@@ -217,10 +224,15 @@ const ModalNewsContainer = styled.div`
 `;
 
 const ModalNewsItem = styled.div`
-  margin: 8px 0;
+  margin: 15px 0;
+  border-left: 5px solid var(--trai-navy);
   a {
     color: var(--trai-text);
     text-decoration: none;
+  }
+
+  &:last-child {
+    margin-bottom: 20px !important;
   }
 `
 

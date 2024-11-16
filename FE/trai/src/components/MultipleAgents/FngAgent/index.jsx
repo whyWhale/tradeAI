@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-import { ImEnlarge2 } from "react-icons/im";
+import { FaPlus } from "react-icons/fa6";
 import { IoCloseCircleOutline } from "react-icons/io5"; 
 
 const FngAgent = ({ className, fngData, selectedDate }) => {
@@ -35,7 +35,7 @@ const FngAgent = ({ className, fngData, selectedDate }) => {
       <div className='flex justify-between items-center mb-4'>
         <h1 className="text-[16px] font-bold ">공포 탐욕 지수</h1>
         {fngData && (
-          <MoreButton onClick={handleMoreClick}><ImEnlarge2 /></MoreButton>
+          <MoreButton onClick={handleMoreClick}><FaPlus /></MoreButton>
         )}
       </div>
       <div className='flex justify-center'>
@@ -100,28 +100,32 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   background-color: var(--trai-white);
-  padding: 30px;
+  color: var(--trai-text);
+  padding: 30px 40px 30px 30px;
   border-radius: 10px;
   width: 800px;
-  height: 550px;
+  height: 550px; 
   position: relative;
   overflow-y: auto;
-
   box-sizing: content-box;
   padding-right: 20px;
 
   &::-webkit-scrollbar {
     width: 8px;
+    margin-right: 10px;
   }
 
   &::-webkit-scrollbar-thumb {
     border-radius: 10px;
     background-color: var(--trai-navy);
+    border: 2px solid var(--trai-white);
   }
 
   &::-webkit-scrollbar-track {
     border-radius: 10px;
     background-color: var(--trai-disabled);
+    margin: 10px 0;
+    border: 4px solid var(--trai-white);
   }
 `
 
@@ -172,8 +176,16 @@ const SummaryContent = styled.span`
 `;
 
 const GraphImg = styled.div`
-  width: 150px;
-  height: 150px;
+  width: 250px;
+  height: 200px;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+  }
 `
 
 const GraphImg2 = styled.div`

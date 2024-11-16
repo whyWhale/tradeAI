@@ -4,6 +4,7 @@ import styled from "styled-components";
 import PropTypes from 'prop-types';
 
 import QuantAgent from "@components/MultipleAgents/QuantAgent";
+import PortfolioAgent from '@components/MultipleAgents/PortfolioAgent';
 import PatternAgent from "@components/MultipleAgents/PatternAgent";
 import FngAgent from "@components/MultipleAgents/FngAgent";
 import NewsAgent from "@components/MultipleAgents/NewsAgent";
@@ -27,13 +28,14 @@ const AgentAI = ({ agentId, selectedDate }) => {
 
         const parsedData = JSON.parse(response.data.jsonData);
         const quantData = parsedData.quant;
+        const portfolioData = parsedData.portfolio;
         const patternData = parsedData.chart_pattern;
         const decisionData = parsedData.decision_maker;
         const newsData = parsedData.news_search;
         const fngData = parsedData.fng;
 
         // setData(response.data);
-        setParsedData({ quantData, patternData, decisionData, newsData, fngData });
+        setParsedData({ quantData, patternData, decisionData, newsData, fngData, portfolioData });
         console.log("Received agentId:", agentId);
         console.log("parsedData", parsedData);
       } catch(error){
@@ -54,11 +56,12 @@ const AgentAI = ({ agentId, selectedDate }) => {
 
   return(
     <Container>
-      <QuantAgent className="item" quantData={parsedData?.quantData}/>
-      <PatternAgent className="item" patternData={parsedData?.patternData}/>
       <FngAgent className="item" fngData={parsedData?.fngData} selectedDate={selectedDate}/>
-      <DecisionAgent className="item" decisionData={parsedData?.decisionData}/>
+      <PatternAgent className="item" patternData={parsedData?.patternData}/>
+      <DecisionAgent className="item" decisionData={parsedData?.decisionData} portfolioData={parsedData?.portfolioData}/>
+      {/* <PortfolioAgent className="item" portfolioData={parsedData?.portfolioData}/> */}
       <NewsAgent className="item" newsData={parsedData?.newsData} />
+      <QuantAgent className="item" quantData={parsedData?.quantData}/>
     </Container>
   )
 }
@@ -70,30 +73,29 @@ AgentAI.propTypes = {
 
 export default AgentAI;
 
-
+// background: linear-gradient(180deg, var(--trai-darknavy), var(--trai-navy));
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 6fr 4fr 4fr 5fr;
-  grid-template-rows: 200px 200px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 280px 220px;
   gap: 30px;
   padding: 20px;
   padding-bottom: 100px;
 
   .item:nth-child(1) {
-    grid-column: 1 / span 1;
+    grid-column: 1 / span 3;
     grid-row: 1 / span 1;
     width: 100%;
     height: 100%;
     border-radius: 20px;
     padding: 20px;
-    color: var(--trai-white);
-    background: linear-gradient(180deg, var(--trai-darknavy), var(--trai-navy));
+    background-color: var(--trai-white);
   }
 
   .item:nth-child(2) {
-    grid-column: 2;
-    grid-row: 1;
+    grid-column: 4 / span 3;
+    grid-row: 1 / span 1;
     width: 100%;
     height: 100%;
     border-radius: 20px;
@@ -102,8 +104,20 @@ const Container = styled.div`
   }
 
   .item:nth-child(3) {
-    grid-column: 3;
-    grid-row: 1;
+    grid-column: 7 / span 4;
+    grid-row: 1 / span 1;
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+    padding: 20px;
+    background: linear-gradient(180deg, var(--trai-sell), var(--trai-mint));
+    color: var(--trai-white);
+  }
+
+
+  .item:nth-child(4) {
+    grid-column: 1 / span 7;
+    grid-row: 2 / span 1;
     width: 100%;
     height: 100%;
     border-radius: 20px;
@@ -111,19 +125,9 @@ const Container = styled.div`
     background-color: var(--trai-white);
   }
 
-  .item:nth-child(4) {
-    grid-column: 4;
-    grid-row: 1 / span 2;
-    width: 100%;
-    height: 100%;
-    border-radius: 20px;
-    padding: 20px;
-    background: linear-gradient(135deg, var(--trai-greytext), var(--trai-disabled));
-  }
-
   .item:nth-child(5) {
-    grid-column: 1 / span 3;
-    grid-row: 2;
+    grid-column: 8 / span 3;
+    grid-row: 2 / span 1;
     width: 100%;
     height: 100%;
     border-radius: 20px;
