@@ -7,10 +7,10 @@ from langchain_core.output_parsers import JsonOutputParser
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from core.state import State
-from core.config import llm
+from core.config import llm_gpt_4o as llm
 import os
 
-# 에이전트 관리
+# 에이전트 관리(Lv.1)
 agents_name = ["fng", "quant", "news_search", "chart_pattern"]
 
 # 파일 불러오기(investment.txt 파일 경로 확인 필요)
@@ -42,7 +42,7 @@ decision_template = """
     fng는 공포 탐욕 지수를 분석하는 전문가, 
     quant는 퀀트로 투자하는 전문가, 
     news_search는 뉴스 검색으로 분석하는 전문가,
-    chart_pattern은 차트 패턴으로 분석하는 전문가입니다.
+    chart_pattern은 차트 패턴으로 분석하는 전문가를 의미합니다.
     해당 결정을 뒷받침하는 투자 전문가들의 의견을 종합해주세요:
     {agents_analysis}
 
@@ -139,7 +139,7 @@ def decision_agent(state: State) -> dict:
             "available_amount": state.user_info["available_amount"],
             "btc_balance_krw": state.user_info["btc_balance_krw"]
         })
-        print("임시 MASTER 에이전트 호출 성공 :", result)
+        print("decision_maker 에이전트 호출 성공 :", result)
     except Exception as e:
         print("Error during chain invocation:", e)
         raise
