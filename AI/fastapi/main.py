@@ -40,16 +40,6 @@ graph_builder.add_node("decision_agent", decision_agent)
 # Lv.3
 graph_builder.add_node("portfolio_agent", portfolio_agent)
 
-# 직렬
-# graph_builder.add_edge(START, "fng_agent")
-# graph_builder.add_edge("fng_agent", "news_search_agent")
-# graph_builder.add_edge("news_search_agent", "quant_agent")
-# graph_builder.add_edge("quant_agent", "chart_pattern_agent")
-# graph_builder.add_edge("chart_pattern_agent", "master_agent")
-# graph_builder.add_edge("master_agent", "portfolio_agent")
-# graph_builder.add_edge("portfolio_agent", END)
-# graph = graph_builder.compile()
-
 # 병렬
 graph_builder.add_edge(START, "fng_agent")
 graph_builder.add_edge(START, "news_search_agent")
@@ -100,27 +90,6 @@ class UserInfo(BaseModel):
 async def run_analysis(user_info: UserInfo):
     try:
         print(user_info)
-        initial_state = State(
-            messages=["Analysis Started"],
-            user_info=user_info.dict(),
-            metadata={"date": (datetime.utcnow() + timedelta(hours=9)).isoformat()}
-        )
-        result_state = graph.invoke(initial_state)
-        return result_state
-    except Exception as e:
-        print("API 처리 중 오류 발생:", str(e))
-        raise HTTPException(status_code=500, detail=str(e))
-
-@router.post("/reports")
-async def run_analysis():
-    try:
-        user_info = UserInfo(
-            user_id=12345,
-            available_amount=1000000.0,
-            btc_balance_krw=500000.0,
-            investment_type="공격형"
-        )
-
         initial_state = State(
             messages=["Analysis Started"],
             user_info=user_info.dict(),

@@ -49,7 +49,7 @@ const NavBar = ({openModal}) => {
         <NavList>
           <StyledNavLink to="/trade-settings">
             <div className="PageIcon"><VscSettings /></div>
-            <div className="PageName">투자 성향 설정</div>
+            <div className="PageName">거래 설정</div>
           </StyledNavLink>
           <StyledNavLink to="/asset-overview">
             <div className="PageIcon"><PiChartLineUpLight /></div>
@@ -93,7 +93,7 @@ const NavBar = ({openModal}) => {
 };
 
 NavBar.propTypes = {
-  openModal: PropTypes.func.isRequired,
+  openModal: PropTypes.func,
 }
 
 const NavWrapper = styled.div`

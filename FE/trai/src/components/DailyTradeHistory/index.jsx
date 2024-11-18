@@ -11,7 +11,7 @@ const DailyTradeHistory = ({ onSelectAgentId, selectedDate, onDateChange }) => {
   const dateInputRef = useRef(null);
 
   const handleRowClick = (agentId) => {
-    console.log("Row clicked with agentId:", agentId); 
+    // console.log("Row clicked with agentId:", agentId); 
     onSelectAgentId(agentId);
   }
 
@@ -24,7 +24,7 @@ const DailyTradeHistory = ({ onSelectAgentId, selectedDate, onDateChange }) => {
   const handleDateChange = async(event) => {
     const date = event.target.value;
     onDateChange(date);
-    console.log(date);
+    // console.log(date);
 
     const [year, month, day] = date.split("-");
 
@@ -35,11 +35,11 @@ const DailyTradeHistory = ({ onSelectAgentId, selectedDate, onDateChange }) => {
         }
       })
       if (response.data) {
-        console.log("데이터 있음");
+        // console.log("데이터 있음");
         setTradeData(response.data);
-        console.log(response.data);
+        // console.log(response.data);
       } else {
-        console.log("데이터 없음");
+        // console.log("데이터 없음");
         setTradeData([]);
       }
     } catch(error){

@@ -4,7 +4,6 @@ import styled from "styled-components";
 import PropTypes from 'prop-types';
 
 import QuantAgent from "@components/MultipleAgents/QuantAgent";
-import PortfolioAgent from '@components/MultipleAgents/PortfolioAgent';
 import PatternAgent from "@components/MultipleAgents/PatternAgent";
 import FngAgent from "@components/MultipleAgents/FngAgent";
 import NewsAgent from "@components/MultipleAgents/NewsAgent";
@@ -19,7 +18,7 @@ const AgentAI = ({ agentId, selectedDate }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("fetchData 호출됨");
+      // console.log("fetchData 호출됨");
 
       try {
         const response = await instance.get('api/agent-history', {
@@ -36,9 +35,9 @@ const AgentAI = ({ agentId, selectedDate }) => {
 
         // setData(response.data);
         setParsedData({ quantData, patternData, decisionData, newsData, fngData, portfolioData });
-        console.log("Received agentId:", agentId);
-        console.log("parsing 전: ", response.data.jsonData);
-        console.log("parsedData", parsedData);
+        // console.log("Received agentId:", agentId);
+        // console.log("parsing 전: ", response.data.jsonData);
+        // console.log("parsedData", parsedData);
       } catch(error){
         console.error("데이터 요청 오류: ", error);
       }
@@ -60,7 +59,6 @@ const AgentAI = ({ agentId, selectedDate }) => {
       <FngAgent className="item" fngData={parsedData?.fngData} selectedDate={selectedDate}/>
       <PatternAgent className="item" patternData={parsedData?.patternData}/>
       <DecisionAgent className="item" decisionData={parsedData?.decisionData} portfolioData={parsedData?.portfolioData}/>
-      {/* <PortfolioAgent className="item" portfolioData={parsedData?.portfolioData}/> */}
       <NewsAgent className="item" newsData={parsedData?.newsData} />
       <QuantAgent className="item" quantData={parsedData?.quantData}/>
     </Container>
@@ -79,7 +77,7 @@ export default AgentAI;
 const Container = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 280px 220px;
+  grid-template-rows: 290px 220px;
   gap: 30px;
   padding: 20px;
   padding-bottom: 100px;

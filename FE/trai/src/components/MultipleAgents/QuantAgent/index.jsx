@@ -57,9 +57,9 @@ const QuantAgent = ({ className, quantData }) => {
         <div
           className="absolute bottom-0 left-[-50px]"
           style={{
-            width: "300px", // 그래프 컨테이너 너비
-            height: "150px", // 그래프 컨테이너 높이
-            margin: "10px", // 주변 여백
+            width: "300px",
+            height: "150px",
+            margin: "10px",
           }}
         >
           <LineChart
@@ -71,9 +71,10 @@ const QuantAgent = ({ className, quantData }) => {
             {/* X축 추가 */}
             <XAxis
               dataKey="date"
-              tickFormatter={(tick) => tick.split(" ")[1]} // 시간만 표시
+              // tickFormatter={(tick) => tick.split(" ")[1]} // 시간만 표시
               interval={3} // 3번째 데이터마다 표시
-              tick={{ fontSize: 10 }}
+              // tick={{ fontSize: 2 }}
+              tick={false}
             />
 
             {/* Y축 추가 */}
@@ -121,6 +122,7 @@ const QuantAgent = ({ className, quantData }) => {
                     textAnchor="end"
                     height={60}
                     interval={3}
+                    tick={{fontSize: 6}}
                   />
                   <YAxis
                     domain={["auto", "auto"]}
@@ -152,13 +154,15 @@ const QuantAgent = ({ className, quantData }) => {
                 </ComposedChart>
               </div>
               <div
-                className={`font-bold text-[32px] pl-[75px] pr-[75px] ${
-                  quantData?.decision === 'BUY'
-                    ? 'var(--trai-buy)'
-                    : quantData?.decision === 'SELL'
-                    ? 'var(--trai-sell)'
-                    : 'var(--trai-text)'
-                }`}
+                className="font-bold text-[32px] pl-[75px] pr-[75px]"
+                style={{
+                  color:
+                    quantData?.decision === 'BUY'
+                      ? 'var(--trai-buy)'
+                      : quantData?.decision === 'SELL'
+                      ? 'var(--trai-sell)'
+                      : 'var(--trai-text)',
+                }}
               >
                 {quantData?.decision}
               </div>

@@ -19,7 +19,7 @@ const TradeDetails = () => {
   };
 
   const handleSelectAgentId = (id) => {
-    console.log("Selected agentId:", id);
+    // console.log("Selected agentId:", id);
     setAgentId(id);
   };
 
