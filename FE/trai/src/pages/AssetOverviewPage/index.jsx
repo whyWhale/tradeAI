@@ -10,11 +10,17 @@ import useAssetData from './apis/useAssetData.jsx';
 import useInvestmentSummary from './apis/useInvestmentSummary.jsx';
 import useRealTimeAssetValue from './apis/useRealTimeAssetValue.jsx';
 import '../../components/Loaders/index.scss';
+import BitBot from '@components/BitBot';
+
 
 const AssetOverview = () => {
   const BTCPrice = useSelector((state) => state.BTCData);
   const { assetData: initialAssetData, assetLoading, assetEmpty, assetError } = useAssetData();
   const { investmentData, tradeInitialized, investmentLoading, investmentError } = useInvestmentSummary();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   // 실제 업데이트된 assetData를 상태로 관리
   const [assetData, setAssetData] = useState(null);
@@ -33,7 +39,8 @@ const AssetOverview = () => {
     <div className='flex bg-trai-background min-h-screen' style={{ width: '100vw', height: '100vh' }}>
       <div className="asset-overview">
         <aside className="navbar">
-          <NavBar />
+          <NavBar openModal={openModal}/>
+          {isModalOpen && <BitBot onClose={closeModal} />}
         </aside>
 
         <div className="main-content">

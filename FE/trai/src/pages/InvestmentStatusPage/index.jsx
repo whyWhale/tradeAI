@@ -1,17 +1,24 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
 import NavBar from '@components/NavBar';
 import './index.scss';
 import InvestmentDetailsTable from '../../components/InvestmentDetailsTable/index.jsx';
 import CurrentAssetAllocationChart from '../../components/DonutChart/CurrentAssetAllocationChart.jsx';
 import InvestmentHistory from '../../components/InvestmentHistory/index.jsx';
+import BitBot from '@components/BitBot';
 
 const InvestmentStatus = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
     <div className="investment-status">
       {/* Left Sidebar */}
       <aside className="navbar">
-        <NavBar />
+        <NavBar openModal={openModal}/>
+        {isModalOpen && <BitBot onClose={closeModal} />}
       </aside>
 
       {/* Main Content */}
