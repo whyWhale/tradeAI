@@ -9,13 +9,14 @@ import BitBot from '@components/BitBot';
 const TradeSettings = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [isRoleAdmin, setIsRoleAdmin] = useState(false);
   const [savedValue, setSavedValue] = useState('');
   const navigate = useNavigate();
   const [isSaved, setIsSaved] = useState(false);
 
 
   const [isBitModalOpen, setBitIsModalOpen] = useState(false);
-  
+
   const openBitModal = () => setBitIsModalOpen(true);
   const closeBitModal = () => setBitIsModalOpen(false);
 
@@ -29,7 +30,18 @@ const TradeSettings = () => {
       }
     };
 
+    const role = async ()=>{try {
+      const response = await instance.get('/api/users/userInfo');
+      const isAdmin = response.data === 'ROLE_ADMIN';
+      console.log(isAdmin);
+      setIsRoleAdmin(response.data === 'ROLE_ADMIN')
+    } catch (error) {
+      console.error("Error updating investment type:", error);
+    }
+    }
+
     ivt();
+    role();
   }, []);
 
   const handleOpenModal = () => {
@@ -68,8 +80,8 @@ const TradeSettings = () => {
       console.error("Error updating investment type:", error);
     }
   };
-
   return (
+
       <div className='flex bg-trai-background h-screen'>
         <aside className="navbar fixed w-64">
           <NavBar openModal={openBitModal}/>
@@ -88,7 +100,7 @@ const TradeSettings = () => {
                 placeholder='예시: 저는 공격적인 투자를 선호합니다.'
                 readOnly={!isEditing}
             />
-
+            {isRoleAdmin && (
             <div className='flex justify-evenly'>
               {!isEditing ? (
                   <button
@@ -107,15 +119,17 @@ const TradeSettings = () => {
                     저장
                   </button>
               )}
-              <button
-                  type="button"
-                  onClick={handleOpenModal}
-                  className={`p-2 text-white rounded w-30 ${isEditing ? 'bg-gray-300 cursor-not-allowed' : 'bg-trai-navy'}`}
-                  disabled={isEditing}
-              >
-                실시간 투자 하기
-              </button>
+
+                  <button
+                      type="button"
+                      onClick={handleOpenModal}
+                      className={`p-2 text-white rounded w-30 ${isEditing ? 'bg-gray-300 cursor-not-allowed' : 'bg-trai-navy'}`}
+                      disabled={isEditing}
+                  >
+                    실시간 투자 하기
+                  </button>
             </div>
+                )}
           </div>
 
           {isModalOpen && (
