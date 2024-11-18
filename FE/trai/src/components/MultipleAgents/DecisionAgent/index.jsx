@@ -45,7 +45,7 @@ const DecisionAgent = ({ className, decisionData, portfolioData }) => {
                 <div className="font-bold text-[24px] mt-10 mb-5 pl-[75px]">거래 비율: {`${decisionData?.percentage}%`}</div>
               </div>
             )}
-            <div className="text-[18px] text-justify leading-9 pl-[75px] pr-[75px]">{portfolioData?.summary}</div>
+            <div className="text-[18px] font-medium text-justify leading-9 pl-[75px] pr-[75px]">{portfolioData?.summary}</div>
           </ModalContent>
         </ModalOverlay>
       )}

@@ -42,7 +42,7 @@ const NavBar = ({openModal}) => {
   return (
     <NavWrapper>
       <LogoArea to="/" className="flex flex-col items-center">
-      <img src="/images/trai_logo_x.png" alt="Logo" className="w-24 h-auto" />
+        <img src="/images/trai_logo_002.png" alt="Logo" className="w-24 h-auto" />
       </LogoArea>
 
       <NavContainer>
@@ -168,7 +168,7 @@ const StyledLogoutButton = styled.div`
   }
 
   &:hover {
-    background-color: rgba(0, 128, 128, 0.1); /* 배경 색으로 hover 반응 범위를 넓힘 */
+    background-color: rgba(0, 128, 128, 0.1);
   }
 `;
 
@@ -200,7 +200,7 @@ const BotArea = styled.div`
   width: 15vw;
   max-width: 300px;
   padding: 1vh;
-  margin-bottom: 2vh; /* 하단 여백 추가 */
+  margin-bottom: 5vh; /* 하단 여백 추가 */
 `;
 
 const BotButton = styled.button`

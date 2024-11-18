@@ -7,8 +7,8 @@ export const COLORS = [
   '#2D9CDB',
 ];
 
-export const TEXTS = ['QUANT', 'PATTERN', 'FNG', 'NEWS', 'DECISION', 'PORTFOLIO'];
-export const ButtonTexts = ['Q', 'P', 'F', 'N', 'D', 'P'];
+export const TEXTS = ['QUANT', 'NEWS', 'Pattern', 'FNG', 'DECISION', 'PORTFOLIO'];
+export const ButtonTexts = ['Q', 'N', 'P', 'F', 'D', 'P'];
 export const TEXT_COLORS = [
   '#ffffff',
   '#00ff00',
