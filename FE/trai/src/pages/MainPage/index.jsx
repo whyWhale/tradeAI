@@ -26,7 +26,7 @@ const MainPage = () => {
                     자산 현황
                 </StyledLink>
                 <StyledLink to={'/investment-status'}>
-                    투자 현황
+                    투자 내역
                 </StyledLink>
                 <StyledLink to={'/trade-details'}>
                     거래 상세 및 전략

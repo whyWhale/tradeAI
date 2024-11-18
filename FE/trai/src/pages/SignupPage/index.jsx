@@ -42,7 +42,7 @@ const SignupPage = () => {
         try {
             const response = await instance.get(`/api/users/check?email=${email}`);
             setCheckEmailResult(response.data);
-            console.log(response.data);
+            // console.log(response.data);
         } catch (error) {
             console.error("중복 확인 중 오류 발생:", error);
         }

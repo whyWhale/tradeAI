@@ -3,16 +3,8 @@
     "question": "궁금한 점을 클릭해주세요.",
     "options": [
       {
-        "label": "기능",
-        "next": "bot_function"
-      },
-      {
         "label": "금융 용어",
         "next": "finance_terms"
-      },
-      {
-        "label": "칭찬하기",
-        "next": "show_firework"
       }
     ]
   },

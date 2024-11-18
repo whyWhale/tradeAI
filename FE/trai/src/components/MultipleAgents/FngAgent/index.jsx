@@ -8,6 +8,7 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 const FngAgent = ({ className, fngData, selectedDate }) => {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isImageLoaded, setIsImageLoaded] = useState(true);
   const formattedDate = selectedDate.replace(/-/g, "-");
 
   const handleMoreClick = () => {
@@ -16,6 +17,10 @@ const FngAgent = ({ className, fngData, selectedDate }) => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+  }
+
+  const handleImageError = () => {
+    setIsImageLoaded(false);
   }
 
   // 모달이 열릴 때 배경 스크롤 비활성화
@@ -38,9 +43,20 @@ const FngAgent = ({ className, fngData, selectedDate }) => {
           <MoreButton onClick={handleMoreClick}><FaPlus /></MoreButton>
         )}
       </div>
-      <div className='flex justify-center'>
-        <GraphImg><img src={`https://alternative.me/images/fng/crypto-fear-and-greed-index-${formattedDate}.png`} alt="fngImage" /></GraphImg>
+      <div className="flex justify-center">
+        {fngData && isImageLoaded ? (
+          <GraphImg>
+            <img
+              src={`https://alternative.me/images/fng/crypto-fear-and-greed-index-${formattedDate}.png`}
+              alt="fngImage"
+              onError={handleImageError} 
+            />
+          </GraphImg>
+        ) : (
+          <p className='mt-[80px] text-[14px]'>업데이트 중입니다.</p> 
+        )}
       </div>
+
 
       {isModalOpen && (
         <ModalOverlay>
@@ -49,7 +65,17 @@ const FngAgent = ({ className, fngData, selectedDate }) => {
               <h2 className="font-bold text-[32px]">공포 탐욕 지수</h2>
               <CloseButton onClick={handleCloseModal}><IoCloseCircleOutline /></CloseButton>
               <div className='flex justify-center'>
-                <GraphImg2><img src={`https://alternative.me/images/fng/crypto-fear-and-greed-index-${formattedDate}.png`} alt="fngImage" /></GraphImg2>
+                {fngData && isImageLoaded ? (
+                  <GraphImg2>
+                    <img
+                      src={`https://alternative.me/images/fng/crypto-fear-and-greed-index-${formattedDate}.png`}
+                      alt="fngImage"
+                      
+                    />
+                  </GraphImg2>
+                ) : (
+                  <StyledText>저장된 이미지가 없습니다</StyledText>
+                )}
               </div>
 
               <SummaryContainer>
@@ -136,6 +162,24 @@ const CloseButton = styled.button`
   right: 20px;
   color: var(--trai-navy);
   cursor: pointer;
+`
+
+const StyledText = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 80%; /* ChartImage와 동일한 너비 */
+  max-width: 1366px; /* 최대 너비 제한 */
+  height: 400px;
+  font-size: 16px;
+  color: #666;
+  background-color: #f9f9f9;
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 30px;
 `
 
 const SummaryContainer = styled.div`
