@@ -40,7 +40,7 @@ const DecisionAgent = ({ className, decisionData, portfolioData }) => {
             {decisionData?.percentage !== undefined && (
               <div>
                 <div className="font-bold text-[24px] mb-5 pl-[75px]">최종 거래 판단: {decisionData?.decision}</div>
-                <div className="text-[18px] text-justify leading-9 pl-[75px] pr-[75px]"> {decisionData?.summary}</div>
+                <div className="text-[18px] font-medium text-justify leading-9 pl-[75px] pr-[75px]"> {decisionData?.summary}</div>
     
                 <div className="font-bold text-[24px] mt-10 mb-5 pl-[75px]">거래 비율: {`${decisionData?.percentage}%`}</div>
               </div>

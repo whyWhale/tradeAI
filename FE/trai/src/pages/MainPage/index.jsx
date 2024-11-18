@@ -46,8 +46,8 @@ const MainPage = () => {
                         </div>
                     </div>
                 </div>
-                <HomeImage className="flex flex-end h-[700px] relative top-[-7%]"
-                            src="/images/figmaimage2.png" alt="image"/>
+                <HomeImage className="flex flex-end h-[670px] relative left-[-12%]"
+                            src="/images/main_laptop.png" alt="image"/>
             </FirstContainer>
 
             <SecondContainer>
@@ -89,6 +89,10 @@ const MainPage = () => {
                          answer="TRAI의 AI는 시장 데이터를 기반으로 최적의 거래 전략을 제시하지만, 수익을 보장하지는 않으며, 모든 투자에는 위험이 따릅니다."/>
                 <FAQItem question="TRAI 사용 방법"
                          answer="TRAI를 사용하려면 회원가입 후 관전자 모드로 접속하여 AI가 제안하는 거래 전략을 확인할 수 있습니다. 이를 통해 가상화폐 시장에 대한 이해를 높이고, AI 기반의 거래 분석 과정을 경험해 보세요."/>
+
+                <div className='text-trai-text text-[14px] text-center mt-20'>
+                    &copy; 2024. 행복자유. All rights reserved.
+                </div>
 
             </ThirdContainer>
 
@@ -173,7 +177,6 @@ const HomeImage = styled.img`
     @media (min-width: 1000px) {
         display: block;
         position: relative;
-        width: 800px;
         height: 600px;
         object-fit: cover;
     }
@@ -222,7 +225,7 @@ const AgentCard = styled.div`
 const ThirdContainer = styled.div`
     background-color: var(--trai-disabled);
     min-height: 700px;
-    padding: 50px 150px;
+    padding: 50px 150px 10px;
 `
 
 const FAQContainer = styled.div`
