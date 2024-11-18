@@ -33,7 +33,6 @@ const TradeSettings = () => {
     const role = async ()=>{try {
       const response = await instance.get('/api/users/userInfo');
       const isAdmin = response.data === 'ROLE_ADMIN';
-      console.log(isAdmin);
       setIsRoleAdmin(response.data === 'ROLE_ADMIN')
     } catch (error) {
       console.error("Error updating investment type:", error);

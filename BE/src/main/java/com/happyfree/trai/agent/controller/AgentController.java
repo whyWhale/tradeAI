@@ -35,7 +35,7 @@ public class AgentController {
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
 	@GetMapping("/ai")
 	public ResponseEntity<?> requestAgent() {
-		CompletableFuture.runAsync(agentService::requestAIAnalysisForUser);
+		CompletableFuture.runAsync(agentService::requestAIAnalysisForAllAdmins);
 
 		return ResponseEntity.ok().build();
 	}

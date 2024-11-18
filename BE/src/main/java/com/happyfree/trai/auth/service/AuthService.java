@@ -30,10 +30,7 @@ public class AuthService implements UserDetailsService {
         User user = userRepository.findByEmail(detail.getUsername())
 				.orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
-		String currentUrl = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-				.getRequest().getRequestURI();
-
-		if ("ROLE_USER".equals(user.getRole()) && !"/api/agent-history/ai".equals(currentUrl)) {
+		if ("ROLE_USER".equals(user.getRole())) {
 			return userRepository.findFirstByRole("ROLE_ADMIN")
 					.orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 		}
