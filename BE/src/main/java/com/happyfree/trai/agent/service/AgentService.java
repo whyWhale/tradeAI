@@ -212,6 +212,7 @@ public class AgentService {
 
             // 투자 내역 저장
             if (enoughAmount && (decision.equals("SELL") || decision.equals("BUY"))) {
+                Thread.sleep(5000);
                 TransactionHistory transactionHistory = searchInvestmentHistory(accessKey, secretKey);
                 if (transactionHistory != null) {
                     transactionHistory.updateUser(user);
