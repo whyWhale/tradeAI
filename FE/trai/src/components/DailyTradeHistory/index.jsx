@@ -94,7 +94,7 @@ const DailyTradeHistory = ({ onSelectAgentId, selectedDate, onDateChange }) => {
       <Table>
         <thead>
           <tr>
-            <th>날짜</th>
+            <th>시간</th>
             <th>비트코인 시세</th>
             <th>평단가</th>
             <th>판단</th>
@@ -185,7 +185,7 @@ const Table = styled.table`
 
       &::-webkit-scrollbar {
         margin-top: 10px;
-        width: 12px;
+        width: 10px;
       }
     
       &::-webkit-scrollbar-thumb {
@@ -205,6 +205,11 @@ const Table = styled.table`
     display: table;
     width: 100%;
     table-layout: fixed;
+  }
+
+  thead {
+    width: 99%;
+    margin-right: 10px;
   }
 
   tbody tr {
