@@ -89,14 +89,6 @@ public class AgentService {
         allAdminUser.forEach(this::requestAIAnalysis);
     }
 
-    public void requestAIAnalysisForUser() {
-        User loginUser = authService.getLoginUser();
-        if (loginUser.getRole().equals("ROLE_USER")) {
-            throw new CustomException(UNAUTHORIZED_ACCESS);
-        }
-        requestAIAnalysis(loginUser);
-    }
-
     public void requestAIAnalysis(User user) {
         try {
             AssetData assetData = createAssetData(user);
