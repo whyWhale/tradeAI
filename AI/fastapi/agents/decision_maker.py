@@ -139,7 +139,6 @@ def decision_agent(state: State) -> dict:
             "available_amount": state.user_info["available_amount"],
             "btc_balance_krw": state.user_info["btc_balance_krw"]
         })
-        print("decision_maker 에이전트 호출 성공 :", result)
     except Exception as e:
         print("Error during chain invocation:", e)
         raise
