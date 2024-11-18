@@ -1,17 +1,26 @@
 package com.happyfree.trai.user.controller;
 
-import com.happyfree.trai.user.dto.InvestmentType;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.happyfree.trai.auth.service.AuthService;
+import com.happyfree.trai.user.dto.InvestmentType;
 import com.happyfree.trai.user.dto.SignUp;
 import com.happyfree.trai.user.service.UserService;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -20,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RestController
 public class UserController {
-
+	private final AuthService authService;
 	private final UserService userService;
 
 	@Operation(summary = "회원가입")
@@ -40,6 +49,21 @@ public class UserController {
 	@PostMapping("/logout")
 	public void logout() {
 
+	}
+
+	@Operation(
+		summary = "로그인 유저 ROLE 조회"
+	)
+	@ApiResponses(value = {
+		@ApiResponse(
+			responseCode = "200",
+			description = "성공",
+			content = @Content(schema = @Schema(type = "string", example = "ROLE_USER", implementation = String.class))
+		)
+	})
+	@GetMapping("/userInfo")
+	public ResponseEntity<?> getUserInfo() {
+		return ResponseEntity.ok(authService.getRole());
 	}
 
 	@Operation(summary = "이메일 중복 확인")

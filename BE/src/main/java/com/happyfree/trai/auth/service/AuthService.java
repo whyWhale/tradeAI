@@ -47,4 +47,18 @@ public class AuthService implements UserDetailsService {
 		return new CustomUserDetails(user);
 	}
 
+	public String getRole() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		if (!(principal instanceof CustomUserDetails detail)) {
+			throw new CustomException(USER_NOT_FOUND);
+		}
+
+		User loginUser = userRepository.findByEmail(detail.getUsername())
+			.orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+		if (loginUser == null) {
+			return null;
+		}
+
+		return loginUser.getRole();
+	}
 }
