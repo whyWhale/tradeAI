@@ -71,12 +71,13 @@ const TradeSettings = () => {
 
   return (
       <div className='flex bg-trai-background h-screen'>
-        <aside className="navbar">
-          <NavBar openModal={openBitModal} />
+        <aside className="navbar fixed w-64">
+          <NavBar openModal={openBitModal}/>
         </aside>
 
-        <section className='flex-1 p-8 bg-trai-background mt-40 mb-40'>
-          <div className='flex flex-col gap-6 bg-white p-6 shadow-md rounded-lg mx-auto max-w-3xl'>
+        <section className='flex-1 p-8 bg-trai-background mt-40 mb-40 flex justify-center'
+                 style={{paddingLeft: '270px'}}>
+          <div className='flex flex-col gap-6 bg-white p-6 shadow-md rounded-lg max-w-3xl w-full'>
             <label htmlFor='investmentStyle' className='text-lg font-semibold'>본인의 투자 성향을 작성해주세요.</label>
             {isSaved && <span className="text-sm text-green-500">수정이 완료되었어요 🌈</span>}
             <textarea
@@ -110,7 +111,7 @@ const TradeSettings = () => {
                   type="button"
                   onClick={handleOpenModal}
                   className={`p-2 text-white rounded w-30 ${isEditing ? 'bg-gray-300 cursor-not-allowed' : 'bg-trai-navy'}`}
-                  disabled={true}
+                  disabled={isEditing}
               >
                 실시간 투자 하기
               </button>
@@ -127,7 +128,7 @@ const TradeSettings = () => {
                   cancelText="아니오"
               />
           )}
-          {isBitModalOpen && <BitBot onClose={closeBitModal} />}
+          {isBitModalOpen && <BitBot onClose={closeBitModal}/>}
         </section>
       </div>
   );
