@@ -50,8 +50,7 @@ const TradeSettings = () => {
   const handleConfirm = () => {
     setIsModalOpen(false);
     instance.get('/api/agent-history/ai');
-    navigate('/trade-details')
-    alert('거래내역 페이지로 이동합니다.')
+    alert('투자가 진행됩니다.')
   };
 
   const handleCancel = () => {
