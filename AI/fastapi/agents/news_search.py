@@ -105,4 +105,3 @@ def news_search_agent(state: State) -> State:
     except Exception as e:
         print(f"Error in news_search_agent: {e}")
         return state
-

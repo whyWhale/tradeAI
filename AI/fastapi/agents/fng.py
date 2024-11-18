@@ -12,6 +12,7 @@ from core.state import State
 # 공포 탐욕 지수 URL
 url = "https://api.alternative.me/fng/?date_format=kr&limit="
 
+
 fng_template = """당신은 투자 분석 전문가 입니다.
     아래는 공포 탐욕 지수 판단 자료입니다.
     Level 1: 0-25 points — Extreme Fear: Indicates a high level of pessimism; investors are highly risk-averse.
@@ -49,7 +50,6 @@ def get_fng():
     _url = url + "30"
     try:
         res = requests.request("GET", _url)
-        print("FNG API 요청 성공")
         parsed = json.loads(res.text)
         data = parsed["data"]
         info = [int(item['value']) for item in data]
@@ -62,10 +62,6 @@ def fng_agent(state: State) -> State:
     try:
         fng_info = get_fng()
         result = fng_chain.invoke({"info": fng_info})
-        print("FNG을 위한 LLM 호출 성공:", result)
-
-        # 새로운 메시지 추가
-        # new_message = f"FNG Analysis Decision: {result['decision']}, FNG Analysis Summary: {result['summary']}"
 
         return {
             "fng": {
