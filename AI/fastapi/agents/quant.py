@@ -6,7 +6,7 @@ from typing import Optional, Literal, Dict, Any, Tuple
 from pydantic import BaseModel
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
-from core.config import llm_gpt_4 as llm
+from core.config import llm_gpt_4o as llm
 from core.state import State
 
 
