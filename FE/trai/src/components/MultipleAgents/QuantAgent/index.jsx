@@ -48,7 +48,7 @@ const QuantAgent = ({ className, quantData }) => {
   return (
     <div className={className}>
       <div className="flex justify-between">
-        <div>차트 데이터 분석</div>
+        <div className="font-bold">차트 데이터 분석</div>
         <MoreButton onClick={handleMoreClick}>
           <FaPlus />
         </MoreButton>
@@ -166,7 +166,7 @@ const QuantAgent = ({ className, quantData }) => {
               >
                 {quantData?.decision}
               </div>
-              <div className="text-[18px] leading-9 ml-[75px] mr-[75px]">{quantData?.summary}</div>
+              <div className="text-[18px] font-medium leading-9 ml-[75px] mr-[75px]">{quantData?.summary}</div>
 
               <CloseButton onClick={handleCloseModal}>
                 <IoCloseCircleOutline />
