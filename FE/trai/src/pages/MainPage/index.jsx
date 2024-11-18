@@ -90,7 +90,7 @@ const MainPage = () => {
                 <FAQItem question="TRAI 사용 방법"
                          answer="TRAI를 사용하려면 회원가입 후 관전자 모드로 접속하여 AI가 제안하는 거래 전략을 확인할 수 있습니다. 이를 통해 가상화폐 시장에 대한 이해를 높이고, AI 기반의 거래 분석 과정을 경험해 보세요."/>
 
-                <div className='text-trai-text text-[14px] text-center mt-20'>
+                <div className='text-trai-greytext text-[14px] text-center mt-20'>
                     &copy; 2024. 행복자유. All rights reserved.
                 </div>
 
