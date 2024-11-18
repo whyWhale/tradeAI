@@ -33,7 +33,6 @@ const TradeSettings = () => {
     const role = async ()=>{try {
       const response = await instance.get('/api/users/userInfo');
       const isAdmin = response.data === 'ROLE_ADMIN';
-      console.log(isAdmin);
       setIsRoleAdmin(response.data === 'ROLE_ADMIN')
     } catch (error) {
       console.error("Error updating investment type:", error);
@@ -51,8 +50,7 @@ const TradeSettings = () => {
   const handleConfirm = () => {
     setIsModalOpen(false);
     instance.get('/api/agent-history/ai');
-    navigate('/trade-details')
-    alert('거래내역 페이지로 이동합니다.')
+    alert('투자가 진행됩니다.')
   };
 
   const handleCancel = () => {
