@@ -239,10 +239,6 @@ public class AgentService {
                     transactionHistoryRepository.save(transactionHistory);
                 }
             } else {
-                if (!enoughAmount) {
-                    decision = "HOLD";
-                }
-
                 TransactionHistory transactionHistory = TransactionHistory.builder()
                         .user(user)
                         .agent(agent)
