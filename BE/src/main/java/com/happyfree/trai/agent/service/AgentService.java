@@ -58,7 +58,6 @@ public class AgentService {
     private final ProfitAssetService profitAssetService;
 
     private final AuthService authService;
-
     private final UserRepository userRepository;
 
     private final AgentRepository agentRepository;
@@ -76,12 +75,12 @@ public class AgentService {
     @Transactional(readOnly = true)
     public AgentDecisionResult findAgentHistoryById(long agentId) {
         Agent agentDecision = agentRepository.findById(agentId)
-                .orElseThrow(() -> new CustomException(AGENT_NOT_FOUND));
+            .orElseThrow(() -> new CustomException(AGENT_NOT_FOUND));
 
         return AgentDecisionResult.builder()
-                .jsonData(agentDecision.getJsonData())
-                .createdAt(agentDecision.getCreatedAt())
-                .build();
+            .jsonData(agentDecision.getJsonData())
+            .createdAt(agentDecision.getCreatedAt())
+            .build();
     }
 
     public void requestAIAnalysisForAllAdmins() {
@@ -107,47 +106,47 @@ public class AgentService {
         BigDecimal totalKRWAssets = profitAssetService.getTotalKRW(accessKey, secretKey);
 
         List<ProfitAssetHistory> profitAssetHistories = profitAssetRepository
-                .findTop5ByUserAndSettlementDateLessThanOrderBySettlementDateDesc(user, LocalDate.now());
+            .findTop5ByUserAndSettlementDateLessThanOrderBySettlementDateDesc(user, LocalDate.now());
         List<RecentInvestmentSummary> investmentPerformanceSummary = profitAssetHistories.stream()
-                .map(RecentInvestmentSummary::from)
-                .collect(Collectors.toList());
+            .map(RecentInvestmentSummary::from)
+            .collect(Collectors.toList());
 
         List<TransactionHistory> transactionHistories = transactionHistoryRepository
-                .findTop10ByUserOrderByCreatedAtDesc(user);
+            .findTop10ByUserOrderByCreatedAtDesc(user);
         List<RecentTransactionHistory> bitcoinPositionHistory = transactionHistories.stream()
-                .map(RecentTransactionHistory::from)
-                .collect(Collectors.toList());
+            .map(RecentTransactionHistory::from)
+            .collect(Collectors.toList());
 
         return AssetData.builder()
-                .userId(user.getId())
-                .btcBalanceKrw(totalBTCAmount.multiply(tradePrice).floatValue())
-                .availableAmount(totalKRWAssets.floatValue())
-                .investmentType(user.getInvestmentType() != null ? user.getInvestmentType() : "None")
-                .investmentPerformanceSummary(investmentPerformanceSummary)
-                .bitcoinPositionHistory(bitcoinPositionHistory)
-                .build();
+            .userId(user.getId())
+            .btcBalanceKrw(totalBTCAmount.multiply(tradePrice).floatValue())
+            .availableAmount(totalKRWAssets.floatValue())
+            .investmentType(user.getInvestmentType() != null ? user.getInvestmentType() : "None")
+            .investmentPerformanceSummary(investmentPerformanceSummary)
+            .bitcoinPositionHistory(bitcoinPositionHistory)
+            .build();
     }
 
     private void sendToAIServer(AssetData assetData) {
         webClient
-                .post()
-                .uri("http://3.35.238.247:8000/ai/analysis")
-                .contentType(MediaType.APPLICATION_JSON)
-                .bodyValue(assetData)
-                .retrieve()
-                .bodyToMono(JsonNode.class)
-                .subscribe(
-                        result -> {
-                            try {
-                                processAnalysisResult(result, assetData);
-                            } catch (Exception e) {
-                                throw new CustomException(AI_PROCESS_ERROR);
-                            }
-                        },
-                        error -> {
-                            log.error("AI Server Error: {}", error.getMessage());
-                        }
-                );
+            .post()
+            .uri("http://3.35.238.247:8000/ai/analysis")
+            .contentType(MediaType.APPLICATION_JSON)
+            .bodyValue(assetData)
+            .retrieve()
+            .bodyToMono(JsonNode.class)
+            .subscribe(
+                result -> {
+                    try {
+                        processAnalysisResult(result, assetData);
+                    } catch (Exception e) {
+                        throw new CustomException(AI_PROCESS_ERROR);
+                    }
+                },
+                error -> {
+                    log.error("AI Server Error: {}", error.getMessage());
+                }
+            );
     }
 
     private void processAnalysisResult(JsonNode result, AssetData assetData) {
@@ -158,23 +157,25 @@ public class AgentService {
             long userId = result.path("user_info").path("user_id").asLong();
 
             User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(USER_NOT_FOUND));
 
             String accessKey = user.getAccessKey();
             String secretKey = user.getSecretKey();
             BigDecimal nowBitcoinPrice = profitAssetService.getBitcoinCurrentPrice();
-
             log.info("decision : {}", decision);
             log.info("percentage : {}", percentage);
 
-            BigDecimal averageBitcoinPrice = profitAssetService.getBTCAveragePrice(accessKey, secretKey);
+            BigDecimal averageBitcoinPrice = BigDecimal.ZERO;
+            if (decision.equals("SELL")) {
+                nowBitcoinPrice = profitAssetService.getBTCAveragePrice(accessKey, secretKey);
+            }
 
             // 매수, 매도 주문 처리
             boolean enoughAmount = true;
             if (decision.equals("BUY")) {
                 BigDecimal orderAmount =  BigDecimal.valueOf(assetData.getAvailableAmount())
-                        .multiply(BigDecimal.valueOf(percentage))
-                        .divide(BigDecimal.valueOf(100), 0, RoundingMode.DOWN);
+                    .multiply(BigDecimal.valueOf(percentage))
+                    .divide(BigDecimal.valueOf(100), 0, RoundingMode.DOWN);
 
                 enoughAmount =  checkAmount(orderAmount);
 
@@ -184,8 +185,8 @@ public class AgentService {
             } else if (decision.equals("SELL")) {
                 BigDecimal totalBTCAmount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
                 BigDecimal orderAmount = totalBTCAmount
-                        .multiply(BigDecimal.valueOf(percentage))
-                        .divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN);
+                    .multiply(BigDecimal.valueOf(percentage))
+                    .divide(BigDecimal.valueOf(100), 8, RoundingMode.DOWN);
 
                 enoughAmount = checkAmount(orderAmount.multiply(nowBitcoinPrice));
 
@@ -196,8 +197,8 @@ public class AgentService {
 
             // 분석 결과 저장
             Agent agent = Agent.builder()
-                    .jsonData(mapper.writeValueAsString(result))
-                    .build();
+                .jsonData(mapper.writeValueAsString(result))
+                .build();
             agentRepository.save(agent);
 
             BigDecimal nowBitcoinCount = profitAssetService.getBitcoinAmount(accessKey, secretKey);
@@ -206,20 +207,25 @@ public class AgentService {
             if (enoughAmount && (decision.equals("SELL") || decision.equals("BUY"))) {
                 Thread.sleep(5000);
                 TransactionHistory transactionHistory = searchInvestmentHistory(accessKey, secretKey);
+
+                if (decision.equals("BUY")) {
+                    nowBitcoinPrice = profitAssetService.getBTCAveragePrice(accessKey, secretKey);
+                }
+
                 if (transactionHistory != null) {
                     transactionHistory.updateUser(user);
                     transactionHistory.updateSide(decision);
                     transactionHistory.updateTotalEvaluation(BigDecimal.valueOf(Long.parseLong(transactionHistory.getPrice())).multiply(nowBitcoinCount));
                     transactionHistory.updateTotalAmount(profitAssetService.getTotalKRW(accessKey, secretKey)
-                            .add(nowBitcoinPrice.multiply(nowBitcoinCount)));
+                        .add(nowBitcoinPrice.multiply(nowBitcoinCount)));
                     transactionHistory.updateAveragePrice(averageBitcoinPrice);
                     transactionHistory.updateAgent(agent);
 
                     if (decision.equals("SELL")) {
                         BigDecimal profitAndLoss = new BigDecimal(transactionHistory.getPrice())
-                                .subtract(averageBitcoinPrice)
-                                .multiply(new BigDecimal(transactionHistory.getExecutedVolume()))
-                                .subtract(new BigDecimal(transactionHistory.getPaidFee()).multiply(new BigDecimal("2")));
+                            .subtract(averageBitcoinPrice)
+                            .multiply(new BigDecimal(transactionHistory.getExecutedVolume()))
+                            .subtract(new BigDecimal(transactionHistory.getPaidFee()).multiply(new BigDecimal("2")));
 
                         transactionHistory.updateProfitAndLoss(profitAndLoss);
                     }
@@ -227,23 +233,23 @@ public class AgentService {
                     if (transactionHistory.getProfitAndLoss() == null) {
                         transactionHistory.updateProfitAndLoss(BigDecimal.ZERO);
                     }
-
                     transactionHistoryRepository.save(transactionHistory);
                 }
             } else {
+                nowBitcoinPrice = profitAssetService.getBTCAveragePrice(accessKey, secretKey);
                 TransactionHistory transactionHistory = TransactionHistory.builder()
-                        .user(user)
-                        .agent(agent)
-                        .side(decision)
-                        .totalEvaluation(nowBitcoinPrice.multiply(nowBitcoinCount))
-                        .totalAmount(profitAssetService.getTotalKRW(accessKey, secretKey)
-                                .add(nowBitcoinPrice.multiply(nowBitcoinCount)))
-                        .executedFunds(BigDecimal.ZERO)
-                        .orderCreatedAt(LocalDateTime.now())
-                        .averagePrice(averageBitcoinPrice)
-                        .price(nowBitcoinPrice.toString())
-                        .profitAndLoss(BigDecimal.ZERO)
-                        .build();
+                    .user(user)
+                    .agent(agent)
+                    .side(decision)
+                    .totalEvaluation(nowBitcoinPrice.multiply(nowBitcoinCount))
+                    .totalAmount(profitAssetService.getTotalKRW(accessKey, secretKey)
+                        .add(nowBitcoinPrice.multiply(nowBitcoinCount)))
+                    .executedFunds(BigDecimal.ZERO)
+                    .orderCreatedAt(LocalDateTime.now())
+                    .averagePrice(averageBitcoinPrice)
+                    .price(nowBitcoinPrice.toString())
+                    .profitAndLoss(BigDecimal.ZERO)
+                    .build();
 
                 transactionHistoryRepository.save(transactionHistory);
             }
@@ -281,11 +287,11 @@ public class AgentService {
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         String jwtToken = JWT.create()
-                .withClaim("access_key", accessKey)
-                .withClaim("nonce", UUID.randomUUID().toString())
-                .withClaim("query_hash", queryHash)
-                .withClaim("query_hash_alg", "SHA512")
-                .sign(algorithm);
+            .withClaim("access_key", accessKey)
+            .withClaim("nonce", UUID.randomUUID().toString())
+            .withClaim("query_hash", queryHash)
+            .withClaim("query_hash_alg", "SHA512")
+            .sign(algorithm);
 
         String authenticationToken = "Bearer " + jwtToken;
 
@@ -304,16 +310,16 @@ public class AgentService {
             throw new CustomException(ORDER_ERROR);
         }
     }
- 
-    // 업비트 거래내역 검색 
+
+    // 업비트 거래내역 검색
     public TransactionHistory searchInvestmentHistory(String accessKey, String secretKey) throws NoSuchAlgorithmException, UnsupportedEncodingException {
         HashMap<String, String> params = new HashMap<>();
         params.put("market", "KRW-BTC");
         params.put("limit", "1");
         params.put("order_by", "desc");
         String[] states = {
-                "done",
-                "cancel"
+            "done",
+            "cancel"
         };
 
         ArrayList<String> queryElements = new ArrayList<>();
@@ -333,12 +339,11 @@ public class AgentService {
 
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         String jwtToken = JWT.create()
-                .withClaim("access_key", accessKey)
-                .withClaim("nonce", UUID.randomUUID().toString())
-                .withClaim("query_hash", queryHash)
-                .withClaim("query_hash_alg", "SHA512")
-                .sign(algorithm);
-
+            .withClaim("access_key", accessKey)
+            .withClaim("nonce", UUID.randomUUID().toString())
+            .withClaim("query_hash", queryHash)
+            .withClaim("query_hash_alg", "SHA512")
+            .sign(algorithm);
         String authenticationToken = "Bearer " + jwtToken;
 
         try {
@@ -358,17 +363,17 @@ public class AgentService {
                 BigDecimal executedVolume = new BigDecimal(jsonObject.get("executed_volume").asText());
 
                 return TransactionHistory.builder()
-                        .uuid(jsonObject.get("uuid").asText())
-                        .orderType(jsonObject.get("ord_type").asText())
-                        .state(jsonObject.get("state").asText())
-                        .market(jsonObject.get("market").asText())
-                        .paidFee(jsonObject.get("paid_fee").asText())
-                        .executedVolume(jsonObject.get("executed_volume").asText())
-                        .executedFunds(new BigDecimal(jsonObject.get("executed_funds").asText()))
-                        .tradesCount(jsonObject.get("trades_count").asInt())
-                        .price(String.valueOf(executedFunds.divide(executedVolume, 0, RoundingMode.HALF_UP)))
-                        .orderCreatedAt(LocalDateTime.parse(jsonObject.get("created_at").asText().replace("+09:00", "")))
-                        .build();
+                    .uuid(jsonObject.get("uuid").asText())
+                    .orderType(jsonObject.get("ord_type").asText())
+                    .state(jsonObject.get("state").asText())
+                    .market(jsonObject.get("market").asText())
+                    .paidFee(jsonObject.get("paid_fee").asText())
+                    .executedVolume(jsonObject.get("executed_volume").asText())
+                    .executedFunds(new BigDecimal(jsonObject.get("executed_funds").asText()))
+                    .tradesCount(jsonObject.get("trades_count").asInt())
+                    .price(String.valueOf(executedFunds.divide(executedVolume, 0, RoundingMode.HALF_UP)))
+                    .orderCreatedAt(LocalDateTime.parse(jsonObject.get("created_at").asText().replace("+09:00", "")))
+                    .build();
             }
 
         } catch (Exception e) {
