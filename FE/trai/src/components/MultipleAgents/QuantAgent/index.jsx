@@ -55,7 +55,7 @@ const QuantAgent = ({ className, quantData }) => {
       </div>
       <div className="relative w-full h-full">
         <div
-          className="absolute bottom-0 left-[20px]"
+          className="absolute bottom-0 left-[-34px]"
           style={{
             width: "300px",
             height: "150px",
