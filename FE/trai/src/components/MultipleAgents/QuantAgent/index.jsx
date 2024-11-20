@@ -1,18 +1,18 @@
-import { useState } from "react";
-import {
-  ComposedChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  LineChart,
-  Line,
-} from "recharts";
-import styled from "styled-components";
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { IoCloseCircleOutline } from "react-icons/io5";
+import {
+  Bar,
+  CartesianGrid,
+  ComposedChart,
+  Line,
+  LineChart,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import styled from "styled-components";
 
 const QuantAgent = ({ className, quantData }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,7 +55,7 @@ const QuantAgent = ({ className, quantData }) => {
       </div>
       <div className="relative w-full h-full">
         <div
-          className="absolute bottom-0 left-[-50px]"
+          className="absolute bottom-0 left-[20px]"
           style={{
             width: "300px",
             height: "150px",

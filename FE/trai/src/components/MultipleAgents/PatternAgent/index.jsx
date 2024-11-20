@@ -90,7 +90,8 @@ PatternAgent.propTypes = {
 export default PatternAgent;
 
 const PatternImage = styled.img`
-  max-width: 80%;
+  width: 250px;
+  height: 200px;
 `
 
 const ChartImage = styled.img`

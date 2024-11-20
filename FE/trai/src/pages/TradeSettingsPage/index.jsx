@@ -86,7 +86,7 @@ const TradeSettings = () => {
         </aside>
 
         <section className='flex-1 p-8 bg-trai-background mt-40 mb-40 flex justify-center'
-                 style={{paddingLeft: '270px'}}>
+                 style={{paddingLeft: '400px'}}>
           <div className='flex flex-col gap-6 bg-white p-6 shadow-md rounded-lg max-w-3xl w-full'>
             <label htmlFor='investmentStyle' className='text-lg font-semibold'>본인의 투자 성향을 작성해주세요.</label>
             {isSaved && <span className="text-sm text-green-500">수정이 완료되었어요 🌈</span>}

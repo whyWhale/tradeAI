@@ -28,7 +28,7 @@ const TradeDetails = () => {
       <aside className="navbar">
         <NavBar openModal={openModal} />
       </aside>
-      <section className='flex-1 ml-[275px] mt-[10px]'>
+      <section className='flex-1 ml-[360px] mt-[10px]'>
         <div><DailyTradeHistory onSelectAgentId={handleSelectAgentId} selectedDate={selectedDate} onDateChange={handleDateChange} /></div>
         <div><AgentAI agentId={agentId} selectedDate={selectedDate} /></div>
         {isModalOpen && <BitBot onClose={closeModal} />}
