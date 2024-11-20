@@ -53,6 +53,8 @@ const CurrentAssetAllocationChart = () => {
                     arcLinkLabelsThickness={0}
                     arcLinkLabelsColor={{ from: 'color' }}
                     arcLabelsSkipAngle={0}
+                    arcLinkLabelsSkipAngle={360}
+
                     theme={{
                         labels: {
                             text: {
