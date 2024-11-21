@@ -9,22 +9,14 @@ spring:
   jwt:
     secret: asdnjkansjdknajksndjkansjkdnqeojrdiuwejnadscmsadnfjhbwakjfdlmscjauwfjnkasndjansdjkanskjdbnkj1u823y127hurbhnj423874721yh3iukj
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${SERVER_IP}:3306/${MYSQL_DATABASE}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useUnicode=true
-    username: ${MYSQL_USER}
-    password: ${MYSQL_PASSWORD}
-    hikari:
-      maximum-pool-size: 8
-      minimum-idle: 4
-      connection-timeout: 20000
-      idle-timeout: 300000
-      max-lifetime: 1200000
-      leak-detection-threshold: 30000
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+    username: sa
+    password:
   jpa:
     database: mysql
-    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: create
     defer-datasource-initialization: true
     generate-ddl: true
     show-sql: false
@@ -41,7 +33,7 @@ logging:
     root: info
     org.hibernate.SQL: info
     org.springframework.security: info
-    com.zaxxer.hikari: warn
+    com.zaxxer.hikari: warn      # HikariCP 로깅 추가
     com.zaxxer.hikari.HikariConfig: warn
 
 springdoc:

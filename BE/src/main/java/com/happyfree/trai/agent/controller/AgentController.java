@@ -25,10 +25,10 @@ public class AgentController {
 
 	@Operation(summary = "에이전트 판단 조회")
 	@ApiResponses(value = {@ApiResponse(responseCode = "200")})
-	@GetMapping("")
+	@GetMapping
 	public ResponseEntity<?> findAgentHistoryById(@RequestParam("agentId") Long agentId) {
 
-		return ResponseEntity.ok(agentService.findAgentHistoryById(agentId));
+		return ResponseEntity.ok(agentService.getAgentDecisionHistory(agentId));
 	}
 
 	@Operation(summary = "에이전트 테스트")

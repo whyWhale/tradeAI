@@ -80,11 +80,11 @@ public class UserService {
 		loginUser.updateInvestmentType(investmentType.getInvestmentType());
 		userRepository.save(loginUser);
 
-		return loginUser.getInvestmentType();
+		return loginUser.getInvestmentTendency();
 	}
 
 	public String it() {
 		User loginUser = authService.getLoginUser();
-		return userRepository.findById(loginUser.getId()).get().getInvestmentType();
+		return userRepository.findById(loginUser.getId()).get().getInvestmentTendency();
 	}
 }

@@ -2,7 +2,7 @@ package com.happyfree.trai.transactionHistory.entity;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import com.happyfree.trai.agent.entity.Agent;
+import com.happyfree.trai.agent.entity.AgentDecision;
 import com.happyfree.trai.global.common.BaseEntity;
 import com.happyfree.trai.user.entity.User;
 import jakarta.persistence.*;
@@ -22,7 +22,7 @@ public class TransactionHistory extends BaseEntity {
 	private User user;
 
 	@OneToOne(fetch = FetchType.LAZY)
-	private Agent agent;
+	private AgentDecision agentDecision;
 
 	private String uuid;
 
@@ -67,5 +67,5 @@ public class TransactionHistory extends BaseEntity {
 
 	public void updateProfitAndLoss(BigDecimal profitAndLoss) { this.profitAndLoss = profitAndLoss; }
 
-	public void updateAgent(Agent agent) { this.agent = agent; }
+	public void updateAgent(AgentDecision agentDecision) { this.agentDecision = agentDecision; }
 }

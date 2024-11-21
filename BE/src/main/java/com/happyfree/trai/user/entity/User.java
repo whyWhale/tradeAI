@@ -26,10 +26,10 @@ public class User extends BaseEntity {
 	private String secretKey;
 
 	@Column(columnDefinition = "TEXT")
-	private String investmentType;
+	private String investmentTendency;
 
 	public void updateInvestmentType(String investmentType) {
-		this.investmentType = investmentType;
+		this.investmentTendency = investmentType;
 	}
 
 }

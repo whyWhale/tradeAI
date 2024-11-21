@@ -25,7 +25,7 @@ public class RecentTransactionHistory {
     public static RecentTransactionHistory from(TransactionHistory transactionHistory) {
         return RecentTransactionHistory.builder()
                 .orderCreatedAt(transactionHistory.getOrderCreatedAt().toString())
-                .agentId(transactionHistory.getAgent().getId())
+                .agentId(transactionHistory.getAgentDecision().getId())
                 .price(transactionHistory.getPrice())
                 .averagePrice(transactionHistory.getAveragePrice())
                 .side(transactionHistory.getSide())

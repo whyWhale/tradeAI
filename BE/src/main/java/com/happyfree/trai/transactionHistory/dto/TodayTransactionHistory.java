@@ -24,7 +24,7 @@ public class TodayTransactionHistory {
     public static TodayTransactionHistory from(TransactionHistory transactionHistory) {
         return TodayTransactionHistory.builder()
                 .id(transactionHistory.getId())
-                .agentId(transactionHistory.getAgent().getId())
+                .agentId(transactionHistory.getAgentDecision().getId())
                 .price(transactionHistory.getPrice())
                 .averagePrice(transactionHistory.getAveragePrice())
                 .side(transactionHistory.getSide())
