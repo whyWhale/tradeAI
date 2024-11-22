@@ -1,6 +1,6 @@
 package com.happyfree.trai.agent.scheduler;
 
-import com.happyfree.trai.agent.service.AgentService;
+import com.happyfree.trai.agent.application.AgentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;

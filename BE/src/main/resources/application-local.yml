@@ -1,0 +1,48 @@
+server:
+  servlet:
+    session:
+      timeout: 12h
+
+spring:
+  application:
+    name: trade-ai
+  jwt:
+    secret: asdnjkansjdknajksndjkansjkdnqeojrdiuwejnadscmsadnfjhbwakjfdlmscjauwfjnkasndjansdjkanskjdbnkj1u823y127hurbhnj423874721yh3iukj
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${SERVER_IP}:3306/${MYSQL_DATABASE}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8&useUnicode=true
+    username: ${MYSQL_USER}
+    password: ${MYSQL_PASSWORD}
+    hikari:
+      maximum-pool-size: 8
+      minimum-idle: 4
+      connection-timeout: 20000
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      leak-detection-threshold: 30000
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: none
+    defer-datasource-initialization: true
+    generate-ddl: true
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+logging:
+  level:
+    root: info
+    org.hibernate.SQL: info
+    org.springframework.security: info
+    com.zaxxer.hikari: warn
+    com.zaxxer.hikari.HikariConfig: warn
+
+springdoc:
+  swagger-ui:
+    path: /api/swagger-ui.html
+    disable-swagger-default-url: true
+  api-docs:
+    path: /api/v3/api-docs

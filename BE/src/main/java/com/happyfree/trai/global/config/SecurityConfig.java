@@ -18,10 +18,10 @@ import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.happyfree.trai.auth.filter.CustomLogoutFilter;
-import com.happyfree.trai.auth.filter.JWTFilter;
-import com.happyfree.trai.auth.filter.LoginFilter;
-import com.happyfree.trai.auth.util.JWTUtil;
+import com.happyfree.trai.authentication.presentation.filter.CustomLogoutFilter;
+import com.happyfree.trai.authentication.presentation.filter.JWTFilter;
+import com.happyfree.trai.authentication.presentation.filter.LoginFilter;
+import com.happyfree.trai.authentication.provider.JwtProvider;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,7 +37,7 @@ public class SecurityConfig {
 	@Autowired
 	private AuthenticationConfiguration authenticationConfiguration;
 	@Autowired
-	private JWTUtil jwtUtil;
+	private JwtProvider jwtProvider;
 
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration)
@@ -74,15 +74,15 @@ public class SecurityConfig {
 				}));
 
 		// jwt 권한 필터
-		http.addFilterBefore(new JWTFilter(jwtUtil),
+		http.addFilterBefore(new JWTFilter(jwtProvider),
 			UsernamePasswordAuthenticationFilter.class);
 
 		// 로그인 필터
 		http.addFilterAt(
-			new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil),
+			new LoginFilter(authenticationManager(authenticationConfiguration), jwtProvider),
 			UsernamePasswordAuthenticationFilter.class);
 		http
-			.addFilterBefore(new CustomLogoutFilter(jwtUtil),
+			.addFilterBefore(new CustomLogoutFilter(jwtProvider),
 				LogoutFilter.class);
 		http.exceptionHandling((exceptionHandlingConfigurer) ->
 			exceptionHandlingConfigurer.authenticationEntryPoint((request, response, authException) -> {

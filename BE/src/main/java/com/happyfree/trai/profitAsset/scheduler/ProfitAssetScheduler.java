@@ -1,8 +1,8 @@
 package com.happyfree.trai.profitAsset.scheduler;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.happyfree.trai.agent.service.AgentService;
-import com.happyfree.trai.profitAsset.service.ProfitAssetService;
+import com.happyfree.trai.agent.application.AgentService;
+import com.happyfree.trai.profitAsset.application.ProfitAssetService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
